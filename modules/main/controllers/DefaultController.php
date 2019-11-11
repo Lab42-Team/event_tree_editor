@@ -57,7 +57,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Отображение главной страницы сайта редактора.
      *
      * @return string
      */
@@ -67,7 +67,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Login action.
+     * Страница входа.
      *
      * @return Response|string
      */
@@ -89,7 +89,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Logout action.
+     * Действие выхода.
      *
      * @return Response
      */
@@ -101,7 +101,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Displays contact page.
+     * Страница обратной связи (контакта).
      *
      * @return Response|string
      */
