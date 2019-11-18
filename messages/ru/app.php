@@ -87,4 +87,71 @@ return [
     'LANG_MODEL_LOCAL' => 'Локаль',
     'LANG_MODEL_NAME' => 'Название',
     'LANG_MODEL_DEFAULT' => 'Язык по умолчанию',
+
+    /* TreeDiagram */
+    'TREE_DIAGRAM_MODEL_ID' => 'ID',
+    'TREE_DIAGRAM_MODEL_CREATED_AT' => 'Создан',
+    'TREE_DIAGRAM_MODEL_UPDATED_AT' => 'Обновлен',
+    'TREE_DIAGRAM_MODEL_NAME' => 'Название',
+    'TREE_DIAGRAM_MODEL_DESCRIPTION' => 'Описание',
+    'TREE_DIAGRAM_MODEL_TYPE' => 'Тип',
+    'TREE_DIAGRAM_MODEL_STATUS' => 'Статус',
+    'TREE_DIAGRAM_MODEL_AUTHOR' => 'Автор',
+    /* Значения полей типов диаграмм*/
+    'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Дерево событий',
+    'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Дерево отказов',
+
+    /* Node */
+    'NODE_MODEL_ID' => 'ID',
+    'NODE_MODEL_CREATED_AT' => 'Создан',
+    'NODE_MODEL_UPDATED_AT' => 'Обновлен',
+    'NODE_MODEL_NAME' => 'Название',
+    'NODE_MODEL_DESCRIPTION' => 'Описание',
+    'NODE_MODEL_OPERATOR' => 'Оператор',
+    'NODE_MODEL_TYPE' => 'Тип',
+    'NODE_MODEL_PARENT_NODE' => 'Родительский узел',
+    'NODE_MODEL_TREE_DIAGRAM' => 'Диаграмма',
+    /* Значения операторов */
+    'NODE_MODEL_NOT_OPERATOR' => 'Отрицание',
+    'NODE_MODEL_AND_OPERATOR' => 'И',
+    'NODE_MODEL_OR_OPERATOR' => 'Или',
+    'NODE_MODEL_XOR_OPERATOR' => 'Сложение по модулю 2',
+    /* Значения типов узлов */
+    'TREE_DIAGRAM_MODEL_INITIAL_EVENT_TYPE' => 'Инициирующее событие',
+    'TREE_DIAGRAM_MODEL_EVENT_TYPE' => 'Событие',
+    'TREE_DIAGRAM_MODEL_MECHANISM_TYPE' => 'Механизм',
+
+    /* Parameter */
+    'PARAMETER_MODEL_ID' => 'ID',
+    'PARAMETER_MODEL_CREATED_AT' => 'Создан',
+    'PARAMETER_MODEL_UPDATED_AT' => 'Обновлен',
+    'PARAMETER_MODEL_NAME' => 'Название',
+    'PARAMETER_MODEL_DESCRIPTION' => 'Описание',
+    'PARAMETER_MODEL_OPERATOR' => 'Оператор',
+    'PARAMETER_MODEL_VALUE' => 'Значение',
+    'PARAMETER_MODEL_NODE' => 'Узел',
+    /* Значения операторов */
+    'PARAMETER_MODEL_EQUALLY_OPERATOR' => '=',
+    'PARAMETER_MODEL_MORE_OPERATOR' => '>',
+    'PARAMETER_MODEL_LESS_OPERATOR' => '<',
+    'PARAMETER_MODEL_MORE_EQUAL_OPERATOR' => '>=',
+    'PARAMETER_MODEL_LESS_EQUAL_OPERATOR' => '<=',
+    'PARAMETER_MODEL_NOT_EQUAL_OPERATOR' => '≠',
+
+    /* Level */
+    'LEVEL_MODEL_ID' => 'ID',
+    'LEVEL_MODEL_CREATED_AT' => 'Создан',
+    'LEVEL_MODEL_UPDATED_AT' => 'Обновлен',
+    'LEVEL_MODEL_NAME' => 'Название',
+    'LEVEL_MODEL_DESCRIPTION' => 'Описание',
+    'LEVEL_MODEL_TREE_DIAGRAM' => 'Диаграмма',
+
+    /* Sequence */
+    'SEQUENCE_MODEL_ID' => 'ID',
+    'SEQUENCE_MODEL_CREATED_AT' => 'Создан',
+    'SEQUENCE_MODEL_UPDATED_AT' => 'Обновлен',
+    'SEQUENCE_MODEL_TREE_DIAGRAM' => 'Диаграмма',
+    'SEQUENCE_MODEL_LEVEL' => 'Уровень',
+    'SEQUENCE_MODEL_NODE' => 'Узел',
+    'SEQUENCE_MODEL_PRIORITY' => 'Приоритет',
 ];

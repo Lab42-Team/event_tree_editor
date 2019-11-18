@@ -87,4 +87,71 @@ return [
     'LANG_MODEL_LOCAL' => 'Local',
     'LANG_MODEL_NAME' => 'Name',
     'LANG_MODEL_DEFAULT' => 'Default language',
+
+    /* TreeDiagram */
+    'TREE_DIAGRAM_MODEL_ID' => 'ID',
+    'TREE_DIAGRAM_MODEL_CREATED_AT' => 'Created at',
+    'TREE_DIAGRAM_MODEL_UPDATED_AT' => 'Updated at',
+    'TREE_DIAGRAM_MODEL_NAME' => 'Name',
+    'TREE_DIAGRAM_MODEL_DESCRIPTION' => 'Description',
+    'TREE_DIAGRAM_MODEL_TYPE' => 'Type',
+    'TREE_DIAGRAM_MODEL_STATUS' => 'Status',
+    'TREE_DIAGRAM_MODEL_AUTHOR' => 'Author',
+    /* Значения полей типов диаграмм*/
+    'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
+    'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
+
+    /* Node */
+    'NODE_MODEL_ID' => 'ID',
+    'NODE_MODEL_CREATED_AT' => 'Created at',
+    'NODE_MODEL_UPDATED_AT' => 'Updated at',
+    'NODE_MODEL_NAME' => 'Name',
+    'NODE_MODEL_DESCRIPTION' => 'Description',
+    'NODE_MODEL_OPERATOR' => 'Operator',
+    'NODE_MODEL_TYPE' => 'Type',
+    'NODE_MODEL_PARENT_NODE' => 'Parent node',
+    'NODE_MODEL_TREE_DIAGRAM' => 'Diagram',
+    /* Значения операторов */
+    'NODE_MODEL_NOT_OPERATOR' => 'NOT',
+    'NODE_MODEL_AND_OPERATOR' => 'AND',
+    'NODE_MODEL_OR_OPERATOR' => 'OR',
+    'NODE_MODEL_XOR_OPERATOR' => 'XOR',
+    /* Значения типов узлов */
+    'TREE_DIAGRAM_MODEL_INITIAL_EVENT_TYPE' => 'Initial event',
+    'TREE_DIAGRAM_MODEL_EVENT_TYPE' => 'Event',
+    'TREE_DIAGRAM_MODEL_MECHANISM_TYPE' => 'Mechanism',
+
+    /* Parameter */
+    'PARAMETER_MODEL_ID' => 'ID',
+    'PARAMETER_MODEL_CREATED_AT' => 'Created at',
+    'PARAMETER_MODEL_UPDATED_AT' => 'Updated at',
+    'PARAMETER_MODEL_NAME' => 'Name',
+    'PARAMETER_MODEL_DESCRIPTION' => 'Description',
+    'PARAMETER_MODEL_OPERATOR' => 'Operator',
+    'PARAMETER_MODEL_VALUE' => 'Value',
+    'PARAMETER_MODEL_NODE' => 'Node',
+    /* Значения операторов */
+    'PARAMETER_MODEL_EQUALLY_OPERATOR' => '=',
+    'PARAMETER_MODEL_MORE_OPERATOR' => '>',
+    'PARAMETER_MODEL_LESS_OPERATOR' => '<',
+    'PARAMETER_MODEL_MORE_EQUAL_OPERATOR' => '>=',
+    'PARAMETER_MODEL_LESS_EQUAL_OPERATOR' => '<=',
+    'PARAMETER_MODEL_NOT_EQUAL_OPERATOR' => '≠',
+
+    /* Level */
+    'LEVEL_MODEL_ID' => 'ID',
+    'LEVEL_MODEL_CREATED_AT' => 'Created at',
+    'LEVEL_MODEL_UPDATED_AT' => 'Updated at',
+    'LEVEL_MODEL_NAME' => 'Name',
+    'LEVEL_MODEL_DESCRIPTION' => 'Description',
+    'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
+
+    /* Sequence */
+    'SEQUENCE_MODEL_ID' => 'ID',
+    'SEQUENCE_MODEL_CREATED_AT' => 'Created at',
+    'SEQUENCE_MODEL_UPDATED_AT' => 'Updated at',
+    'SEQUENCE_MODEL_TREE_DIAGRAM' => 'Diagram',
+    'SEQUENCE_MODEL_LEVEL' => 'Level',
+    'SEQUENCE_MODEL_NODE' => 'Node',
+    'SEQUENCE_MODEL_PRIORITY' => 'Priority',
 ];
