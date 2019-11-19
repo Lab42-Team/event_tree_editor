@@ -3,6 +3,8 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use app\modules\main\models\User;
+
 
 /**
  * This is the model class for table "{{%tree_diagram}}".
