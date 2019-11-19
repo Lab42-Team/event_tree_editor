@@ -88,6 +88,23 @@ return [
     'LANG_MODEL_NAME' => 'Название',
     'LANG_MODEL_DEFAULT' => 'Язык по умолчанию',
 
+    /* User */
+    'USER_MODEL_ID' => 'ID',
+    'USER_MODEL_CREATED_AT' => 'Зарегистрирован',
+    'USER_MODEL_UPDATED_AT' => 'Обновлен',
+    'USER_MODEL_USERNAME' => 'Логин',
+    'USER_MODEL_AUTH_KEY' => 'Ключ аутентификации',
+    'USER_MODEL_EMAIL_CONFIRM_TOKEN' => 'Метка подтверждения электронной почты',
+    'USER_MODEL_PASSWORD_HASH' => 'Хэш пароля',
+    'USER_MODEL_PASSWORD_RESET_TOKEN' => 'Метка сброса пароля',
+    'USER_MODEL_STATUS' => 'Статус',
+    'USER_MODEL_FULL_NAME' => 'Фамилия Имя Отчество',
+    'USER_MODEL_EMAIL' => 'Электронная почта',
+    /* Сообщения модели User */
+    'USER_MODEL_MESSAGE_USERNAME' => 'Это имя пользователя уже занято.',
+    'USER_MODEL_MESSAGE_UPDATED_YOUR_DETAILS' => 'Вы успешно изменили свои данные.',
+    'USER_MODEL_MESSAGE_UPDATED_YOUR_PASSWORD' => 'Вы успешно изменили пароль.',
+
     /* TreeDiagram */
     'TREE_DIAGRAM_MODEL_ID' => 'ID',
     'TREE_DIAGRAM_MODEL_CREATED_AT' => 'Создан',
