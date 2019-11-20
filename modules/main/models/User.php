@@ -5,6 +5,8 @@ namespace app\modules\main\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -45,13 +47,15 @@ class User extends ActiveRecord implements IdentityInterface
             ['username', 'string', 'min' => 5, 'max' => 100],
             ['username', 'unique', 'targetClass' => self::className(),
                 'message' => Yii::t('app', 'USER_MODEL_MESSAGE_USERNAME')],
-            [['status'], 'default', 'value' => null],
-            [['status'], 'integer'],
-            ['password_hash', 'required', 'on' => 'create_and_update_password_hash'],
-            ['password_hash', 'string', 'min' => 5, 'on' => 'create_and_update_password_hash'],
+            ['password', 'required', 'on' => 'create_and_update_password_hash'],
+            ['password', 'string', 'min' => 5, 'on' => 'create_and_update_password_hash'],
             [['full_name', 'email'], 'required'],
+            ['full_name', 'match', 'pattern' => '/^[ А-Яа-яs,]+$/u',
+                'message' => Yii::t('app', 'USER_MODEL_MESSAGE_FULL_NAME')],
             [['full_name'], 'string', 'min' => 5, 'max' => 100],
             [['email'], 'string', 'max' => 255],
+            [['status'], 'default', 'value' => null],
+            [['status'], 'integer'],
         ];
     }
 
@@ -65,6 +69,7 @@ class User extends ActiveRecord implements IdentityInterface
             'created_at' => Yii::t('app', 'USER_MODEL_CREATED_AT'),
             'updated_at' => Yii::t('app', 'USER_MODEL_UPDATED_AT'),
             'username' => Yii::t('app', 'USER_MODEL_USERNAME'),
+            'password' => Yii::t('app', 'USER_MODEL_PASSWORD'),
             'auth_key' => Yii::t('app', 'USER_MODEL_AUTH_KEY'),
             'email_confirm_token' => Yii::t('app', 'USER_MODEL_EMAIL_CONFIRM_TOKEN'),
             'password_hash' => Yii::t('app', 'USER_MODEL_PASSWORD_HASH'),
@@ -75,21 +80,21 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
+    /**  то что создал gii  удалить за ненадобностью
      * @return \yii\db\ActiveQuery
-     */
+
     public function getTreeDiagrams()
     {
         return $this->hasMany(TreeDiagram::className(), ['author' => 'id']);
     }
+    */
 
-
-
-
-
-
-
-
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
 
     /**
      * Поиск пользователя по идентификатору.

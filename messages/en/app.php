@@ -93,6 +93,7 @@ return [
     'USER_MODEL_CREATED_AT' => 'Created at',
     'USER_MODEL_UPDATED_AT' => 'Updated at',
     'USER_MODEL_USERNAME' => 'Username',
+    'USER_MODEL_PASSWORD' => 'Password',
     'USER_MODEL_AUTH_KEY' => 'Auth key',
     'USER_MODEL_EMAIL_CONFIRM_TOKEN' => 'E-mail confirm token',
     'USER_MODEL_PASSWORD_HASH' => 'Password hash',

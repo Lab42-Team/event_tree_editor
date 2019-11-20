@@ -93,6 +93,7 @@ return [
     'USER_MODEL_CREATED_AT' => 'Зарегистрирован',
     'USER_MODEL_UPDATED_AT' => 'Обновлен',
     'USER_MODEL_USERNAME' => 'Логин',
+    'USER_MODEL_PASSWORD' => 'Пароль',
     'USER_MODEL_AUTH_KEY' => 'Ключ аутентификации',
     'USER_MODEL_EMAIL_CONFIRM_TOKEN' => 'Метка подтверждения электронной почты',
     'USER_MODEL_PASSWORD_HASH' => 'Хэш пароля',
