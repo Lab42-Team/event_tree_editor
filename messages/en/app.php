@@ -11,6 +11,8 @@ return [
     'NAV_SIGN_UP' => 'Sign up',
     'NAV_SIGN_IN' => 'Sign in',
     'NAV_SIGN_OUT' => 'Sign out',
+    'NAV_TREE_DIAGRAMS' => 'Diagrams',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Possible actions',
 
@@ -48,6 +50,19 @@ return [
     'NOTICE_TEXT' => 'this important information.',
 
     /* Страницы сайта */
+    /* Страница диаграммы */
+    'TREE_DIAGRAMS_PAGE_TREE_DIAGRAM' => 'Diagram',
+    'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS' => 'Diagrams',
+    'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM' => 'Create diagram',
+    'TREE_DIAGRAMS_PAGE_VIEW_TREE_DIAGRAM' => 'View diagram',
+    'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Update diagram',
+    'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Delete diagram',
+    'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Are you sure that you want to delete this diagram?',
+    /* Сообщения на страницах администрирования событий */
+    'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'You have successfully created a new diagram.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'You have successfully updated diagram.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'You have successfully deleted diagram.',
+
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'The above error occurred while the Web server was processing your request.',
     'ERROR_PAGE_TEXT_TWO' => 'Please contact us if you think this is a server error. Thank you.',
@@ -118,6 +133,9 @@ return [
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
+    /* Значения полей статусов*/
+    'TREE_DIAGRAM_MODEL_PUBLIC_STATUS' => 'Public',
+    'TREE_DIAGRAM_MODEL_PRIVATE_STATUS' => 'Private',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',

@@ -18,7 +18,10 @@ $config = [
     'modules' => [
         'main' => [
             'class' => 'app\modules\main\Module',
-        ]
+        ],
+        'editor'=> [
+            'class' => 'app\modules\editor\Module',
+        ],
     ],
 
     'components' => [
@@ -38,6 +41,9 @@ $config = [
                 '/' => 'main/default/index',
                 'contact' => 'main/default/contact',
                 'sing-in' => 'main/default/sing-in',
+
+                '/tree-diagrams/<_ev:(index|create)>' => 'tree-diagrams/<_ev>',
+                '/tree-diagrams/<_ev:(view|update|delete)>/<id:\d+>' => 'tree-diagrams/<_ev>',
             ],
         ],
         'cache' => [

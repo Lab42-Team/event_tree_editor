@@ -41,6 +41,8 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'encodeLabels' => false,
             'items' => array_filter([
+                ['label' => '<span class="glyphicon glyphicon-tree-conifer"></span> ' .
+                    Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
                 ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
                     Yii::t('app', 'NAV_CONTACT_US'), 'url' => ['/main/default/contact']],
                 Yii::$app->user->isGuest ? (

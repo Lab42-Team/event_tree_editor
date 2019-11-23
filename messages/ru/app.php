@@ -11,6 +11,8 @@ return [
     'NAV_SIGN_UP' => 'Регистрация',
     'NAV_SIGN_IN' => 'Вход',
     'NAV_SIGN_OUT' => 'Выход',
+    'NAV_TREE_DIAGRAMS' => 'Диаграммы',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Возможные действия',
 
@@ -48,6 +50,19 @@ return [
     'NOTICE_TEXT' => 'на эту важную информацию.',
 
     /* Страницы сайта */
+    /* Страница диаграммы */
+    'TREE_DIAGRAMS_PAGE_TREE_DIAGRAM' => 'Диаграмма',
+    'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS' => 'Диаграммы',
+    'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM' => 'Создать диаграмму',
+    'TREE_DIAGRAMS_PAGE_VIEW_TREE_DIAGRAM' => 'Просмотр диаграммы',
+    'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Изменить диаграмму',
+    'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Удалить диаграмму',
+    'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данное событие?',
+    /* Сообщения на страницах администрирования событий */
+    'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'Вы успешно обновили данную диаграмму.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'Вы успешно удалили диаграмму.',
+
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'Вышеупомянутая ошибка произошла при обработке веб-сервером вашего запроса.',
     'ERROR_PAGE_TEXT_TWO' => 'Пожалуйста, свяжитесь с нами, если Вы думаете, что это ошибка сервера. Спасибо.',
@@ -118,6 +133,9 @@ return [
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Дерево событий',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Дерево отказов',
+    /* Значения полей статусов*/
+    'TREE_DIAGRAM_MODEL_PUBLIC_STATUS' => 'Публичный',
+    'TREE_DIAGRAM_MODEL_PRIVATE_STATUS' => 'Частный',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',

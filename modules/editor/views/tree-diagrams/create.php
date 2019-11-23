@@ -5,8 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
 
-$this->title = 'Create Tree Diagram';
-$this->params['breadcrumbs'][] = ['label' => 'Tree Diagrams', 'url' => ['index']];
+$this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM');
+
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tree-diagram-create">

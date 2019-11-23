@@ -3,7 +3,9 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use app\modules\main\models\User;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -27,6 +29,9 @@ class TreeDiagram extends \yii\db\ActiveRecord
 {
     const EVENT_TREE_TYPE = 0;   // Тип диаграммы дерево событий
     const FAULT_TREE_TYPE = 1; // Тип диаграммы дерево отказов
+
+    const PUBLIC_STATUS = 0;   // Публичный статус
+    const PRIVATE_STATUS = 1; // Приватный статус
 
     /**
      * @return string table name
@@ -91,6 +96,35 @@ class TreeDiagram extends \yii\db\ActiveRecord
     public function getTypeName()
     {
         return ArrayHelper::getValue(self::getTypesArray(), $this->type);
+    }
+
+    /**
+     * Получение списка статусов.
+     * @return array - массив всех возможных статусов
+     */
+    public static function getStatusesArray()
+    {
+        return [
+            self::PUBLIC_STATUS => Yii::t('app', 'TREE_DIAGRAM_MODEL_PUBLIC_STATUS'),
+            self::PRIVATE_STATUS => Yii::t('app', 'TREE_DIAGRAM_MODEL_PRIVATE_STATUS'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     * @return mixed
+     */
+    public function getStatusName()
+    {
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->type);
+    }
+
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
     }
 
 }

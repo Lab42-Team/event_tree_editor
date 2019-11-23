@@ -14,6 +14,8 @@ use yii\filters\VerbFilter;
  */
 class TreeDiagramsController extends Controller
 {
+
+    public $layout = '@app/modules/main/views/layouts/main';
     /**
      * {@inheritdoc}
      */
@@ -66,9 +68,22 @@ class TreeDiagramsController extends Controller
     {
         $model = new TreeDiagram();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->author = 2;
+            // Сохранение данных о новой партитуре в БД
+            if ($model->save()) {}
+            // Вывод сообщения
+            Yii::$app->getSession()->setFlash('success',
+                Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            //Yii::$app->getSession()->setFlash('success',
+            //    Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
+            //return $this->redirect(['view', 'id' => $model->id]);
+        //}
 
         return $this->render('create', [
             'model' => $model,

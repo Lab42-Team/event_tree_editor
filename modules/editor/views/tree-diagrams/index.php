@@ -2,40 +2,60 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\StringHelper;
+use app\modules\editor\models\TreeDiagram;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\editor\models\TreeDiagramSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Tree Diagrams';
+$this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS');
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tree-diagram-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Tree Diagram', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <p><?= Html::a('<span class="glyphicon glyphicon-edit"></span> ' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM'),
+            ['create'], ['class' => 'btn btn-success']) ?></p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'created_at',
-            'updated_at',
             'name',
-            'description',
-            //'type',
-            //'status',
-            //'author',
+            [
+                'attribute' => 'description',
+                'value' => function ($model) {
+                    return StringHelper::truncate($model->description, 10);
+                }
+            ],
+            [
+                'attribute'=>'type',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getTypeName();
+                },
+                'filter'=>TreeDiagram::getTypesArray(),
+            ],
+            [
+                'attribute'=>'status',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getStatusName();
+                },
+                'filter'=>TreeDiagram::getStatusesArray(),
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            'author', // заменить на вывод имени автора а не id
+
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => ['class' => 'action-column'],
+                'template' => '{view} {update} {delete}',
+            ],
         ],
     ]); ?>
 
