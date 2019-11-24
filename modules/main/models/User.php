@@ -4,9 +4,11 @@ namespace app\modules\main\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
+use app\modules\editor\models\TreeDiagram;
 
 /**
  * This is the model class for table "{{%user}}".
@@ -28,6 +30,7 @@ use yii\behaviors\TimestampBehavior;
 class User extends ActiveRecord implements IdentityInterface
 {
     public $password;
+
     /**
      * {@inheritdoc}
      */
@@ -80,14 +83,13 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**  то что создал gii  удалить за ненадобностью
+    /**
      * @return \yii\db\ActiveQuery
-
+     */
     public function getTreeDiagrams()
     {
         return $this->hasMany(TreeDiagram::className(), ['author' => 'id']);
     }
-    */
 
     public function behaviors()
     {
@@ -98,6 +100,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Поиск пользователя по идентификатору.
+     *
      * @param int|string $id
      * @return null|static
      */
@@ -113,6 +116,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Поиск пользователя по имени.
+     *
      * @param string $username
      * @return static|null
      */
@@ -123,6 +127,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Получить id пользователя.
+     *
      * @return mixed
      */
     public function getId()
@@ -132,6 +137,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Получить ключ аутентификации.
+     *
      * @return string
      */
     public function getAuthKey()
@@ -141,6 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Проверка ключа аутентификации.
+     *
      * @param string $authKey
      * @return bool
      */
@@ -151,6 +158,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Генерирование ключа аутентификации при активации "запомнить меня".
+     *
      */
     public function generateAuthKey()
     {
@@ -159,6 +167,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Проверка пароля.
+     *
      * @param string $password password to validate
      * @return boolean if password provided is valid for current user
      */
@@ -169,6 +178,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Установка пароля.
+     *
      * @param string $password
      */
     public function setPassword($password)
@@ -178,6 +188,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Finds out if password reset token is valid.
+     *
      * @param string $token password reset token
      * @return boolean
      */
@@ -195,6 +206,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Finds user by password reset token.
+     *
      * @param string $token password reset token
      * @return static|null
      */
@@ -251,6 +263,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Генерация ключа автоматической аутентификации перед записью в БД.
+     *
      * @param bool $insert
      * @return bool
      */
@@ -264,5 +277,15 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return false;
+    }
+
+    /**
+     * Получение списка всех пользователей.
+     *
+     * @return array - массив всех записей из таблицы user
+     */
+    public static function getAllUsersArray()
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'username');
     }
 }

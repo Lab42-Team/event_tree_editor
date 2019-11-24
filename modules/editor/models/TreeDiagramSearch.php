@@ -4,7 +4,6 @@ namespace app\modules\editor\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\editor\models\TreeDiagram;
 
 /**
  * TreeDiagramSearch represents the model behind the search form of `app\modules\editor\models\TreeDiagram`.
@@ -32,10 +31,9 @@ class TreeDiagramSearch extends TreeDiagram
     }
 
     /**
-     * Creates data provider instance with search query applied
+     * Creates data provider instance with search query applied.
      *
      * @param array $params
-     *
      * @return ActiveDataProvider
      */
     public function search($params)
@@ -43,7 +41,6 @@ class TreeDiagramSearch extends TreeDiagram
         $query = TreeDiagram::find();
 
         // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

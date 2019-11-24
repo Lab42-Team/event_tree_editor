@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\helpers\StringHelper;
+use app\modules\main\models\User;
 use app\modules\editor\models\TreeDiagram;
 
 /* @var $this yii\web\View */
@@ -13,6 +13,7 @@ $this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS');
 
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="tree-diagram-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -26,12 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            [
-                'attribute' => 'description',
-                'value' => function ($model) {
-                    return StringHelper::truncate($model->description, 10);
-                }
-            ],
             [
                 'attribute'=>'type',
                 'format' => 'raw',
@@ -48,9 +43,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter'=>TreeDiagram::getStatusesArray(),
             ],
-
-            'author', // заменить на вывод имени автора а не id
-
+            [
+                'attribute'=>'author',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->user->username;
+                },
+                'filter'=>User::getAllUsersArray(),
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['class' => 'action-column'],
@@ -58,6 +58,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
 
 </div>

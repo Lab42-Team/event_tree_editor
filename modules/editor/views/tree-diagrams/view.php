@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'name',
-            'description',
             [
                 'attribute'=>'type',
                 'format' => 'raw',
@@ -49,8 +48,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter'=>TreeDiagram::getStatusesArray(),
             ],
-
-            'author',// заменить на вывод имени автора а не id
+            [
+                'attribute'=>'author',
+                'value' => $model->user->username,
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => ['date', 'dd.MM.Y HH:mm:ss']
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format' => ['date', 'dd.MM.Y HH:mm:ss']
+            ],
+            'description',
         ],
     ]) ?>
 

@@ -3,19 +3,19 @@
 namespace app\modules\editor\controllers;
 
 use Yii;
-use app\modules\editor\models\TreeDiagram;
-use app\modules\editor\models\TreeDiagramSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\modules\editor\models\TreeDiagram;
+use app\modules\editor\models\TreeDiagramSearch;
 
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
 class TreeDiagramsController extends Controller
 {
-
     public $layout = '@app/modules/main/views/layouts/main';
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +33,7 @@ class TreeDiagramsController extends Controller
 
     /**
      * Lists all TreeDiagram models.
+     *
      * @return mixed
      */
     public function actionIndex()
@@ -48,6 +49,7 @@ class TreeDiagramsController extends Controller
 
     /**
      * Displays a single TreeDiagram model.
+     *
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -62,28 +64,19 @@ class TreeDiagramsController extends Controller
     /**
      * Creates a new TreeDiagram model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     *
      * @return mixed
      */
     public function actionCreate()
     {
         $model = new TreeDiagram();
-
-        if ($model->load(Yii::$app->request->post())) {
-            $model->author = 2;
-            // Сохранение данных о новой партитуре в БД
-            if ($model->save()) {}
-            // Вывод сообщения
+        $model->author = Yii::$app->user->identity->getId();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->getSession()->setFlash('success',
                 Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
 
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        //if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //Yii::$app->getSession()->setFlash('success',
-            //    Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
-            //return $this->redirect(['view', 'id' => $model->id]);
-        //}
 
         return $this->render('create', [
             'model' => $model,
@@ -93,6 +86,7 @@ class TreeDiagramsController extends Controller
     /**
      * Updates an existing TreeDiagram model.
      * If update is successful, the browser will be redirected to the 'view' page.
+     *
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -113,6 +107,7 @@ class TreeDiagramsController extends Controller
     /**
      * Deletes an existing TreeDiagram model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
+     *
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found

@@ -2,8 +2,8 @@
 
 namespace app\commands;
 
-use yii\console\Controller;
 use yii\helpers\Console;
+use yii\console\Controller;
 use app\modules\main\models\User;
 
 /**

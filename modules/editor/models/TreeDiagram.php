@@ -3,10 +3,9 @@
 namespace app\modules\editor\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
-use app\modules\main\models\User;
 use yii\helpers\ArrayHelper;
-
+use app\modules\main\models\User;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%tree_diagram}}".
@@ -23,15 +22,15 @@ use yii\helpers\ArrayHelper;
  * @property Level[] $levels
  * @property Node[] $nodes
  * @property Sequence[] $sequences
- * @property User $author0
+ * @property User $user
  */
 class TreeDiagram extends \yii\db\ActiveRecord
 {
-    const EVENT_TREE_TYPE = 0;   // Тип диаграммы дерево событий
+    const EVENT_TREE_TYPE = 0; // Тип диаграммы дерево событий
     const FAULT_TREE_TYPE = 1; // Тип диаграммы дерево отказов
 
     const PUBLIC_STATUS = 0;   // Публичный статус
-    const PRIVATE_STATUS = 1; // Приватный статус
+    const PRIVATE_STATUS = 1;  // Приватный статус
 
     /**
      * @return string table name
@@ -77,8 +76,16 @@ class TreeDiagram extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * Получение списка типов диаграмм.
+     *
      * @return array - массив всех возможных типов диаграмм
      */
     public static function getTypesArray()
@@ -91,6 +98,7 @@ class TreeDiagram extends \yii\db\ActiveRecord
 
     /**
      * Получение названия типа диаграмм.
+     *
      * @return mixed
      */
     public function getTypeName()
@@ -100,6 +108,7 @@ class TreeDiagram extends \yii\db\ActiveRecord
 
     /**
      * Получение списка статусов.
+     *
      * @return array - массив всех возможных статусов
      */
     public static function getStatusesArray()
@@ -112,6 +121,7 @@ class TreeDiagram extends \yii\db\ActiveRecord
 
     /**
      * Получение названия типа диаграмм.
+     *
      * @return mixed
      */
     public function getStatusName()
@@ -119,12 +129,13 @@ class TreeDiagram extends \yii\db\ActiveRecord
         return ArrayHelper::getValue(self::getStatusesArray(), $this->type);
     }
 
-
-    public function behaviors()
+    /**
+     * Получение имени автора диаграммы.
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
     {
-        return [
-            TimestampBehavior::className(),
-        ];
+        return $this->hasOne(User::className(), ['id' => 'author']);
     }
-
 }
