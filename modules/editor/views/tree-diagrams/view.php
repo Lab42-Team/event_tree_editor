@@ -14,6 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
 ?>
+
+<?= $this->render('_modal_form_tree_diagrams', ['model' => $model]) ?>
+
 <div class="tree-diagram-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
