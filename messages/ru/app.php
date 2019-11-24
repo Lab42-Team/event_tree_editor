@@ -57,7 +57,7 @@ return [
     'TREE_DIAGRAMS_PAGE_VIEW_TREE_DIAGRAM' => 'Просмотр диаграммы',
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Изменить диаграмму',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Удалить диаграмму',
-    'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данное событие?',
+    'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данную диаграмму?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'Вы успешно обновили данную диаграмму.',

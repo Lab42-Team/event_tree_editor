@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('<span class="glyphicon glyphicon-trash"></span> ' . Yii::t('app', 'BUTTON_DELETE'), ['#'], [
             'class' => 'btn btn-danger',
             'data-toggle'=>'modal',
-            'data-target'=>'#removeEventModalForm'
+            'data-target'=>'#removeTreeDiagramModalForm'
         ]) ?>
     </p>
 
