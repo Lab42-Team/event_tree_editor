@@ -29,6 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'data-toggle'=>'modal',
             'data-target'=>'#removeTreeDiagramModalForm'
         ]) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-tree-deciduous"></span> ' . Yii::t('app', 'BUTTON_VISUAL_DIAGRAM'),
+            ['visual-diagram', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= DetailView::widget([

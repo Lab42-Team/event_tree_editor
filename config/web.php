@@ -43,6 +43,7 @@ $config = [
                 'sing-in' => 'main/default/sing-in',
                 '/tree-diagrams/<_ev:(index|create)>' => 'editor/tree-diagrams/<_ev>',
                 '/tree-diagrams/<_ev:(view|update|delete)>/<id:\d+>' => 'editor/tree-diagrams/<_ev>',
+                '/tree-diagrams/<_ev:(visual-diagram)>/<id:\d+>' => 'editor/tree-diagrams/<_ev>',
             ],
         ],
         'cache' => [

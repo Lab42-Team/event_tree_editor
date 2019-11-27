@@ -13,6 +13,12 @@ return [
     'NAV_SIGN_OUT' => 'Выход',
     'NAV_TREE_DIAGRAMS' => 'Диаграммы',
 
+    'NAV_ADD' => 'Добавить',
+    'NAV_ADD_LEVEL' => 'Уровень',
+    'NAV_ADD_INITIAL_EVENT' => 'Инициирующее событие',
+    'NAV_ADD_EVENT' => 'Событие',
+    'NAV_ADD_MECHANISM' => 'Механизм',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Возможные действия',
 
@@ -34,6 +40,7 @@ return [
     'BUTTON_IMPORT' => 'Импортировать',
     'BUTTON_EXPORT' => 'Экспортировать',
     'BUTTON_RETURN' => 'Вернуться к',
+    'BUTTON_VISUAL_DIAGRAM' => 'Визуальная диаграмма',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Страница не найдена.',
@@ -57,6 +64,7 @@ return [
     'TREE_DIAGRAMS_PAGE_VIEW_TREE_DIAGRAM' => 'Просмотр диаграммы',
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Изменить диаграмму',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Удалить диаграмму',
+    'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Визуальная диаграмма',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данную диаграмму?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',

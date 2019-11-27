@@ -13,6 +13,12 @@ return [
     'NAV_SIGN_OUT' => 'Sign out',
     'NAV_TREE_DIAGRAMS' => 'Diagrams',
 
+    'NAV_ADD' => 'Add',
+    'NAV_ADD_LEVEL' => 'Level',
+    'NAV_ADD_INITIAL_EVENT' => 'Initial event',
+    'NAV_ADD_EVENT' => 'Event',
+    'NAV_ADD_MECHANISM' => 'Mechanism',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Possible actions',
 
@@ -34,6 +40,7 @@ return [
     'BUTTON_IMPORT' => 'Import',
     'BUTTON_EXPORT' => 'Export',
     'BUTTON_RETURN' => 'Return to',
+    'BUTTON_VISUAL_DIAGRAM' => 'Visual diagram',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',
@@ -57,6 +64,7 @@ return [
     'TREE_DIAGRAMS_PAGE_VIEW_TREE_DIAGRAM' => 'View diagram',
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Update diagram',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Delete diagram',
+    'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Visual diagram',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Are you sure that you want to delete this diagram?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'You have successfully created a new diagram.',

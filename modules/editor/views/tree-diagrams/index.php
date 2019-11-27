@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\modules\main\models\User;
 use app\modules\editor\models\TreeDiagram;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\editor\models\TreeDiagramSearch */
@@ -54,7 +55,15 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['class' => 'action-column'],
-                'template' => '{view} {update} {delete}',
+                'template' => '{view} {update} {delete} {visual-diagram}',
+                'buttons' => [
+                    'visual-diagram' => function ($model){
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-tree-deciduous"]);
+                        $url = $model;
+                        return Html::a($icon, $url);
+                    },
+                ],
+
             ],
         ],
     ]); ?>

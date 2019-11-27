@@ -134,4 +134,12 @@ class TreeDiagramsController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    public function actionVisualDiagram($id)
+    {
+        return $this->render('visual-diagram', [
+            'model' => $this->findModel($id),
+        ]);
+    }
 }
