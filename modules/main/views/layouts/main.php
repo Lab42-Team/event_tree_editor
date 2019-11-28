@@ -10,6 +10,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\components\widgets\WLang;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -39,23 +40,13 @@ AppAsset::register($this);
         echo "<form class='navbar-form navbar-right'>" . WLang::widget() . "</form>";
 
 
-        //if ( Url::current([], true)) {echo 's1';} else {echo 's2';}
 
-
+        if ( preg_match("/visual-diagram/", Url::current([], false)) == 0)
+        {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'encodeLabels' => false,
             'items' => array_filter([
-
-                ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
-                    Yii::t('app', 'NAV_ADD'), 'items' => array_filter([
-                        ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_INITIAL_EVENT'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => ['#']],
-                    ])
-                ],
-
                 ['label' => '<span class="glyphicon glyphicon-tree-deciduous"></span> ' .
                     Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
                 ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
@@ -76,6 +67,42 @@ AppAsset::register($this);
                 )
             ])
         ]);
+        } else {
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'encodeLabels' => false,
+                'items' => array_filter([
+
+                    ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
+                        Yii::t('app', 'NAV_ADD'), 'items' => array_filter([
+                        ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => ['#']],
+                        ['label' => Yii::t('app', 'NAV_ADD_INITIAL_EVENT'), 'url' => ['#']],
+                        ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => ['#']],
+                        ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => ['#']],
+                    ])
+                    ],
+
+                    ['label' => '<span class="glyphicon glyphicon-tree-deciduous"></span> ' .
+                        Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
+                    ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
+                        Yii::t('app', 'NAV_CONTACT_US'), 'url' => ['/main/default/contact']],
+                    Yii::$app->user->isGuest ? (
+                    ['label' => '<span class="glyphicon glyphicon-log-in"></span> ' . Yii::t('app', 'NAV_SIGN_IN'),
+                        'url' => ['/main/default/sing-in']]
+                    ) : (
+                        '<li>'
+                        . Html::beginForm(['/main/default/sing-out'], 'post')
+                        . Html::submitButton(
+                            '<span class="glyphicon glyphicon-log-out"></span> ' . Yii::t('app', 'NAV_SIGN_OUT') .
+                            ' (' . Yii::$app->user->identity->username . ')',
+                            ['class' => 'btn btn-link logout']
+                        )
+                        . Html::endForm()
+                        . '</li>'
+                    )
+                ])
+            ]);
+        }
         NavBar::end();
         ?>
 
@@ -90,6 +117,9 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
+
+            <?php echo preg_match("/visual-diagram/", Url::current([], false)) ?>
+
             <p class="pull-left"><?= ' &copy; ' . date('Y') . ' ' . Yii::t('app', 'FOOTER_INSTITUTE') ?></p>
             <p class="pull-right"><?= Yii::t('app', 'FOOTER_POWERED_BY') . ' ' .
                 ' <a href="mailto:DorodnyxNikita@gmail.com">'.Yii::$app->params['adminEmail'].'</a>' ?></p>
