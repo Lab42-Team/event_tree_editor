@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%level}}".
@@ -34,14 +35,14 @@ class Level extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'tree_diagram'], 'required'],
-            [['tree_diagram'], 'default', 'value' => null],
+            //[['tree_diagram'], 'default', 'value' => null],
             [['tree_diagram'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
-            [['tree_diagram'], 'exist', 'skipOnError' => true, 'targetClass' => TreeDiagram::className(),
-                'targetAttribute' => ['tree_diagram' => 'id']],
+            //[['tree_diagram'], 'exist', 'skipOnError' => true, 'targetClass' => TreeDiagram::className(),
+            //    'targetAttribute' => ['tree_diagram' => 'id']],
         ];
     }
 
@@ -60,9 +61,16 @@ class Level extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
 
+        /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTreeDiagram()
     {
         return $this->hasOne(TreeDiagram::className(), ['id' => 'tree_diagram']);

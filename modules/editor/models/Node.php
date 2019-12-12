@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%node}}".
@@ -76,6 +77,13 @@ class Node extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'NODE_MODEL_TYPE'),
             'parent_node' => Yii::t('app', 'NODE_MODEL_PARENT_NODE'),
             'tree_diagram' => Yii::t('app', 'NODE_MODEL_TREE_DIAGRAM'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 

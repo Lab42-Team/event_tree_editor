@@ -47,13 +47,8 @@ AppAsset::register($this);
                 (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
                      //и тогда выводить кнопку меню на экран
                     ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
-                        Yii::t('app', 'NAV_ADD'), 'items' => array_filter([
-                        ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_INITIAL_EVENT'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => ['#']],
-                        ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => ['#']],
-                        ])
-                    ]
+                        Yii::t('app', 'NAV_ADD'),
+                        'items' => $this->params['menu']                    ]
                 ):(""),
                 ['label' => '<span class="glyphicon glyphicon-tree-deciduous"></span> ' .
                     Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],

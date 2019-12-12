@@ -9,6 +9,9 @@ use yii\filters\VerbFilter;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
 
+use app\modules\editor\models\Level;
+use yii\web\Response;
+
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
@@ -138,8 +141,46 @@ class TreeDiagramsController extends Controller
 
     public function actionVisualDiagram($id)
     {
+        $level_model_all = Level::find()->where(['tree_diagram' => $id])->all();
+
+        $level_model = new Level();
+
         return $this->render('visual-diagram', [
             'model' => $this->findModel($id),
+            'level_model' => $level_model,
+            'level_model_all' => $level_model_all,
         ]);
+    }
+
+    public function actionAddLevel($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            // Формирование модели уровня
+            $model = new Level();
+            // Задание id диаграммы
+            $model->tree_diagram = $id;
+            // Определение полей модели уровня и валидация формы
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+               // Успешный ввод данных
+                $data["success"] = true;
+                // Добавление нового уровня в БД
+                $model->save();
+                // Формирование данных о новом уровне
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+            } else
+                $data = ActiveForm::validate($model);
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
     }
 }

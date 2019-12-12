@@ -7,7 +7,9 @@ use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use yii\widgets\ActiveForm;
 
-Modal::begin([
+?>
+
+<?php Modal::begin([
     'id' => 'removeTreeDiagramModalForm',
     'header' => '<h3>' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM') . '</h3>',
 ]); ?>

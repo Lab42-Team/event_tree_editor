@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%parameter}}".
@@ -67,6 +68,13 @@ class Parameter extends \yii\db\ActiveRecord
             'operator' => Yii::t('app', 'PARAMETER_MODEL_OPERATOR'),
             'value' => Yii::t('app', 'PARAMETER_MODEL_VALUE'),
             'node' => Yii::t('app', 'PARAMETER_MODEL_NODE'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 

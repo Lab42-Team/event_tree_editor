@@ -189,6 +189,7 @@ return [
     'LEVEL_MODEL_NAME' => 'Name',
     'LEVEL_MODEL_DESCRIPTION' => 'Description',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
+    'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',

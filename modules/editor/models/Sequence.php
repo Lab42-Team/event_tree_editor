@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%sequence}}".
@@ -61,6 +62,13 @@ class Sequence extends \yii\db\ActiveRecord
             'level' => Yii::t('app', 'SEQUENCE_MODEL_LEVEL'),
             'node' => Yii::t('app', 'SEQUENCE_MODEL_NODE'),
             'priority' => Yii::t('app', 'SEQUENCE_MODEL_PRIORITY'),
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
         ];
     }
 
