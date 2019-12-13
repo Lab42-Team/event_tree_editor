@@ -42,11 +42,8 @@ $config = [
                 'contact' => 'main/default/contact',
                 'sing-in' => 'main/default/sing-in',
                 '/tree-diagrams/<_ev:(index|create)>' => 'editor/tree-diagrams/<_ev>',
-                '/tree-diagrams/<_ev:(view|update|delete)>/<id:\d+>' => 'editor/tree-diagrams/<_ev>',
-                '/tree-diagrams/<_ev:(visual-diagram|add-level)>/<id:\d+>' => 'editor/tree-diagrams/<_ev>',
-
-                //'/tree-diagrams/<_ev:(add-level)>/<id:\d+>' => 'editor/tree-diagrams/<_ev>',
-
+                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level)>/<id:\d+>' =>
+                    'editor/tree-diagrams/<_ev>',
             ],
         ],
         'cache' => [
@@ -55,6 +52,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\modules\main\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['main/default/sing-in'],
         ],
         'errorHandler' => [
             'errorAction' => 'main/default/error',

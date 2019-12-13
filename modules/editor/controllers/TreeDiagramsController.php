@@ -3,14 +3,14 @@
 namespace app\modules\editor\controllers;
 
 use Yii;
+use yii\web\Response;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\bootstrap\ActiveForm;
+use app\modules\editor\models\Level;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
-
-use app\modules\editor\models\Level;
-use yii\web\Response;
 
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
@@ -112,8 +112,10 @@ class TreeDiagramsController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      *
      * @param integer $id
-     * @return mixed
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -139,6 +141,13 @@ class TreeDiagramsController extends Controller
     }
 
 
+    /**
+     * Страница визуального редактора деревьев.
+     *
+     * @param $id - id дерева событий
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionVisualDiagram($id)
     {
         $level_model_all = Level::find()->where(['tree_diagram' => $id])->all();
@@ -152,6 +161,12 @@ class TreeDiagramsController extends Controller
         ]);
     }
 
+    /**
+     * Добавление нового уровня в дерево событий.
+     *
+     * @param $id - id дерева событий
+     * @return bool|\yii\console\Response|Response
+     */
     public function actionAddLevel($id)
     {
         //Ajax-запрос
@@ -179,8 +194,10 @@ class TreeDiagramsController extends Controller
                 $data = ActiveForm::validate($model);
             // Возвращение данных
             $response->data = $data;
+
             return $response;
         }
+
         return false;
     }
 }
