@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\bootstrap\ActiveForm;
 use app\modules\editor\models\Level;
+use app\modules\editor\models\Node;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
 
@@ -151,13 +152,20 @@ class TreeDiagramsController extends Controller
     public function actionVisualDiagram($id)
     {
         $level_model_all = Level::find()->where(['tree_diagram' => $id])->all();
-
+        $initial_event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->all();
+        $event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::EVENT_TYPE])->all();
+        $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
         $level_model = new Level();
+        $node_model = new Node();
 
         return $this->render('visual-diagram', [
             'model' => $this->findModel($id),
             'level_model' => $level_model,
+            'node_model' => $node_model,
             'level_model_all' => $level_model_all,
+            'initial_event_model_all' =>$initial_event_model_all,
+            'event_model_all' => $event_model_all,
+            'mechanism_model_all' => $mechanism_model_all,
         ]);
     }
 
@@ -183,6 +191,104 @@ class TreeDiagramsController extends Controller
             // Определение полей модели уровня и валидация формы
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                // Успешный ввод данных
+                $data["success"] = true;
+                // Добавление нового уровня в БД
+                $model->save();
+                // Формирование данных о новом уровне
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+            } else
+                $data = ActiveForm::validate($model);
+            // Возвращение данных
+            $response->data = $data;
+
+            return $response;
+        }
+
+        return false;
+    }
+
+    /**
+     * Добавление нового события в дерево событий.
+     *
+     * @param $id - id дерева событий
+     * @return bool|\yii\console\Response|Response
+     */
+    public function actionAddEvent($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            // Формирование модели уровня
+            $model = new Node();
+            // Задание id диаграммы
+            $model->tree_diagram = $id;
+            // Задание AND_OPERATOR для оператора по умолчанию
+            $model->operator = Node::AND_OPERATOR;
+
+            // Условие проверки является ли событие инициирующим
+            $i = Node::find()->where(['tree_diagram' => $id, 'type' => 0])->count();
+            // Если инициирующих событий нет
+            if ($i > '0') {
+                // Тип присваивается константа "EVENT_TYPE" как событие
+                $model->type = Node::EVENT_TYPE;
+            } else
+                // Тип присваивается константа "INITIAL_EVENT_TYPE" как инициирующее событие
+                $model->type = Node::INITIAL_EVENT_TYPE;
+
+            // Определение полей модели уровня и валидация формы
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Добавление нового уровня в БД
+                $model->save();
+                // Формирование данных о новом уровне
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+                $data["type"] = $model->type;
+            } else
+                $data = ActiveForm::validate($model);
+            // Возвращение данных
+            $response->data = $data;
+
+            return $response;
+        }
+
+        return false;
+    }
+
+    /**
+     * Добавление нового механизма в дерево событий.
+     *
+     * @param $id - id дерева событий
+     * @return bool|\yii\console\Response|Response
+     */
+    public function actionAddMechanism($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            // Формирование модели уровня
+            $model = new Node();
+            // Задание id диаграммы
+            $model->tree_diagram = $id;
+            // Задание AND_OPERATOR для оператора по умолчанию
+            $model->operator = Node::AND_OPERATOR;
+            // Задание константы "MECHANISM_TYPE" типа узла механизма
+            $model->type = Node::MECHANISM_TYPE;
+            // Определение полей модели уровня и валидация формы
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                // Успешный ввод данных
                 $data["success"] = true;
                 // Добавление нового уровня в БД
                 $model->save();

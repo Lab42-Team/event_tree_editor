@@ -17,9 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->params['menu'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
         'options' => ['data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
-    ['label' => Yii::t('app', 'NAV_ADD_INITIAL_EVENT'), 'url' => '#'],
-    ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#'],
-    ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#'],
+    ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
+        'options' => ['data-toggle'=>'modal', 'data-target'=>'#addEventModalForm']],
+    ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
+        'options' => ['data-toggle'=>'modal', 'data-target'=>'#addMechanismModalForm']],
 ];
 ?>
 
@@ -28,12 +29,22 @@ $this->params['menu'] = [
         'level_model' => $level_model,
 ]) ?>
 
+<?= $this->render('_modal_form_event_editor', [
+    'model' => $model,
+    'node_model' => $node_model,
+]) ?>
+
+<?= $this->render('_modal_form_mechanism_editor', [
+    'model' => $model,
+    'node_model' => $node_model,
+]) ?>
+
 <!-- Подключение скрипта для модальных форм -->
 <?php $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]) ?>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        // Обработка закрытия модального окна добавления нового шаблона факта
+        // Обработка закрытия модального окна добавления нового уровня
         $("#addLevelModalForm").on("hidden.bs.modal", function() {
             // Скрытие списка ошибок ввода в модальном окне
             $("#add-level-form .error-summary").hide();
@@ -48,16 +59,75 @@ $this->params['menu'] = [
     });
 </script>
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Обработка закрытия модального окна добавления нового события
+        $("#addEventModalForm").on("hidden.bs.modal", function() {
+            // Скрытие списка ошибок ввода в модальном окне
+            $("#add-event-form .error-summary").hide();
+            $("#add-event-form .form-group").each(function() {
+                $(this).removeClass("has-error");
+                $(this).removeClass("has-success");
+            });
+            $("#add-event-form .help-block").each(function() {
+                $(this).text("");
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Обработка закрытия модального окна добавления нового механизма
+        $("#addMechanismModalForm").on("hidden.bs.modal", function() {
+            // Скрытие списка ошибок ввода в модальном окне
+            $("#add-mechanism-form .error-summary").hide();
+            $("#add-mechanism-form .form-group").each(function() {
+                $(this).removeClass("has-error");
+                $(this).removeClass("has-success");
+            });
+            $("#add-mechanism-form .help-block").each(function() {
+                $(this).text("");
+            });
+        });
+    });
+</script>
+
 <div class="tree-diagram-visual-diagram">
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
-<!-- Вывод уровней -->
+
 <div id="visual-diagram-top-layer" class="col-md-10">
+    <!-- Вывод уровней -->
     <?php foreach ($level_model_all as $value): ?>
         <div class="div-level-<?= $value->id ?>">
             <div class="div-level-name"><?= $value->name ?></div>
             <div class="div-level-description"><?= $value->description ?></div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Вывод инициирующего события -->
+    <?php foreach ($initial_event_model_all as $value): ?>
+        <div class="div-initial-event-<?= $value->id ?>">
+            <div class="div-initial-event-name"><?= $value->name ?></div>
+            <div class="div-initial-event-description"><?= $value->description ?></div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Вывод событий -->
+    <?php foreach ($event_model_all as $value): ?>
+        <div class="div-event-<?= $value->id ?>">
+            <div class="div-event-name"><?= $value->name ?></div>
+            <div class="div-event-description"><?= $value->description ?></div>
+        </div>
+    <?php endforeach; ?>
+
+    <!-- Вывод механизма -->
+    <?php foreach ($mechanism_model_all as $value): ?>
+        <div class="div-mechanism-<?= $value->id ?>">
+            <div class="div-mechanism-name"><?= $value->name ?></div>
+            <div class="div-mechanism-description"><?= $value->description ?></div>
         </div>
     <?php endforeach; ?>
 </div>

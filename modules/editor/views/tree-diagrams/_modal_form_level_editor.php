@@ -35,8 +35,7 @@ use app\modules\main\models\Lang;
                             // Скрывание модального окна
                             $("#addLevelModalForm").modal("hide");
 
-                            //тут писать вывод в <div> через JS
-
+                            //создание и вывод в <div> нового элемента
                             var visual_diagram_top_layer = document.getElementById('visual-diagram-top-layer');
 
                             var div_level = document.createElement('div');

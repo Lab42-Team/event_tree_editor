@@ -189,7 +189,6 @@ return [
     'LEVEL_MODEL_NAME' => 'Название',
     'LEVEL_MODEL_DESCRIPTION' => 'Описание',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Диаграмма',
-    'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -199,4 +198,9 @@ return [
     'SEQUENCE_MODEL_LEVEL' => 'Уровень',
     'SEQUENCE_MODEL_NODE' => 'Узел',
     'SEQUENCE_MODEL_PRIORITY' => 'Приоритет',
+
+    /* Заголовки модальных форм */
+    'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
+    'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
+    'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
 ];

@@ -42,7 +42,7 @@ $config = [
                 'contact' => 'main/default/contact',
                 'sing-in' => 'main/default/sing-in',
                 '/tree-diagrams/<_ev:(index|create)>' => 'editor/tree-diagrams/<_ev>',
-                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level)>/<id:\d+>' =>
+                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level|add-event|add-mechanism)>/<id:\d+>' =>
                     'editor/tree-diagrams/<_ev>',
             ],
         ],
