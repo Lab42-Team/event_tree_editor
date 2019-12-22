@@ -36,7 +36,7 @@ use app\modules\main\models\Lang;
                             $("#addMechanismModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-top-layer');
+                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
 
                             var div_mechanism = document.createElement('div');
                             div_mechanism.className = 'div-mechanism-' + data['id'];

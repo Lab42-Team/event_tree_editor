@@ -1,0 +1,37 @@
+.visual-diagram-top-layer {
+    height:750px;
+    max-height:700px;
+    border:1px solid #CCC;
+    background-color:white;
+    /*flex-grow:1;
+    position:relative;*/
+
+    /* Вкл Прокрутку*/
+    overflow: scroll !important;
+    cursor:default;
+}
+
+.div-level {
+    min-height: 200px;
+    border-width:2px;
+    border-style:dashed;
+    border-top-width:0px;
+    /* div в строку*/
+    display: flex;
+}
+
+.div-level-name {
+    width: 100px;
+    border-right-style:solid;
+    border-width:2px;
+    /* перенос теаста*/
+    word-wrap: break-word;
+    /* текст по центру*/
+    text-align: center;
+}
+
+.div-level-description {
+
+
+
+}

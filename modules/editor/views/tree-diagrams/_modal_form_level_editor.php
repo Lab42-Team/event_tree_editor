@@ -36,10 +36,11 @@ use app\modules\main\models\Lang;
                             $("#addLevelModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-top-layer');
+                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
 
                             var div_level = document.createElement('div');
-                            div_level.className = 'div-level-' + data['id'];
+                            div_level.id = 'div-level-' + data['id'];
+                            div_level.className = 'div-level';
                             visual_diagram_top_layer.append(div_level);
 
                             var div_level_name = document.createElement('div');

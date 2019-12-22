@@ -40,7 +40,10 @@ $this->params['menu'] = [
 ]) ?>
 
 <!-- Подключение скрипта для модальных форм -->
-<?php $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]) ?>
+<?php
+$this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
+$this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
+?>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -97,11 +100,10 @@ $this->params['menu'] = [
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
-
-<div id="visual-diagram-top-layer" class="col-md-10">
+<div id="visual-diagram-field" class="visual-diagram-top-layer col-md-12">
     <!-- Вывод уровней -->
     <?php foreach ($level_model_all as $value): ?>
-        <div class="div-level-<?= $value->id ?>">
+        <div id="div-level-<?= $value->id ?>" class="div-level">
             <div class="div-level-name"><?= $value->name ?></div>
             <div class="div-level-description"><?= $value->description ?></div>
         </div>
@@ -109,7 +111,7 @@ $this->params['menu'] = [
 
     <!-- Вывод инициирующего события -->
     <?php foreach ($initial_event_model_all as $value): ?>
-        <div class="div-initial-event-<?= $value->id ?>">
+        <div id="div-initial-event-<?= $value->id ?>" class="div-initial-event">
             <div class="div-initial-event-name"><?= $value->name ?></div>
             <div class="div-initial-event-description"><?= $value->description ?></div>
         </div>
@@ -117,7 +119,7 @@ $this->params['menu'] = [
 
     <!-- Вывод событий -->
     <?php foreach ($event_model_all as $value): ?>
-        <div class="div-event-<?= $value->id ?>">
+        <div id="div-event-<?= $value->id ?>" class="div-event">
             <div class="div-event-name"><?= $value->name ?></div>
             <div class="div-event-description"><?= $value->description ?></div>
         </div>
@@ -125,7 +127,7 @@ $this->params['menu'] = [
 
     <!-- Вывод механизма -->
     <?php foreach ($mechanism_model_all as $value): ?>
-        <div class="div-mechanism-<?= $value->id ?>">
+        <div id="div-mechanism-<?= $value->id ?>" class="div-mechanism">
             <div class="div-mechanism-name"><?= $value->name ?></div>
             <div class="div-mechanism-description"><?= $value->description ?></div>
         </div>

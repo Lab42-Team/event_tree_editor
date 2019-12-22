@@ -37,7 +37,7 @@ use app\modules\editor\models\Node;
                             $("#addEventModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-top-layer');
+                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
 
                             if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
                                 var div_initial_event = document.createElement('div');
