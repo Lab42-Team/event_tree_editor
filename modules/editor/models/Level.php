@@ -13,6 +13,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_at
  * @property string $name
  * @property string $description
+ * @property int $parent_level
  * @property int $tree_diagram
  *
  * @property TreeDiagram $treeDiagram
@@ -35,9 +36,13 @@ class Level extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'tree_diagram'], 'required'],
-            [['tree_diagram'], 'integer'],
+            [['tree_diagram', 'parent_level'], 'default', 'value' => null],
+            [['tree_diagram', 'parent_level'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
+
+            [['parent_level'], 'exist', 'skipOnError' => true, 'targetClass' => Level::className(),
+                'targetAttribute' => ['parent_level' => 'id']],
         ];
     }
 
@@ -52,6 +57,7 @@ class Level extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'LEVEL_MODEL_UPDATED_AT'),
             'name' => Yii::t('app', 'LEVEL_MODEL_NAME'),
             'description' => Yii::t('app', 'LEVEL_MODEL_DESCRIPTION'),
+            'parent_level' => Yii::t('app', 'LEVEL_MODEL_PARENT_LEVEL'),
             'tree_diagram' => Yii::t('app', 'LEVEL_MODEL_TREE_DIAGRAM'),
         ];
     }

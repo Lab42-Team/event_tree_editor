@@ -188,6 +188,7 @@ return [
     'LEVEL_MODEL_UPDATED_AT' => 'Обновлен',
     'LEVEL_MODEL_NAME' => 'Название',
     'LEVEL_MODEL_DESCRIPTION' => 'Описание',
+    'LEVEL_MODEL_PARENT_LEVEL' => 'Родительский уровень',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Диаграмма',
 
     /* Sequence */

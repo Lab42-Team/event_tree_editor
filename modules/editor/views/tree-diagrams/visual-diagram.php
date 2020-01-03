@@ -101,13 +101,34 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
 </div>
 
 <div id="visual-diagram-field" class="visual-diagram-top-layer col-md-12">
+
     <!-- Вывод уровней -->
+    <!-- Вывод начального уровня -->
     <?php foreach ($level_model_all as $value): ?>
-        <div id="div-level-<?= $value->id ?>" class="div-level">
-            <div class="div-level-name"><?= $value->name ?></div>
-            <div class="div-level-description"><?= $value->description ?></div>
-        </div>
+        <?php if ($value->parent_level == null){ ?>
+            <div id="div-level-<?= $value->id ?>" class="div-level">
+                <div class="div-level-name"><?= $value->name ?></div>
+                <div class="div-level-description"><?= $value->description ?></div>
+            </div>
+        <?php $a = $value->id; }?>
     <?php endforeach; ?>
+    <!-- Вывод остальных уровней -->
+    <?php if ($level_model_count > 1){ ?>
+        <?php $i = 1; ?>
+        <?php do { ?>
+            <?php foreach ($level_model_all as $value): ?>
+                <?php if ($value->parent_level == $a){ ?>
+                    <div id="div-level-<?= $value->id ?>" class="div-level">
+                        <div class="div-level-name"><?= $value->name ?></div>
+                        <div class="div-level-description"><?= $value->description ?></div>
+                    </div>
+                    <?php $a = $value->id; ?>
+                    <?php break 1; ?>
+                <?php } ?>
+            <?php endforeach; ?>
+            <?php $i = $i + 1; ?>
+        <?php } while ($i < $level_model_count); ?>
+    <?php } ?>
 
     <!-- Вывод инициирующего события -->
     <?php foreach ($initial_event_model_all as $value): ?>

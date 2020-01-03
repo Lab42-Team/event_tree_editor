@@ -188,6 +188,7 @@ return [
     'LEVEL_MODEL_UPDATED_AT' => 'Updated at',
     'LEVEL_MODEL_NAME' => 'Name',
     'LEVEL_MODEL_DESCRIPTION' => 'Description',
+    'LEVEL_MODEL_PARENT_LEVEL' => 'Parent level',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
 
     /* Sequence */

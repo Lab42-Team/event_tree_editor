@@ -152,6 +152,7 @@ class TreeDiagramsController extends Controller
     public function actionVisualDiagram($id)
     {
         $level_model_all = Level::find()->where(['tree_diagram' => $id])->all();
+        $level_model_count = Level::find()->where(['tree_diagram' => $id])->count();
         $initial_event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->all();
         $event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::EVENT_TYPE])->all();
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
@@ -163,6 +164,7 @@ class TreeDiagramsController extends Controller
             'level_model' => $level_model,
             'node_model' => $node_model,
             'level_model_all' => $level_model_all,
+            'level_model_count' => $level_model_count,
             'initial_event_model_all' =>$initial_event_model_all,
             'event_model_all' => $event_model_all,
             'mechanism_model_all' => $mechanism_model_all,
@@ -188,6 +190,22 @@ class TreeDiagramsController extends Controller
             $model = new Level();
             // Задание id диаграммы
             $model->tree_diagram = $id;
+
+            // Задание parent_level уровня
+            $mas = Level::find()->where(['tree_diagram' => $id, 'parent_level' => null ])->one();;
+            if ($mas <> null){
+                $a = $mas->id;
+                do {
+                    $b = $a;
+                    $mas = Level::find()->where(['tree_diagram' => $id, 'parent_level' => $b ])->one();;
+                    if ($mas <> null)
+                        $a = $mas->id;
+                } while ($mas <> null);
+                $model->parent_level = $b;
+            } else {
+                $model->parent_level = null;
+            }
+
             // Определение полей модели уровня и валидация формы
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                // Успешный ввод данных
