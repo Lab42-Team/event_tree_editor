@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use yii\bootstrap\ActiveForm;
 use app\modules\editor\models\Level;
 use app\modules\editor\models\Node;
+use app\modules\editor\models\Sequence;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
 
@@ -155,6 +156,7 @@ class TreeDiagramsController extends Controller
         $level_model_count = Level::find()->where(['tree_diagram' => $id])->count();
         $initial_event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->all();
         $event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::EVENT_TYPE])->all();
+        $sequence_model_all = Sequence::find()->where(['tree_diagram' => $id])->all();
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
         $level_model = new Level();
         $node_model = new Node();
@@ -168,6 +170,7 @@ class TreeDiagramsController extends Controller
             'initial_event_model_all' =>$initial_event_model_all,
             'event_model_all' => $event_model_all,
             'mechanism_model_all' => $mechanism_model_all,
+            'sequence_model_all' => $sequence_model_all,
         ]);
     }
 
@@ -251,14 +254,14 @@ class TreeDiagramsController extends Controller
 
             // Условие проверки является ли событие инициирующим
             $i = Node::find()->where(['tree_diagram' => $id, 'type' => 0])->count();
-            // Если инициирующих событий нет
+            // Если инициирующие события есть
             if ($i > '0') {
                 // Тип присваивается константа "EVENT_TYPE" как событие
                 $model->type = Node::EVENT_TYPE;
-            } else
+            } else {
                 // Тип присваивается константа "INITIAL_EVENT_TYPE" как инициирующее событие
                 $model->type = Node::INITIAL_EVENT_TYPE;
-
+            }
             // Определение полей модели уровня и валидация формы
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 // Успешный ввод данных
@@ -272,6 +275,29 @@ class TreeDiagramsController extends Controller
                 $data["type"] = $model->type;
             } else
                 $data = ActiveForm::validate($model);
+
+            $sequence = new Sequence();
+            $sequence->tree_diagram = $id;
+            $mas_level = Level::find()->where(['tree_diagram' => $id, 'parent_level' => null ])->one();;
+            if (($mas_level <> null) and ($i > '0')){
+                $a = $mas_level->id;
+                do {
+                    $b = $a;
+                    $mas_level = Level::find()->where(['tree_diagram' => $id, 'parent_level' => $b ])->one();;
+                    if ($mas_level <> null)
+                        $a = $mas_level->id;
+                } while ($mas_level <> null);
+                $sequence->level = $b;
+            } else {
+                $sequence->level = $mas_level->id;
+            }
+            $sequence->node = $model->id;
+            $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
+            $sequence->priority = $sequence_model_count;
+            $sequence->save();
+
+            $data["id_level"] = $sequence->level;
+
             // Возвращение данных
             $response->data = $data;
 

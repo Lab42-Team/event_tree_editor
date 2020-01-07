@@ -13,11 +13,14 @@
 
 .div-level {
     min-height: 200px;
-    border-width:2px;
-    border-style:dashed;
-    border-top-width:0px;
+    border-bottom-width:2px;
+    border-bottom-style:dashed;
     /* div в строку*/
     display: flex;
+
+    /* убираем оступы по бокам возможно другое решение*/
+    margin-left: -11px;
+    margin-right: -11px;
 }
 
 .div-level-name {
@@ -31,7 +34,25 @@
 }
 
 .div-level-description {
+    /* div в строку*/
+    display: flex;
+}
 
+.div-event {
+    /* форма*/
+    width: 150px;
+    height: 80px;
+    border-style:solid;
+    border-width:2px;
+    /* текст по центру*/
+    position: relative;
+}
 
-
+.div-event-name {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }

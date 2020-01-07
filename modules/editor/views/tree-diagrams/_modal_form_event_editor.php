@@ -36,38 +36,38 @@ use app\modules\editor\models\Node;
                             // Скрывание модального окна
                             $("#addEventModalForm").modal("hide");
 
-                            //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
-
                             if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
+                                var div_level_layer = document.getElementById('div-level-' + data['id_level']);
                                 var div_initial_event = document.createElement('div');
-                                div_initial_event.className = 'div-initial-event-' + data['id'];
-                                visual_diagram_top_layer.append(div_initial_event);
+                                div_initial_event.id = 'div-initial-event-' + data['id'];
+                                div_initial_event.className = 'div-event';
+                                div_level_layer.append(div_initial_event);
 
                                 var div_initial_event_name = document.createElement('div');
-                                div_initial_event_name.className = 'div-initial-event-name' ;
+                                div_initial_event_name.className = 'div-event-name' ;
                                 div_initial_event_name.innerHTML = data['name'];
                                 div_initial_event.append(div_initial_event_name);
 
-                                var div_initial_event_description = document.createElement('div');
-                                div_initial_event_description.className = 'div-initial-event-description' ;
-                                div_initial_event_description.innerHTML = data['description'];
-                                div_initial_event.append(div_initial_event_description);
+                                //var div_initial_event_description = document.createElement('div');
+                                //div_initial_event_description.className = 'div-event-description' ;
+                                //div_initial_event_description.innerHTML = data['description'];
+                                //div_initial_event.append(div_initial_event_description);
                             } else {
+                                var div_level_layer = document.getElementById('div-level-' + data['id_level']);
                                 var div_event = document.createElement('div');
-                                div_event.className = 'div-event-' + data['id'];
-                                visual_diagram_top_layer.append(div_event);
+                                div_event.id = 'div-event-' + data['id'];
+                                div_event.className = 'div-event';
+                                div_level_layer.append(div_event);
 
                                 var div_event_name = document.createElement('div');
                                 div_event_name.className = 'div-event-name' ;
                                 div_event_name.innerHTML = data['name'];
                                 div_event.append(div_event_name);
 
-                                var div_event_description = document.createElement('div');
-                                div_event_description.className = 'div-event-description' ;
-                                div_event_description.innerHTML = data['description'];
-                                div_event.append(div_event_description);
-
+                                //var div_event_description = document.createElement('div');
+                                //div_event_description.className = 'div-event-description' ;
+                                //div_event_description.innerHTML = data['description'];
+                                //div_event.append(div_event_description);
                             }
 
                         } else {

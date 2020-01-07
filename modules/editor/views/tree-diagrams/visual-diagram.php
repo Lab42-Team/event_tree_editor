@@ -108,7 +108,16 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
         <?php if ($value->parent_level == null){ ?>
             <div id="div-level-<?= $value->id ?>" class="div-level">
                 <div class="div-level-name"><?= $value->name ?></div>
-                <div class="div-level-description"><?= $value->description ?></div>
+                <div class="div-level-description">
+                    <?= $value->description ?>
+                    <!-- Вывод инициирующего события -->
+                    <?php foreach ($initial_event_model_all as $initial_event_value): ?>
+                        <div id="div-initial-event-<?= $initial_event_value->id ?>" class="div-event">
+                            <div class="div-event-name"><?= $initial_event_value->name ?></div>
+                            <!-- <div class="div-event-description"> $initial_event_value->description ?></div>-->
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         <?php $a = $value->id; }?>
     <?php endforeach; ?>
@@ -116,35 +125,34 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
     <?php if ($level_model_count > 1){ ?>
         <?php $i = 1; ?>
         <?php do { ?>
-            <?php foreach ($level_model_all as $value): ?>
-                <?php if ($value->parent_level == $a){ ?>
-                    <div id="div-level-<?= $value->id ?>" class="div-level">
-                        <div class="div-level-name"><?= $value->name ?></div>
-                        <div class="div-level-description"><?= $value->description ?></div>
+            <?php foreach ($level_model_all as $level_value): ?>
+                <?php if ($level_value->parent_level == $a){ ?>
+                    <div id="div-level-<?= $level_value->id ?>" class="div-level">
+                        <div class="div-level-name"><?= $level_value->name ?></div>
+                        <div class="div-level-description">
+                            <?= $level_value->description ?>
+                            <?php foreach ($sequence_model_all as $sequence_value): ?>
+                                <?php if ($sequence_value->level == $level_value->id){ ?>
+                                    <?php $event_id = $sequence_value->node; ?>
+                                    <?php foreach ($event_model_all as $event_value): ?>
+                                        <?php if ($event_value->id == $event_id){ ?>
+                                            <div id="div-event-<?= $event_value->id ?>" class="div-event">
+                                                <div class="div-event-name"><?= $event_value->name ?></div>
+                                                <!--<div class="div-event-description"> $event_value->description ?></div>-->
+                                            </div>
+                                        <?php } ?>
+                                    <?php endforeach; ?>
+                                <?php } ?>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <?php $a = $value->id; ?>
+                    <?php $a = $level_value->id; ?>
                     <?php break 1; ?>
                 <?php } ?>
             <?php endforeach; ?>
             <?php $i = $i + 1; ?>
-        <?php } while ($i < $level_model_count); ?>
+        <?php } while ($i <> $level_model_count); ?>
     <?php } ?>
-
-    <!-- Вывод инициирующего события -->
-    <?php foreach ($initial_event_model_all as $value): ?>
-        <div id="div-initial-event-<?= $value->id ?>" class="div-initial-event">
-            <div class="div-initial-event-name"><?= $value->name ?></div>
-            <div class="div-initial-event-description"><?= $value->description ?></div>
-        </div>
-    <?php endforeach; ?>
-
-    <!-- Вывод событий -->
-    <?php foreach ($event_model_all as $value): ?>
-        <div id="div-event-<?= $value->id ?>" class="div-event">
-            <div class="div-event-name"><?= $value->name ?></div>
-            <div class="div-event-description"><?= $value->description ?></div>
-        </div>
-    <?php endforeach; ?>
 
     <!-- Вывод механизма -->
     <?php foreach ($mechanism_model_all as $value): ?>
