@@ -56,3 +56,21 @@
     margin-right: -50%;
     transform: translate(-50%, -50%);
 }
+
+.div-mechanism {
+    width: 7em;
+    height: 7em;
+    /*filter: drop-shadow(0 0 5px #000);*/
+    background: linear-gradient(to left bottom, transparent 50%, #b9def0 50%) top / 100% 50% no-repeat,
+    linear-gradient(to left top, transparent 50%, #b9def0 50%) bottom / 100% 50% no-repeat;
+    position: relative;
+}
+
+.div-mechanism-name {
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}

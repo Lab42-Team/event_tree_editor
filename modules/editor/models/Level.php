@@ -4,6 +4,8 @@ namespace app\modules\editor\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\helpers\ArrayHelper;
+
 
 /**
  * This is the model class for table "{{%level}}".
@@ -83,5 +85,10 @@ class Level extends \yii\db\ActiveRecord
     public function getSequences()
     {
         return $this->hasMany(Sequence::className(), ['level' => 'id']);
+    }
+
+    public static function getLevelsArray($id)
+    {
+        return ArrayHelper::map(self::find()->where(['tree_diagram' => $id])->all(), 'id', 'name');
     }
 }

@@ -117,6 +117,21 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                             <!-- <div class="div-event-description"> $initial_event_value->description ?></div>-->
                         </div>
                     <?php endforeach; ?>
+
+                    <?php foreach ($sequence_model_all as $sequence_value): ?>
+                        <?php if ($sequence_value->level == $value->id){ ?>
+                            <?php $event_id = $sequence_value->node; ?>
+                            <?php foreach ($event_model_all as $event_value): ?>
+                                <?php if ($event_value->id == $event_id){ ?>
+                                    <div id="div-event-<?= $event_value->id ?>" class="div-event">
+                                        <div class="div-event-name"><?= $event_value->name ?></div>
+                                        <!--<div class="div-event-description"> $event_value->description ?></div>-->
+                                    </div>
+                                <?php } ?>
+                            <?php endforeach; ?>
+                        <?php } ?>
+                    <?php endforeach; ?>
+
                 </div>
             </div>
         <?php $a = $value->id; }?>
@@ -158,7 +173,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
     <?php foreach ($mechanism_model_all as $value): ?>
         <div id="div-mechanism-<?= $value->id ?>" class="div-mechanism">
             <div class="div-mechanism-name"><?= $value->name ?></div>
-            <div class="div-mechanism-description"><?= $value->description ?></div>
+            <!--<div class="div-mechanism-description"> $value->description ?></div>-->
         </div>
     <?php endforeach; ?>
 </div>

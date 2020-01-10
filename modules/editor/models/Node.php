@@ -26,6 +26,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class Node extends \yii\db\ActiveRecord
 {
+    public $level_id;
+
     const NOT_OPERATOR = 0;   // Оператор
     const AND_OPERATOR = 1; // Оператор И
     const OR_OPERATOR = 2; // Оператор ИЛИ
@@ -48,9 +50,9 @@ class Node extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'tree_diagram'], 'required'],
+            [['name', 'tree_diagram', 'level_id'], 'required'],
             [['operator', 'type', 'parent_node', 'tree_diagram'], 'default', 'value' => null],
-            [['operator', 'type', 'parent_node', 'tree_diagram'], 'integer'],
+            [['operator', 'type', 'parent_node', 'tree_diagram', 'level_id'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
@@ -77,6 +79,7 @@ class Node extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'NODE_MODEL_TYPE'),
             'parent_node' => Yii::t('app', 'NODE_MODEL_PARENT_NODE'),
             'tree_diagram' => Yii::t('app', 'NODE_MODEL_TREE_DIAGRAM'),
+            'level_id' => Yii::t('app', 'NODE_MODEL_LEVEL_ID'),
         ];
     }
 

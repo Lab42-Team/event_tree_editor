@@ -155,6 +155,7 @@ return [
     'NODE_MODEL_TYPE' => 'Type',
     'NODE_MODEL_PARENT_NODE' => 'Parent node',
     'NODE_MODEL_TREE_DIAGRAM' => 'Diagram',
+    'NODE_MODEL_LEVEL_ID' => 'Level name',
     /* Значения операторов */
     'NODE_MODEL_NOT_OPERATOR' => 'NOT',
     'NODE_MODEL_AND_OPERATOR' => 'AND',

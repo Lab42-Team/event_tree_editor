@@ -155,6 +155,7 @@ return [
     'NODE_MODEL_TYPE' => 'Тип',
     'NODE_MODEL_PARENT_NODE' => 'Родительский узел',
     'NODE_MODEL_TREE_DIAGRAM' => 'Диаграмма',
+    'NODE_MODEL_LEVEL_ID' => 'Название уровня',
     /* Значения операторов */
     'NODE_MODEL_NOT_OPERATOR' => 'Отрицание',
     'NODE_MODEL_AND_OPERATOR' => 'И',

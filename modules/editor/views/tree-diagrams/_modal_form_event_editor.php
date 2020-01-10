@@ -3,8 +3,10 @@
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
+use yii\helpers\ArrayHelper;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
+use app\modules\editor\models\Level;
 
 /* @var $node_model app\modules\editor\models\Node */
 ?>
@@ -95,6 +97,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
+<?= $form->field($node_model, 'level_id')->dropDownList(Level::getLevelsArray($model->id)) ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
