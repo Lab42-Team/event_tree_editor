@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
+use app\modules\editor\models\Level;
 
 /* @var $level_model app\modules\editor\models\Node */
 ?>
@@ -36,21 +37,17 @@ use app\modules\main\models\Lang;
                             $("#addMechanismModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
+                            var div_level_layer = document.getElementById('div-level-' + data['id_level']);
 
                             var div_mechanism = document.createElement('div');
-                            div_mechanism.className = 'div-mechanism-' + data['id'];
-                            visual_diagram_top_layer.append(div_mechanism);
+                            div_mechanism.id = 'div-mechanism-' + data['id'];
+                            div_mechanism.className = 'div-mechanism';
+                            div_level_layer.append(div_mechanism);
 
                             var div_mechanism_name = document.createElement('div');
                             div_mechanism_name.className = 'div-mechanism-name' ;
                             div_mechanism_name.innerHTML = data['name'];
                             div_mechanism.append(div_mechanism_name);
-
-                            var div_mechanism_description = document.createElement('div');
-                            div_mechanism_description.className = 'div-mechanism-description' ;
-                            div_mechanism_description.innerHTML = data['description'];
-                            div_mechanism.append(div_mechanism_description);
 
                         } else {
                             // Отображение ошибок ввода
@@ -77,6 +74,7 @@ use app\modules\main\models\Lang;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
+<?= $form->field($node_model, 'level_id')->dropDownList(Level::getWithoutInitialLevelsArray($model->id)) ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),

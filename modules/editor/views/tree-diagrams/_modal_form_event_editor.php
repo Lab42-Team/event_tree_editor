@@ -3,7 +3,6 @@
 use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
-use yii\helpers\ArrayHelper;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
 use app\modules\editor\models\Level;

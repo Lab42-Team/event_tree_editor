@@ -333,17 +333,7 @@ class TreeDiagramsController extends Controller
 
             $sequence = new Sequence();
             $sequence->tree_diagram = $id;
-            $mas_level = Level::find()->where(['tree_diagram' => $id, 'parent_level' => null ])->one();;
-            if ($mas_level <> null){
-                $a = $mas_level->id;
-                do {
-                    $b = $a;
-                    $mas_level = Level::find()->where(['tree_diagram' => $id, 'parent_level' => $b ])->one();;
-                    if ($mas_level <> null)
-                        $a = $mas_level->id;
-                } while ($mas_level <> null);
-                $sequence->level = $b;
-            }
+            $sequence->level = $model->level_id;
             $sequence->node = $model->id;
             $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
             $sequence->priority = $sequence_model_count;

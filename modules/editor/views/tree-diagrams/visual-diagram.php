@@ -148,9 +148,19 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                             <?= $level_value->description ?>
                             <?php foreach ($sequence_model_all as $sequence_value): ?>
                                 <?php if ($sequence_value->level == $level_value->id){ ?>
-                                    <?php $event_id = $sequence_value->node; ?>
+                                    <?php $node_id = $sequence_value->node; ?>
+                                    <!-- Вывод механизма -->
+                                    <?php foreach ($mechanism_model_all as $mechanism_value): ?>
+                                        <?php if ($mechanism_value->id == $node_id){ ?>
+                                            <div id="div-mechanism-<?= $mechanism_value->id ?>" class="div-mechanism">
+                                                <div class="div-mechanism-name"><?= $mechanism_value->name ?></div>
+                                                <!--<div class="div-mechanism-description"> $value->description ?></div>-->
+                                            </div>
+                                        <?php } ?>
+                                    <?php endforeach; ?>
+                                    <!-- Вывод событий -->
                                     <?php foreach ($event_model_all as $event_value): ?>
-                                        <?php if ($event_value->id == $event_id){ ?>
+                                        <?php if ($event_value->id == $node_id){ ?>
                                             <div id="div-event-<?= $event_value->id ?>" class="div-event">
                                                 <div class="div-event-name"><?= $event_value->name ?></div>
                                                 <!--<div class="div-event-description"> $event_value->description ?></div>-->
@@ -168,12 +178,4 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             <?php $i = $i + 1; ?>
         <?php } while ($i <> $level_model_count); ?>
     <?php } ?>
-
-    <!-- Вывод механизма -->
-    <?php foreach ($mechanism_model_all as $value): ?>
-        <div id="div-mechanism-<?= $value->id ?>" class="div-mechanism">
-            <div class="div-mechanism-name"><?= $value->name ?></div>
-            <!--<div class="div-mechanism-description"> $value->description ?></div>-->
-        </div>
-    <?php endforeach; ?>
 </div>
