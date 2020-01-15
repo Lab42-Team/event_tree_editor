@@ -109,7 +109,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             <div id="div-level-<?= $value->id ?>" class="div-level">
                 <div class="div-level-name"><?= $value->name ?></div>
                 <div class="div-level-description">
-                    <?= $value->description ?>
+                    <!--?= $level_value->description ?>-->
                     <!-- Вывод инициирующего события -->
                     <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                         <div id="div-initial-event-<?= $initial_event_value->id ?>" class="div-event">
@@ -145,7 +145,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                     <div id="div-level-<?= $level_value->id ?>" class="div-level">
                         <div class="div-level-name"><?= $level_value->name ?></div>
                         <div class="div-level-description">
-                            <?= $level_value->description ?>
+                            <!--?= $level_value->description ?>-->
                             <?php foreach ($sequence_model_all as $sequence_value): ?>
                                 <?php if ($sequence_value->level == $level_value->id){ ?>
                                     <?php $node_id = $sequence_value->node; ?>
@@ -153,7 +153,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                     <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                         <?php if ($mechanism_value->id == $node_id){ ?>
                                             <div id="div-mechanism-<?= $mechanism_value->id ?>" class="div-mechanism">
-                                                <div class="div-mechanism-name"><?= $mechanism_value->name ?></div>
+                                                <div class="div-mechanism-m">M</div><div class="div-mechanism-name"><?= $mechanism_value->name ?></div>
                                                 <!--<div class="div-mechanism-description"> $value->description ?></div>-->
                                             </div>
                                         <?php } ?>

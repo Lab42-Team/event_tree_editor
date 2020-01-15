@@ -1,32 +1,30 @@
 .visual-diagram-top-layer {
     height:750px;
     max-height:700px;
-    border:1px solid #CCC;
+    border:1px solid #b9def0;
     background-color:white;
     /*flex-grow:1;
     position:relative;*/
-
     /* Вкл Прокрутку*/
     overflow: scroll !important;
     cursor:default;
 }
 
+/* -Стили для уровней- */
 .div-level {
     min-height: 200px;
-    border-bottom-width:2px;
-    border-bottom-style:dashed;
+    border-bottom:2px dashed #337ab7;
+    background-color: white;
     /* div в строку*/
     display: flex;
-
     /* убираем оступы по бокам возможно другое решение*/
     margin-left: -11px;
     margin-right: -11px;
 }
 
 .div-level-name {
-    width: 100px;
-    border-right-style:solid;
-    border-width:2px;
+    min-width: 100px;
+    border-right:2px solid #337ab7;
     /* перенос теаста*/
     word-wrap: break-word;
     /* текст по центру*/
@@ -38,14 +36,26 @@
     display: flex;
 }
 
+/* -Стили для событий- */
 .div-event {
     /* форма*/
     width: 150px;
     height: 80px;
-    border-style:solid;
-    border-width:2px;
+    border:2px solid #337ab7;
+    border-radius: 5px;
     /* текст по центру*/
     position: relative;
+}
+
+.div-event:hover {
+    border:2px solid #337ab7;
+    background-color: #b9def0;
+    opacity:0.9;
+    cursor: pointer;
+}
+
+.div-event:active {
+    cursor: move;
 }
 
 .div-event-name {
@@ -57,20 +67,48 @@
     transform: translate(-50%, -50%);
 }
 
+/* -Стили для механизмов- */
 .div-mechanism {
-    width: 7em;
-    height: 7em;
-    /*filter: drop-shadow(0 0 5px #000);*/
-    background: linear-gradient(to left bottom, transparent 50%, #b9def0 50%) top / 100% 50% no-repeat,
-    linear-gradient(to left top, transparent 50%, #b9def0 50%) bottom / 100% 50% no-repeat;
+    width:87px;
+    height:100px;
+    background-image:url(/web/images/triangle.png);
     position: relative;
 }
 
-.div-mechanism-name {
+.div-mechanism-m {
     position: absolute;
     margin: 0;
     top: 50%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+.div-mechanism-name {
+    display: none;
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.div-mechanism:hover {
+    width:87px;
+    height:100px;
+    background-image:url(/web/images/triangle_activ.png);
+    cursor: pointer;
+}
+
+.div-mechanism:hover .div-mechanism-name{
+    display: block;
+}
+
+.div-mechanism:hover .div-mechanism-m{
+    display: none;
+}
+
+.div-mechanism:active {
+    cursor: move;
 }

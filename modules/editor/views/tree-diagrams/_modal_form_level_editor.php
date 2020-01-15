@@ -48,10 +48,10 @@ use app\modules\main\models\Lang;
                             div_level_name.innerHTML = data['name'];
                             div_level.append(div_level_name);
 
-                            var div_level_description = document.createElement('div');
-                            div_level_description.className = 'div-level-description' ;
-                            div_level_description.innerHTML = data['description'];
-                            div_level.append(div_level_description);
+                            //var div_level_description = document.createElement('div');
+                            //div_level_description.className = 'div-level-description' ;
+                            //div_level_description.innerHTML = data['description'];
+                            //div_level.append(div_level_description);
 
                         } else {
                             // Отображение ошибок ввода
