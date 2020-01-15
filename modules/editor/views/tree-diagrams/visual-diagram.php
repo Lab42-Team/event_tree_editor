@@ -106,6 +106,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
     <!-- Вывод начального уровня -->
     <?php foreach ($level_model_all as $value): ?>
         <?php if ($value->parent_level == null){ ?>
+            <div class="top">
             <div id="div-level-<?= $value->id ?>" class="div-level">
                 <div class="div-level-name"><?= $value->name ?></div>
                 <div class="div-level-description">
@@ -177,5 +178,6 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             <?php endforeach; ?>
             <?php $i = $i + 1; ?>
         <?php } while ($i <> $level_model_count); ?>
+    </div>
     <?php } ?>
 </div>

@@ -1,5 +1,4 @@
 .visual-diagram-top-layer {
-    height:750px;
     max-height:700px;
     border:1px solid #b9def0;
     background-color:white;
@@ -10,16 +9,27 @@
     cursor:default;
 }
 
+/* -Выравнивание ширины всех уровней по самой большой ширины уровня- */
+div.top {
+    width: max-content;
+}
+div.top > div {
+    width: 100%;
+}
+/* ------------ */
+
 /* -Стили для уровней- */
 .div-level {
     min-height: 200px;
+    width: max-content;
     border-bottom:2px dashed #337ab7;
     background-color: white;
     /* div в строку*/
     display: flex;
-    /* убираем оступы по бокам возможно другое решение*/
+    /* убираем оступ слева возможно другое решение*/
     margin-left: -11px;
-    margin-right: -11px;
+    /* выравнивание отступа справа*/
+    margin-right: 11px;
 }
 
 .div-level-name {
@@ -43,7 +53,7 @@
     height: 80px;
     border:2px solid #337ab7;
     border-radius: 5px;
-    /* текст по центру*/
+    /* текст по центру для дочернего блока div-event-name*/
     position: relative;
 }
 
@@ -59,6 +69,7 @@
 }
 
 .div-event-name {
+    /* текст по центру*/
     position: absolute;
     margin: 0;
     top: 50%;
@@ -72,10 +83,12 @@
     width:87px;
     height:100px;
     background-image:url(/web/images/triangle.png);
+    /* текст по центру для дочерних блоков div-mechanism-m div-mechanism-name*/
     position: relative;
 }
 
 .div-mechanism-m {
+    /* текст по центру*/
     position: absolute;
     margin: 0;
     top: 50%;
@@ -86,6 +99,7 @@
 
 .div-mechanism-name {
     display: none;
+    /* текст по центру*/
     position: absolute;
     margin: 0;
     top: 50%;
