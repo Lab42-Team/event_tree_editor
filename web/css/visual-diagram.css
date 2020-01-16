@@ -12,6 +12,7 @@
 /* -Выравнивание ширины всех уровней по самой большой ширины уровня- */
 div.top {
     width: max-content;
+    min-width: 100%;
 }
 div.top > div {
     width: 100%;
@@ -33,10 +34,13 @@ div.top > div {
 }
 
 .div-level-name {
-    min-width: 100px;
+    width: 100px;
     border-right:2px solid #337ab7;
     /* перенос теаста*/
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+    line-break: loose;
     /* текст по центру*/
     text-align: center;
 }
@@ -83,22 +87,11 @@ div.top > div {
     width:87px;
     height:100px;
     background-image:url(/web/images/triangle.png);
-    /* текст по центру для дочерних блоков div-mechanism-m div-mechanism-name*/
+    /* текст по центру для дочерних блоков div-mechanism-m*/
     position: relative;
 }
 
 .div-mechanism-m {
-    /* текст по центру*/
-    position: absolute;
-    margin: 0;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-
-.div-mechanism-name {
-    display: none;
     /* текст по центру*/
     position: absolute;
     margin: 0;
@@ -113,14 +106,6 @@ div.top > div {
     height:100px;
     background-image:url(/web/images/triangle_activ.png);
     cursor: pointer;
-}
-
-.div-mechanism:hover .div-mechanism-name{
-    display: block;
-}
-
-.div-mechanism:hover .div-mechanism-m{
-    display: none;
 }
 
 .div-mechanism:active {

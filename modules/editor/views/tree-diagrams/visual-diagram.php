@@ -153,8 +153,8 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                     <!-- Вывод механизма -->
                                     <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                         <?php if ($mechanism_value->id == $node_id){ ?>
-                                            <div id="div-mechanism-<?= $mechanism_value->id ?>" class="div-mechanism">
-                                                <div class="div-mechanism-m">M</div><div class="div-mechanism-name"><?= $mechanism_value->name ?></div>
+                                            <div id="div-mechanism-<?= $mechanism_value->id ?>" class="div-mechanism" title="<?= $mechanism_value->name ?>">
+                                                <div class="div-mechanism-m">M</div>
                                                 <!--<div class="div-mechanism-description"> $value->description ?></div>-->
                                             </div>
                                         <?php } ?>
