@@ -16,17 +16,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menu'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
-        'options' => ['data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
+        'options' => ['id'=>'nav_add_level', 'class' => 'enabled', 'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
-        'options' => ['data-toggle'=>'modal', 'data-target'=>'#addEventModalForm']],
+        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
-        'options' => ['data-toggle'=>'modal', 'data-target'=>'#addMechanismModalForm']],
+        'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
 ];
 ?>
 
 <?= $this->render('_modal_form_level_editor', [
-        'model' => $model,
-        'level_model' => $level_model,
+    'model' => $model,
+    'level_model' => $level_model,
 ]) ?>
 
 <?= $this->render('_modal_form_event_editor', [
@@ -44,6 +44,21 @@ $this->params['menu'] = [
 $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
 ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var nav_add_event = document.getElementById('nav_add_event');
+        var nav_add_mechanism = document.getElementById('nav_add_mechanism');
+        if ('<?php echo $level_model_count; ?>' > 0){
+            nav_add_event.className = 'enabled';
+            nav_add_event.setAttribute("data-target", "#addEventModalForm");
+        }
+        if ('<?php echo $level_model_count; ?>' > 1){
+            nav_add_mechanism.className = 'enabled';
+            nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+        }
+    });
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
