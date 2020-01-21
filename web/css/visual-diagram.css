@@ -5,7 +5,7 @@
     /*flex-grow:1;
     position:relative;*/
     /* Вкл Прокрутку*/
-    overflow: scroll !important;
+    overflow: auto !important;
     cursor:default;
 }
 
