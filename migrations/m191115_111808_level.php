@@ -26,9 +26,9 @@ class m191115_111808_level extends Migration
         $this->createIndex('idx_level_name', '{{%level}}', 'name');
 
         $this->addForeignKey("level_parent_level_fk", "{{%level}}", "parent_level",
-            "{{%level}}", "id", 'RESTRICT');
+            "{{%level}}", "id", 'CASCADE');
         $this->addForeignKey("level_tree_diagram_fk", "{{%level}}", "tree_diagram",
-            "{{%tree_diagram}}", "id", 'RESTRICT');
+            "{{%tree_diagram}}", "id", 'CASCADE');
     }
 
     public function down()

@@ -26,7 +26,7 @@ class m191115_120055_parameter extends Migration
 
         $this->createIndex('idx_parameter_name', '{{%parameter}}', 'name');
 
-        $this->addForeignKey("parameter_node_fk", "{{%parameter}}", "node", "{{%node}}", "id", 'RESTRICT');
+        $this->addForeignKey("parameter_node_fk", "{{%parameter}}", "node", "{{%node}}", "id", 'CASCADE');
     }
 
     public function down()
