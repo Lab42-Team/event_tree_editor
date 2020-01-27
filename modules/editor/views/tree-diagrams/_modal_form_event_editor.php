@@ -6,6 +6,8 @@ use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
 use app\modules\editor\models\Level;
+use yii\widgets\Pjax;
+use yii\bootstrap\Html;
 
 /* @var $node_model app\modules\editor\models\Node */
 ?>
@@ -70,6 +72,7 @@ use app\modules\editor\models\Level;
                                 //div_event_description.innerHTML = data['description'];
                                 //div_event.append(div_event_description);
                             }
+                            document.getElementById('add-event-form').reset();
 
                         } else {
                             // Отображение ошибок ввода
@@ -84,6 +87,8 @@ use app\modules\editor\models\Level;
         });
     </script>
 
+<?php Pjax::begin(); ?>
+
 <?php $form = ActiveForm::begin([
     'id' => 'add-event-form',
     'enableAjaxValidation' => true,
@@ -96,7 +101,7 @@ use app\modules\editor\models\Level;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList(Level::getLevelsArray($model->id)) ?>
+<?= $form->field($node_model, 'level_id')->dropDownList($array_levels) ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
@@ -117,5 +122,12 @@ use app\modules\editor\models\Level;
 ]); ?>
 
 <?php ActiveForm::end(); ?>
+
+<?= Html::beginForm(['/tree-diagrams/visual-diagram/' . $model->id], 'post',
+    ['id' => 'pjax-event-editor-form', 'data-pjax' => '', 'style' => 'display:none']); ?>
+<?= Html::submitButton('Вычислить', ['id' => 'pjax-event-editor-button', 'data-pjax' => '']) ?>
+<?= Html::endForm() ?>
+
+<?php Pjax::end(); ?>
 
 <?php Modal::end(); ?>

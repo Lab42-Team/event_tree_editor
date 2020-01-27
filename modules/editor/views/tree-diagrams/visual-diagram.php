@@ -18,7 +18,7 @@ $this->params['menu'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
         'options' => ['id'=>'nav_add_level', 'class' => 'enabled', 'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
-        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
+        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'onclick' => 'reset()', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
         'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
 ];
@@ -32,6 +32,7 @@ $this->params['menu'] = [
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
     'node_model' => $node_model,
+    'array_levels' => $array_levels,
 ]) ?>
 
 <?= $this->render('_modal_form_mechanism_editor', [
@@ -44,6 +45,14 @@ $this->params['menu'] = [
 $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
 ?>
+
+<script type="text/javascript">
+    function reset()
+    {
+        //alert ('пик');
+        document.getElementById("pjax-event-editor-button").click();
+    }
+</script>
 
 <script type="text/javascript">
     $(document).ready(function() {

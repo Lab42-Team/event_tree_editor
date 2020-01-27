@@ -53,6 +53,17 @@ use app\modules\main\models\Lang;
                             //div_level_description.innerHTML = data['description'];
                             //div_level.append(div_level_description);
 
+                            var nav_add_event = document.getElementById('nav_add_event');
+                            var nav_add_mechanism = document.getElementById('nav_add_mechanism');
+                            if (data['level_count'] > 0){
+                                nav_add_event.className = 'enabled';
+                                nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                            }
+                            if (data['level_count'] > 1){
+                                nav_add_mechanism.className = 'enabled';
+                                nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+                            }
+                            document.getElementById('add-level-form').reset();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);

@@ -54,6 +54,8 @@ use app\modules\editor\models\Level;
                             //div_mechanism_name.className = 'div-mechanism-name' ;
                             //div_mechanism_name.innerHTML = data['name'];
                             //div_mechanism.append(div_mechanism_name);
+
+                            document.getElementById('add-mechanism-form').reset();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-mechanism-form", data);

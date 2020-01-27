@@ -161,6 +161,9 @@ class TreeDiagramsController extends Controller
         $level_model = new Level();
         $node_model = new Node();
 
+        $array_levels = Level::getLevelsArray($id);
+
+
         return $this->render('visual-diagram', [
             'model' => $this->findModel($id),
             'level_model' => $level_model,
@@ -171,6 +174,8 @@ class TreeDiagramsController extends Controller
             'event_model_all' => $event_model_all,
             'mechanism_model_all' => $mechanism_model_all,
             'sequence_model_all' => $sequence_model_all,
+
+            'array_levels' => $array_levels,
         ]);
     }
 
@@ -221,6 +226,9 @@ class TreeDiagramsController extends Controller
                 $data["description"] = $model->description;
             } else
                 $data = ActiveForm::validate($model);
+
+            $data["level_count"] = Level::find()->where(['tree_diagram' => $id])->count();
+
             // Возвращение данных
             $response->data = $data;
 
