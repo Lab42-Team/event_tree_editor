@@ -71,9 +71,10 @@ use yii\bootstrap\Html;
                                 //div_event_description.className = 'div-event-description' ;
                                 //div_event_description.innerHTML = data['description'];
                                 //div_event.append(div_event_description);
+
+                                // /tree-diagrams/visual-diagram/
                             }
                             document.getElementById('add-event-form').reset();
-
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
@@ -86,8 +87,6 @@ use yii\bootstrap\Html;
             });
         });
     </script>
-
-<?php Pjax::begin(); ?>
 
 <?php $form = ActiveForm::begin([
     'id' => 'add-event-form',
@@ -122,12 +121,5 @@ use yii\bootstrap\Html;
 ]); ?>
 
 <?php ActiveForm::end(); ?>
-
-<?= Html::beginForm(['/tree-diagrams/visual-diagram/' . $model->id], 'post',
-    ['id' => 'pjax-event-editor-form', 'data-pjax' => '', 'style' => 'display:none']); ?>
-<?= Html::submitButton('Вычислить', ['id' => 'pjax-event-editor-button', 'data-pjax' => '']) ?>
-<?= Html::endForm() ?>
-
-<?php Pjax::end(); ?>
 
 <?php Modal::end(); ?>

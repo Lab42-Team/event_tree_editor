@@ -63,7 +63,10 @@ use app\modules\main\models\Lang;
                                 nav_add_mechanism.className = 'enabled';
                                 nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
                             }
+
                             document.getElementById('add-level-form').reset();
+
+                            document.getElementById("pjax-event-editor-button").click();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);

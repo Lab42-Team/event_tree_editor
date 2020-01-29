@@ -162,7 +162,7 @@ class TreeDiagramsController extends Controller
         $node_model = new Node();
 
         $array_levels = Level::getLevelsArray($id);
-
+        $array_levels_initial_without = Level::getWithoutInitialLevelsArray($id);
 
         return $this->render('visual-diagram', [
             'model' => $this->findModel($id),
@@ -176,6 +176,7 @@ class TreeDiagramsController extends Controller
             'sequence_model_all' => $sequence_model_all,
 
             'array_levels' => $array_levels,
+            'array_levels_initial_without' => $array_levels_initial_without,
         ]);
     }
 

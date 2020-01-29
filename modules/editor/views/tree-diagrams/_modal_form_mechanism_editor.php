@@ -81,7 +81,7 @@ use app\modules\editor\models\Level;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList(Level::getWithoutInitialLevelsArray($model->id)) ?>
+<?= $form->field($node_model, 'level_id')->dropDownList($array_levels_initial_without) ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),

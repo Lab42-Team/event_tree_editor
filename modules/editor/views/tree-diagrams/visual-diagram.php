@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 
+use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
 /* @var $level_model app\modules\editor\models\Level */
@@ -18,11 +21,16 @@ $this->params['menu'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
         'options' => ['id'=>'nav_add_level', 'class' => 'enabled', 'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
-        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'onclick' => 'reset()', 'data-target'=>'']],
+        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
         'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
 ];
 ?>
+
+<?php Pjax::begin(); ?>
+
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
 
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
@@ -38,21 +46,17 @@ $this->params['menu'] = [
 <?= $this->render('_modal_form_mechanism_editor', [
     'model' => $model,
     'node_model' => $node_model,
+    'array_levels_initial_without' => $array_levels_initial_without,
 ]) ?>
+
+<?php Pjax::end(); ?>
+
 
 <!-- Подключение скрипта для модальных форм -->
 <?php
 $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
 ?>
-
-<script type="text/javascript">
-    function reset()
-    {
-        //alert ('пик');
-        document.getElementById("pjax-event-editor-button").click();
-    }
-</script>
 
 <script type="text/javascript">
     $(document).ready(function() {
