@@ -1,14 +1,20 @@
 <?php
 
 use yii\helpers\Html;
-
-use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
 /* @var $level_model app\modules\editor\models\Level */
+/* @var $node_model app\modules\editor\models\Node */
 /* @var $level_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $level_model_count app\modules\editor\controllers\TreeDiagramsController */
+/* @var $initial_event_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $sequence_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $event_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $mechanism_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
+/* @var $array_levels_initial_without app\modules\editor\controllers\TreeDiagramsController */
 
 $this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM') . ' - ' . $model->name;
 
@@ -19,23 +25,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menu'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
-        'options' => ['id'=>'nav_add_level', 'class' => 'enabled', 'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
+        'options' => ['id'=>'nav_add_level', 'class' => 'enabled',
+            'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
-        'options' => ['id'=>'nav_add_event', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
+        'options' => ['id'=>'nav_add_event', 'class' => 'disabled',
+            'data-toggle'=>'modal', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
-        'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled', 'data-toggle'=>'modal', 'data-target'=>'']],
+        'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled',
+            'data-toggle'=>'modal', 'data-target'=>'']],
 ];
 ?>
-
-<?php Pjax::begin(); ?>
-
-<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
-    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
 
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
     'level_model' => $level_model,
 ]) ?>
+
+<?php Pjax::begin(); ?>
+
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
 
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
@@ -60,6 +69,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
 
 <script type="text/javascript">
     $(document).ready(function() {
+        // Включение переходов на модальные окна
         var nav_add_event = document.getElementById('nav_add_event');
         var nav_add_mechanism = document.getElementById('nav_add_mechanism');
         if ('<?php echo $level_model_count; ?>' > 0){
@@ -70,11 +80,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             nav_add_mechanism.className = 'enabled';
             nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
         }
-    });
-</script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
         // Обработка закрытия модального окна добавления нового уровня
         $("#addLevelModalForm").on("hidden.bs.modal", function() {
             // Скрытие списка ошибок ввода в модальном окне
@@ -87,11 +93,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                 $(this).text("");
             });
         });
-    });
-</script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
         // Обработка закрытия модального окна добавления нового события
         $("#addEventModalForm").on("hidden.bs.modal", function() {
             // Скрытие списка ошибок ввода в модальном окне
@@ -104,11 +106,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                 $(this).text("");
             });
         });
-    });
-</script>
 
-<script type="text/javascript">
-    $(document).ready(function() {
         // Обработка закрытия модального окна добавления нового механизма
         $("#addMechanismModalForm").on("hidden.bs.modal", function() {
             // Скрытие списка ошибок ввода в модальном окне
@@ -143,7 +141,6 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                     <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                         <div id="div-initial-event-<?= $initial_event_value->id ?>" class="div-event">
                             <div class="div-event-name"><?= $initial_event_value->name ?></div>
-                            <!-- <div class="div-event-description"> $initial_event_value->description ?></div>-->
                         </div>
                     <?php endforeach; ?>
 
@@ -154,7 +151,6 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                 <?php if ($event_value->id == $event_id){ ?>
                                     <div id="div-event-<?= $event_value->id ?>" class="div-event">
                                         <div class="div-event-name"><?= $event_value->name ?></div>
-                                        <!--<div class="div-event-description"> $event_value->description ?></div>-->
                                     </div>
                                 <?php } ?>
                             <?php endforeach; ?>
@@ -181,9 +177,9 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                     <!-- Вывод механизма -->
                                     <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                         <?php if ($mechanism_value->id == $node_id){ ?>
-                                            <div id="div-mechanism-<?= $mechanism_value->id ?>" class="div-mechanism" title="<?= $mechanism_value->name ?>">
+                                            <div id="div-mechanism-<?= $mechanism_value->id ?>"
+                                                 class="div-mechanism" title="<?= $mechanism_value->name ?>">
                                                 <div class="div-mechanism-m">M</div>
-                                                <!--<div class="div-mechanism-description"> $value->description ?></div>-->
                                             </div>
                                         <?php } ?>
                                     <?php endforeach; ?>
@@ -192,7 +188,6 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                         <?php if ($event_value->id == $node_id){ ?>
                                             <div id="div-event-<?= $event_value->id ?>" class="div-event">
                                                 <div class="div-event-name"><?= $event_value->name ?></div>
-                                                <!--<div class="div-event-description"> $event_value->description ?></div>-->
                                             </div>
                                         <?php } ?>
                                     <?php endforeach; ?>

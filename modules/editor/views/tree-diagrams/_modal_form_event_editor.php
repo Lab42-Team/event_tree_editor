@@ -5,11 +5,10 @@ use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
-use app\modules\editor\models\Level;
-use yii\widgets\Pjax;
-use yii\bootstrap\Html;
 
 /* @var $node_model app\modules\editor\models\Node */
+/* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
+
 ?>
 
 <!-- Модальное окно добавления нового уровня -->
@@ -50,11 +49,6 @@ use yii\bootstrap\Html;
                                 div_initial_event_name.className = 'div-event-name' ;
                                 div_initial_event_name.innerHTML = data['name'];
                                 div_initial_event.append(div_initial_event_name);
-
-                                //var div_initial_event_description = document.createElement('div');
-                                //div_initial_event_description.className = 'div-event-description' ;
-                                //div_initial_event_description.innerHTML = data['description'];
-                                //div_initial_event.append(div_initial_event_description);
                             } else {
                                 var div_level_layer = document.getElementById('div-level-' + data['id_level']);
                                 var div_event = document.createElement('div');
@@ -66,13 +60,6 @@ use yii\bootstrap\Html;
                                 div_event_name.className = 'div-event-name' ;
                                 div_event_name.innerHTML = data['name'];
                                 div_event.append(div_event_name);
-
-                                //var div_event_description = document.createElement('div');
-                                //div_event_description.className = 'div-event-description' ;
-                                //div_event_description.innerHTML = data['description'];
-                                //div_event.append(div_event_description);
-
-                                // /tree-diagrams/visual-diagram/
                             }
                             document.getElementById('add-event-form').reset();
                         } else {

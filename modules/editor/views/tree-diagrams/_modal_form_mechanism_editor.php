@@ -4,9 +4,10 @@ use yii\widgets\ActiveForm;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
-use app\modules\editor\models\Level;
 
-/* @var $level_model app\modules\editor\models\Node */
+/* @var $node_model app\modules\editor\models\Node */
+/* @var $array_levels_initial_without app\modules\editor\controllers\TreeDiagramsController */
+
 ?>
 
     <!-- Модальное окно добавления нового уровня -->
@@ -49,11 +50,6 @@ use app\modules\editor\models\Level;
                             div_mechanism_m.className = 'div-mechanism-m' ;
                             div_mechanism_m.innerHTML = 'M';
                             div_mechanism.append(div_mechanism_m);
-
-                            //var div_mechanism_name = document.createElement('div');
-                            //div_mechanism_name.className = 'div-mechanism-name' ;
-                            //div_mechanism_name.innerHTML = data['name'];
-                            //div_mechanism.append(div_mechanism_name);
 
                             document.getElementById('add-mechanism-form').reset();
                         } else {
