@@ -39,9 +39,10 @@ use app\modules\editor\models\Node;
                             $("#addEventModalForm").modal("hide");
 
                             if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
-                                var div_level_layer = document.getElementById('div-level-' + data['id_level']);
+                                var div_level_layer = document.getElementById('level_description_' + data['id_level']);
+
                                 var div_initial_event = document.createElement('div');
-                                div_initial_event.id = 'div-initial-event-' + data['id'];
+                                div_initial_event.id = 'node_' + data['id'];
                                 div_initial_event.className = 'div-event';
                                 div_level_layer.append(div_initial_event);
 
@@ -50,9 +51,10 @@ use app\modules\editor\models\Node;
                                 div_initial_event_name.innerHTML = data['name'];
                                 div_initial_event.append(div_initial_event_name);
                             } else {
-                                var div_level_layer = document.getElementById('div-level-' + data['id_level']);
+                                var div_level_layer = document.getElementById('level_description_' + data['id_level']);
+
                                 var div_event = document.createElement('div');
-                                div_event.id = 'div-event-' + data['id'];
+                                div_event.id = 'node_' + data['id'];
                                 div_event.className = 'div-event';
                                 div_level_layer.append(div_event);
 

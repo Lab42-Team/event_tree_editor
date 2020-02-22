@@ -2,8 +2,8 @@
     max-height:700px;
     border:1px solid #b9def0;
     background-color:white;
-    /*flex-grow:1;
-    position:relative;*/
+    /*flex-grow:1;*/
+    position:relative;
     /* Вкл Прокрутку*/
     overflow: auto !important;
     cursor:default;
@@ -47,6 +47,8 @@ div.top > div {
 
 .div-level-description {
     /* div в строку*/
+    width: 100%;
+    position:relative;
     display: flex;
 }
 
@@ -58,7 +60,7 @@ div.top > div {
     border:2px solid #337ab7;
     border-radius: 5px;
     /* текст по центру для дочернего блока div-event-name*/
-    position: relative;
+    position: absolute;
 }
 
 .div-event:hover {
@@ -88,7 +90,7 @@ div.top > div {
     height:100px;
     background-image:url(/web/images/triangle.png);
     /* текст по центру для дочерних блоков div-mechanism-m*/
-    position: relative;
+    position: absolute;
 }
 
 .div-mechanism-m {

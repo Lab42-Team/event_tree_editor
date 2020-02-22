@@ -36,10 +36,10 @@ use app\modules\main\models\Lang;
                             $("#addLevelModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var visual_diagram_top_layer = document.getElementById('visual-diagram-field');
+                            var visual_diagram_top_layer = document.getElementById('top_layer');
 
                             var div_level = document.createElement('div');
-                            div_level.id = 'div-level-' + data['id'];
+                            div_level.id = 'level_' + data['id'];
                             div_level.className = 'div-level';
                             visual_diagram_top_layer.append(div_level);
 
@@ -47,6 +47,11 @@ use app\modules\main\models\Lang;
                             div_level_name.className = 'div-level-name' ;
                             div_level_name.innerHTML = data['name'];
                             div_level.append(div_level_name);
+
+                            var div_level_description = document.createElement('div');
+                            div_level_description.className = 'div-level-description' ;
+                            div_level_description.id = 'level_description_' + data['id'];
+                            div_level.append(div_level_description);
 
                             var nav_add_event = document.getElementById('nav_add_event');
                             var nav_add_mechanism = document.getElementById('nav_add_mechanism');

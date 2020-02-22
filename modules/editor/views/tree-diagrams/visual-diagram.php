@@ -63,8 +63,18 @@ $this->params['menu'] = [
 
 <!-- Подключение скрипта для модальных форм -->
 <?php
+
+// создаем массив из соотношения level и node для передачи в jsplumb
+$sequence_mas = array();
+foreach ($sequence_model_all as $s){
+    array_push($sequence_mas, [$s->level, $s->node]);
+}
+
 $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
+
+$this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  // jsPlumb 2.12.9
+//$this->registerJsFile('/js/visual-diagram.js', ['position'=>yii\web\View::POS_HEAD]);
 ?>
 
 <script type="text/javascript">
@@ -120,56 +130,105 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             });
         });
     });
+
+
+    jsPlumb.ready(function () {
+        var instance = jsPlumb.getInstance({
+            Container: visual_diagram_field,
+            Connector:"StateMachine",
+            Endpoint:["Dot", {radius:3}], Anchor:"Center"});
+
+        var sequence_mas = <?php echo json_encode($sequence_mas); ?>;;//прием массива из php
+
+        var group_name = "";
+        //разбор полученного массива
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //первый элемент это id уровня
+                if (j == 0) {
+                    id_level = elem;//записываем id уровня
+                    //находим DOM элемент description уровня (идентификатор div level_description)
+                    var div_level_id = document.getElementById('level_description_'+ id_level);
+                    group_name = 'group'+ id_level; //определяем имя группы
+                    var grp = instance.getGroup(group_name);//определяем существует ли группа с таким именем
+                    if (grp == 0){
+                        //если группа не существует то создаем группу с определенным именем group_name
+                        instance.addGroup({
+                            el: div_level_id,
+                            id: group_name,
+                            draggable: false,
+                            constrain: true,
+                        });
+                    }
+                }
+                //второй элемент это id узла события или механизма
+                if (j == 1) {
+                    var id_node = elem;//записываем id узла события node или механизма mechanism
+                    //находим DOM элемент node (идентификатор div node)
+                    var div_node_id = document.getElementById('node_'+ elem);
+                    //делаем node перетаскиваемым
+                    instance.draggable(div_node_id);
+                    //добавляем элемент div_node_id в группу с именем group_name
+                    instance.addToGroup(group_name, div_node_id);
+                }
+            });
+        });
+    });
 </script>
+
+<?php
+
+?>
+
 
 <div class="tree-diagram-visual-diagram">
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
-<div id="visual-diagram-field" class="visual-diagram-top-layer col-md-12">
+<div id="visual_diagram_field" class="visual-diagram-top-layer col-md-12">
 
     <!-- Вывод уровней -->
     <!-- Вывод начального уровня -->
     <?php foreach ($level_model_all as $value): ?>
-        <?php if ($value->parent_level == null){ ?>
-            <div class="top">
-            <div id="div-level-<?= $value->id ?>" class="div-level">
-                <div class="div-level-name"><?= $value->name ?></div>
-                <div class="div-level-description">
-                    <!--?= $level_value->description ?>-->
-                    <!-- Вывод инициирующего события -->
-                    <?php foreach ($initial_event_model_all as $initial_event_value): ?>
-                        <div id="div-initial-event-<?= $initial_event_value->id ?>" class="div-event">
-                            <div class="div-event-name"><?= $initial_event_value->name ?></div>
-                        </div>
-                    <?php endforeach; ?>
+<?php if ($value->parent_level == null){ ?>
+    <div id="top_layer" class="top">
+        <div id="level_<?= $value->id ?>" class="div-level">
+            <div class="div-level-name"><?= $value->name ?></div>
+            <div class="div-level-description" id="level_description_<?= $value->id ?>">
+                <!--?= $level_value->description ?>-->
+                <!-- Вывод инициирующего события -->
+                <?php foreach ($initial_event_model_all as $initial_event_value): ?>
+                    <div id="node_<?= $initial_event_value->id ?>" class="div-event">
+                        <div class="div-event-name"><?= $initial_event_value->name ?></div>
+                    </div>
+                <?php endforeach; ?>
 
-                    <?php foreach ($sequence_model_all as $sequence_value): ?>
-                        <?php if ($sequence_value->level == $value->id){ ?>
-                            <?php $event_id = $sequence_value->node; ?>
-                            <?php foreach ($event_model_all as $event_value): ?>
-                                <?php if ($event_value->id == $event_id){ ?>
-                                    <div id="div-event-<?= $event_value->id ?>" class="div-event">
-                                        <div class="div-event-name"><?= $event_value->name ?></div>
-                                    </div>
-                                <?php } ?>
-                            <?php endforeach; ?>
-                        <?php } ?>
-                    <?php endforeach; ?>
+                <?php foreach ($sequence_model_all as $sequence_value): ?>
+                    <?php if ($sequence_value->level == $value->id){ ?>
+                        <?php $event_id = $sequence_value->node; ?>
+                        <?php foreach ($event_model_all as $event_value): ?>
+                            <?php if ($event_value->id == $event_id){ ?>
+                                <div id="node_<?= $event_value->id ?>" class="div-event">
+                                    <div class="div-event-name"><?= $event_value->name ?></div>
+                                </div>
+                            <?php } ?>
+                        <?php endforeach; ?>
+                    <?php } ?>
+                <?php endforeach; ?>
 
-                </div>
             </div>
+        </div>
         <?php $a = $value->id; }?>
-    <?php endforeach; ?>
-    <!-- Вывод остальных уровней -->
-    <?php if ($level_model_count > 1){ ?>
+        <?php endforeach; ?>
+        <!-- Вывод остальных уровней -->
+        <?php if ($level_model_count > 1){ ?>
         <?php $i = 1; ?>
         <?php do { ?>
             <?php foreach ($level_model_all as $level_value): ?>
                 <?php if ($level_value->parent_level == $a){ ?>
-                    <div id="div-level-<?= $level_value->id ?>" class="div-level">
+                    <div id="level_<?= $level_value->id ?>" class="div-level">
                         <div class="div-level-name"><?= $level_value->name ?></div>
-                        <div class="div-level-description">
+                        <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
                             <!--?= $level_value->description ?>-->
                             <?php foreach ($sequence_model_all as $sequence_value): ?>
                                 <?php if ($sequence_value->level == $level_value->id){ ?>
@@ -177,7 +236,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                     <!-- Вывод механизма -->
                                     <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                         <?php if ($mechanism_value->id == $node_id){ ?>
-                                            <div id="div-mechanism-<?= $mechanism_value->id ?>"
+                                            <div id="node_<?= $mechanism_value->id ?>"
                                                  class="div-mechanism" title="<?= $mechanism_value->name ?>">
                                                 <div class="div-mechanism-m">M</div>
                                             </div>
@@ -186,7 +245,7 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
                                     <!-- Вывод событий -->
                                     <?php foreach ($event_model_all as $event_value): ?>
                                         <?php if ($event_value->id == $node_id){ ?>
-                                            <div id="div-event-<?= $event_value->id ?>" class="div-event">
+                                            <div id="node_<?= $event_value->id ?>" class="div-event">
                                                 <div class="div-event-name"><?= $event_value->name ?></div>
                                             </div>
                                         <?php } ?>
@@ -202,5 +261,5 @@ $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS
             <?php $i = $i + 1; ?>
         <?php } while ($i <> $level_model_count); ?>
     </div>
-    <?php } ?>
+<?php } ?>
 </div>

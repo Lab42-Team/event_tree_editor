@@ -38,12 +38,12 @@ use app\modules\main\models\Lang;
                             $("#addMechanismModalForm").modal("hide");
 
                             //создание и вывод в <div> нового элемента
-                            var div_level_layer = document.getElementById('div-level-' + data['id_level']);
+                            var div_level_layer = document.getElementById('level_description_' + data['id_level']);
 
                             var div_mechanism = document.createElement('div');
-                            div_mechanism.id = 'div-mechanism-' + data['id'];
-                            div_mechanism.title = data['name'];
+                            div_mechanism.id = 'node_' + data['id'];
                             div_mechanism.className = 'div-mechanism';
+                            div_mechanism.title = data['name'];
                             div_level_layer.append(div_mechanism);
 
                             var div_mechanism_m = document.createElement('div');
