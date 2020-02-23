@@ -63,9 +63,30 @@ use app\modules\editor\models\Node;
                                 div_event_name.innerHTML = data['name'];
                                 div_event.append(div_event_name);
                             }
-                            document.getElementById('add-event-form').reset();
 
-                            document.getElementById("pjax-sequence-mas-button").click();
+                            document.getElementById('add-event-form').reset();
+                            //document.getElementById("pjax-sequence-mas-button").click();
+
+                            //применяем к новым элементам свойства plumb
+                            //находим DOM элемент description уровня (идентификатор div level_description)
+                            var div_level_id = document.getElementById('level_description_'+ data['id_level']);
+                            var g_name = 'group'+ data['id_level']; //определяем имя группы
+                            var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                            if (grp == 0){
+                            //если группа не существует то создаем группу с определенным именем group_name
+                                instance.addGroup({
+                                    el: div_level_id,
+                                    id: g_name,
+                                    draggable: false,
+                                    constrain: true,
+                                });
+                            }
+                            //находим DOM элемент node (идентификатор div node)
+                            var div_node_id = document.getElementById('node_'+ data['id']);
+                            //делаем node перетаскиваемым
+                            instance.draggable(div_node_id);
+                            //добавляем элемент div_node_id в группу с именем group_name
+                            instance.addToGroup(g_name, div_node_id);
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);

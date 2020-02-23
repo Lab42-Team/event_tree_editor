@@ -140,9 +140,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
-
+    var instance = "";
     jsPlumb.ready(function () {
-        var instance = jsPlumb.getInstance({
+        instance = jsPlumb.getInstance({
             Container: visual_diagram_field,
             Connector:"StateMachine",
             Endpoint:["Dot", {radius:3}], Anchor:"Center"});
@@ -191,12 +191,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 </div>
 
 <div id="visual_diagram_field" class="visual-diagram-top-layer col-md-12">
-
+    <div id="top_layer" class="top">
     <!-- Вывод уровней -->
     <!-- Вывод начального уровня -->
     <?php foreach ($level_model_all as $value): ?>
-<?php if ($value->parent_level == null){ ?>
-    <div id="top_layer" class="top">
+    <?php if ($value->parent_level == null){ ?>
         <div id="level_<?= $value->id ?>" class="div-level">
             <div class="div-level-name"><?= $value->name ?></div>
             <div class="div-level-description" id="level_description_<?= $value->id ?>">
