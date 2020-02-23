@@ -65,7 +65,6 @@ use app\modules\editor\models\Node;
                             }
 
                             document.getElementById('add-event-form').reset();
-                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //применяем к новым элементам свойства plumb
                             //находим DOM элемент description уровня (идентификатор div level_description)

@@ -52,7 +52,6 @@ use app\modules\main\models\Lang;
                             div_mechanism.append(div_mechanism_m);
 
                             document.getElementById('add-mechanism-form').reset();
-                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //применяем к новым элементам свойства plumb
                             //находим DOM элемент description уровня (идентификатор div level_description)
