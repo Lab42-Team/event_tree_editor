@@ -61,15 +61,24 @@ $this->params['menu'] = [
 <?php Pjax::end(); ?>
 
 
+<?php Pjax::begin(); ?>
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-sequence-mas-button', 'style' => 'display:none']) ?>
+<?php
+    // создаем массив из соотношения level и node для передачи в jsplumb
+    $sequence_mas = array();
+    foreach ($sequence_model_all as $s){
+        array_push($sequence_mas, [$s->level, $s->node]);
+        //echo $s->level;
+        //echo " - ";
+        //echo $s->node;
+        //echo " - - - ";
+    }
+?>
+<?php Pjax::end(); ?>
+
 <!-- Подключение скрипта для модальных форм -->
 <?php
-
-// создаем массив из соотношения level и node для передачи в jsplumb
-$sequence_mas = array();
-foreach ($sequence_model_all as $s){
-    array_push($sequence_mas, [$s->level, $s->node]);
-}
-
 $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD]);
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
 
@@ -175,10 +184,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 </script>
-
-<?php
-
-?>
 
 
 <div class="tree-diagram-visual-diagram">

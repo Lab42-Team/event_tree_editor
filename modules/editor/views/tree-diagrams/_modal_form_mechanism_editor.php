@@ -52,6 +52,8 @@ use app\modules\main\models\Lang;
                             div_mechanism.append(div_mechanism_m);
 
                             document.getElementById('add-mechanism-form').reset();
+
+                            document.getElementById("pjax-sequence-mas-button").click();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-mechanism-form", data);

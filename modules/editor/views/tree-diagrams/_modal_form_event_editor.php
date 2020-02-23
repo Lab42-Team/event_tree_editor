@@ -64,6 +64,8 @@ use app\modules\editor\models\Node;
                                 div_event.append(div_event_name);
                             }
                             document.getElementById('add-event-form').reset();
+
+                            document.getElementById("pjax-sequence-mas-button").click();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
