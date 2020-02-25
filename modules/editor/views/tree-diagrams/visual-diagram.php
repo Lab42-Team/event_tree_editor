@@ -131,6 +131,14 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
+
+    //$(document).on('dblclick', '.div-event', function() {
+    //    var id_dblclick = $(this).attr('id');
+    //    alert(id_dblclick);
+    //});
+
+
+
     var instance = "";
     jsPlumb.ready(function () {
         instance = jsPlumb.getInstance({
