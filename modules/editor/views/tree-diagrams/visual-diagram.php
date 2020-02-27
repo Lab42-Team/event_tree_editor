@@ -132,6 +132,111 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
+
+    $(document).ready(function() {
+        $(".div-event").mousemove(function(){
+            var id_node = $(this).attr('id');
+            var event = document.getElementById(id_node);
+            var level = event.offsetParent;
+
+            var width_level = level.clientWidth;
+
+            var top = document.getElementById('top_layer').clientWidth;
+
+            var l = event.offsetLeft;
+
+            if (l + 140 >= width_level){
+                //alert("равно");
+                document.getElementById('top_layer').style.width = top + 100 + 'px';
+            }
+
+        });
+    });
+
+//  работает но не так как хочется
+//    $(document).ready(function() {
+//        $(".div-event").mousedown(function(){
+//            var id_node = $(this).attr('id');
+//            var event = document.getElementById(id_node);
+//            var level = event.offsetParent;
+//
+//            var width_level = level.clientWidth;
+//
+//            document.onmousemove = function(e) {
+//                var l = event.offsetLeft;
+//
+//                if (l + 140 == width_level){
+//                    //alert("равно");
+//                    level.style.width = width_level + 10 + 'px';
+//                }
+//            };
+//
+//            event.onmouseup = function() {
+//                //alert(x +'x'+ y + 'ширина уровня' + top);
+//                return false;
+//            };
+//        });
+//    });
+
+    //event.addEventListener("mousemove", function(e){
+    //    alert("sdf");
+    //    if (!e) e = window.event;
+    //    var ctx = canvas.getContext("2d");
+
+    //    var x = e.offsetX || e.originalEvent.layerX;
+    //    var y = e.offsetY || e.originalEvent.layerY;
+
+    //    ctx.fillRect(x, y, 1, 1);
+    //});
+
+    //var x = e.offsetX || e.originalEvent.layerX;
+    //var y = e.offsetY || e.originalEvent.layerY;
+    //var offX  = (e.offsetX || e.pageX - $(e.target).offset().left);
+
+    //event.addEventListener("mousemove", function(e){
+    //    alert("sdf");
+    //    if (!e) e = window.event;
+    //    var ctx = canvas.getContext("2d");
+
+    //    var x = e.offsetX || e.originalEvent.layerX;
+    //    var y = e.offsetY || e.originalEvent.layerY;
+
+    //    ctx.fillRect(x, y, 1, 1);
+    //});
+
+
+    //$(document).mousedown('.div-event', function() {
+    //.mousedown(function()
+
+    //$(document).on('mousedown', '.div-event', function() {
+    //    console.log("sdfgsdf")
+
+    //    var l = this.offsetLeft;
+        //alert(l);
+
+    //    var top = document.getElementById('top_layer').clientWidth;
+        //alert(top);
+
+    //    if (l + 240 == top){
+            //alert("равно");
+    //        document.getElementById('top_layer').style.width = top + 100 + 'px';
+    //    }
+
+
+        //Доступную внутреннюю ширину родителя можно получить,
+        // вычитая из clientWidth размеры paddingLeft/paddingRight, и затем присвоить её элементу:
+        //var bodyClientWidth = document.body.clientWidth;
+
+        //var style = getComputedStyle(elem);
+
+        //var bodyInnerWidth = bodyClientWidth - parseInt(style.paddingLeft) - parseInt(style.paddingRight);
+
+        //elem.style.width = bodyInnerWidth + 'px';
+    //});
+
+
+
+    // работаю над редактированием элемента
     //$(document).on('dblclick', '.div-event', function() {
     //    var id_dblclick = $(this).attr('id');
     //    alert(id_dblclick);
@@ -164,8 +269,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         instance.addGroup({
                             el: div_level_id,
                             id: group_name,
-                            draggable: false,
-                            constrain: true,
+                            draggable: false, //перетаскивание группы
+                            constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
                         });
                     }
                 }
