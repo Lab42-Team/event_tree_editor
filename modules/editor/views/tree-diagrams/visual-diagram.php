@@ -270,7 +270,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             el: div_level_id,
                             id: group_name,
                             draggable: false, //перетаскивание группы
-                            constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                            //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                            dropOverride:true,
                         });
                     }
                 }
