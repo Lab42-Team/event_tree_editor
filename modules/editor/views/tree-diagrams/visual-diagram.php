@@ -132,108 +132,116 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-
     $(document).ready(function() {
+
         $(".div-event").mousemove(function(){
             var id_node = $(this).attr('id');
             var event = document.getElementById(id_node);
             var level = event.offsetParent;
 
             var width_level = level.clientWidth;
+            var height_level = level.clientHeight;
 
-            var top = document.getElementById('top_layer').clientWidth;
+            var top_layer_width = document.getElementById('top_layer').clientWidth;
 
             var l = event.offsetLeft;
+            var h = event.offsetTop;
 
             if (l + 140 >= width_level){
-                //alert("равно");
-                document.getElementById('top_layer').style.width = top + 100 + 'px';
+                document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
+                //var s = $(".visual-diagram-top-layer").scrollLeft();
+                //$(".visual-diagram-top-layer").scrollLeft(s+10);
             }
 
+            if (h + 80 >= height_level){
+                level.style.height = height_level + 5 + 'px';
+                //var s = $(".visual-diagram-top-layer").scrollTop();
+                //$(".visual-diagram-top-layer").scrollTop(s+10);
+            }
+
+            var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
+            var max_width = 0;
+            //разбор полученного массива
+            $.each(sequence_mas, function (i, mas) {
+
+                $.each(mas, function (j, elem) {
+                    //второй элемент это id узла события или механизма
+                    if (j == 1) {
+                        var id_node = elem;//записываем id узла события node или механизма mechanism
+                        //находим DOM элемент node (идентификатор div node)
+                        var div_node_id = document.getElementById('node_'+ elem);
+
+                        var width_node = div_node_id.clientWidth;
+                        var height_node = div_node_id.clientHeight;
+                        var w = div_node_id.offsetLeft;
+                        var h = div_node_id.offsetTop;
+
+                        var width = width_node + w;
+                        var height = height_node + h;
+
+                        if (max_width < width){max_width = width}
+                        document.getElementById('top_layer').style.width = max_width + 105 + 'px';
+                    }
+                });
+            });
         });
+
+        $(".div-mechanism").mousemove(function(){
+            var id_node = $(this).attr('id');
+            var event = document.getElementById(id_node);
+            var level = event.offsetParent;
+
+            var width_level = level.clientWidth;
+            var height_level = level.clientHeight;
+
+            var top_layer_width = document.getElementById('top_layer').clientWidth;
+
+            var l = event.offsetLeft;
+            var h = event.offsetTop;
+
+            if (l + 69 >= width_level){
+                document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
+                //var s = $(".visual-diagram-top-layer").scrollLeft();
+                //$(".visual-diagram-top-layer").scrollLeft(s+10);
+            }
+
+            if (h + 80 >= height_level){
+                level.style.height = height_level + 5 + 'px';
+                //var s = $(".visual-diagram-top-layer").scrollTop();
+                //$(".visual-diagram-top-layer").scrollTop(s+10);
+            }
+
+            var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
+            var max_width = 0;
+            //разбор полученного массива
+            $.each(sequence_mas, function (i, mas) {
+
+                $.each(mas, function (j, elem) {
+                    //второй элемент это id узла события или механизма
+                    if (j == 1) {
+                        var id_node = elem;//записываем id узла события node или механизма mechanism
+                        //находим DOM элемент node (идентификатор div node)
+                        var div_node_id = document.getElementById('node_'+ elem);
+
+                        var width_node = div_node_id.clientWidth;
+                        var height_node = div_node_id.clientHeight;
+                        var w = div_node_id.offsetLeft;
+                        var h = div_node_id.offsetTop;
+
+                        var width = width_node + w;
+                        var height = height_node + h;
+
+                        if (max_width < width){max_width = width}
+                        document.getElementById('top_layer').style.width = max_width + 105 + 'px';
+                    }
+                });
+            });
+
+        });
+
+
+
     });
-
-//  работает но не так как хочется
-//    $(document).ready(function() {
-//        $(".div-event").mousedown(function(){
-//            var id_node = $(this).attr('id');
-//            var event = document.getElementById(id_node);
-//            var level = event.offsetParent;
-//
-//            var width_level = level.clientWidth;
-//
-//            document.onmousemove = function(e) {
-//                var l = event.offsetLeft;
-//
-//                if (l + 140 == width_level){
-//                    //alert("равно");
-//                    level.style.width = width_level + 10 + 'px';
-//                }
-//            };
-//
-//            event.onmouseup = function() {
-//                //alert(x +'x'+ y + 'ширина уровня' + top);
-//                return false;
-//            };
-//        });
-//    });
-
-    //event.addEventListener("mousemove", function(e){
-    //    alert("sdf");
-    //    if (!e) e = window.event;
-    //    var ctx = canvas.getContext("2d");
-
-    //    var x = e.offsetX || e.originalEvent.layerX;
-    //    var y = e.offsetY || e.originalEvent.layerY;
-
-    //    ctx.fillRect(x, y, 1, 1);
-    //});
-
-    //var x = e.offsetX || e.originalEvent.layerX;
-    //var y = e.offsetY || e.originalEvent.layerY;
-    //var offX  = (e.offsetX || e.pageX - $(e.target).offset().left);
-
-    //event.addEventListener("mousemove", function(e){
-    //    alert("sdf");
-    //    if (!e) e = window.event;
-    //    var ctx = canvas.getContext("2d");
-
-    //    var x = e.offsetX || e.originalEvent.layerX;
-    //    var y = e.offsetY || e.originalEvent.layerY;
-
-    //    ctx.fillRect(x, y, 1, 1);
-    //});
-
-
-    //$(document).mousedown('.div-event', function() {
-    //.mousedown(function()
-
-    //$(document).on('mousedown', '.div-event', function() {
-    //    console.log("sdfgsdf")
-
-    //    var l = this.offsetLeft;
-        //alert(l);
-
-    //    var top = document.getElementById('top_layer').clientWidth;
-        //alert(top);
-
-    //    if (l + 240 == top){
-            //alert("равно");
-    //        document.getElementById('top_layer').style.width = top + 100 + 'px';
-    //    }
-
-
-        //Доступную внутреннюю ширину родителя можно получить,
-        // вычитая из clientWidth размеры paddingLeft/paddingRight, и затем присвоить её элементу:
-        //var bodyClientWidth = document.body.clientWidth;
-
-        //var style = getComputedStyle(elem);
-
-        //var bodyInnerWidth = bodyClientWidth - parseInt(style.paddingLeft) - parseInt(style.paddingRight);
-
-        //elem.style.width = bodyInnerWidth + 'px';
-    //});
-
 
 
     // работаю над редактированием элемента
@@ -251,7 +259,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Connector:"StateMachine",
             Endpoint:["Dot", {radius:3}], Anchor:"Center"});
 
-        var sequence_mas = <?php echo json_encode($sequence_mas); ?>;;//прием массива из php
+        var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
 
         var group_name = "";
         //разбор полученного массива
