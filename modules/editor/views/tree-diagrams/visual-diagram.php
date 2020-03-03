@@ -149,21 +149,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
             if (l + 140 >= width_level){
                 document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
-                //var s = $(".visual-diagram-top-layer").scrollLeft();
-                //$(".visual-diagram-top-layer").scrollLeft(s+10);
             }
 
             if (h + 80 >= height_level){
                 level.style.height = height_level + 5 + 'px';
-                //var s = $(".visual-diagram-top-layer").scrollTop();
-                //$(".visual-diagram-top-layer").scrollTop(s+10);
             }
-
+            //автоматическое свертывание по горизонтали
             var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
             var max_width = 0;
             //разбор полученного массива
             $.each(sequence_mas, function (i, mas) {
-
                 $.each(mas, function (j, elem) {
                     //второй элемент это id узла события или механизма
                     if (j == 1) {
@@ -172,18 +167,73 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         var div_node_id = document.getElementById('node_'+ elem);
 
                         var width_node = div_node_id.clientWidth;
-                        var height_node = div_node_id.clientHeight;
                         var w = div_node_id.offsetLeft;
-                        var h = div_node_id.offsetTop;
-
                         var width = width_node + w;
-                        var height = height_node + h;
 
                         if (max_width < width){max_width = width}
                         document.getElementById('top_layer').style.width = max_width + 105 + 'px';
                     }
                 });
             });
+
+            //-----------
+            //автоматическое свертывание по вертикали
+            var mas_data = {};
+            var q = 0;
+            var id_level = "";
+            var id_node = "";
+            $.each(sequence_mas, function (i, mas) {
+                $.each(mas, function (j, elem) {
+                    //первый элемент это id уровня
+                    if (j == 0) {id_level = elem;}//записываем id уровня
+                    //второй элемент это id узла события или механизма
+                    if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
+                    mas_data[q] = {
+                        "level":id_level,
+                        "node":id_node,
+                    }
+                });
+                q = q+1;
+            });
+
+            var mas_otbor = {};
+            var q = 0;
+            $.each(mas_data, function (i, elem1) {
+                var max_height = 0;
+                var mas_node = 0;
+                var mas_level = 0;
+                $.each(mas_data, function (j, elem2) {
+                    var div_node_2 = document.getElementById('node_'+ elem2.node);
+                    var height_node = div_node_2.clientHeight;
+                    var h = div_node_2.offsetTop;
+                    var height = height_node + h;
+
+                    if (elem1.level == elem2.level) {
+                        if (max_height < height){
+                            max_height = height;
+                            mas_node = elem2.node;
+                            mas_level = elem2.level;
+                            q = q+1;
+                        }
+                    }
+                });
+                mas_otbor[q] = {
+                    "level":mas_level,
+                    "node":mas_node,
+                };
+            });
+
+            $.each(mas_otbor, function (j, elem) {
+                //находим DOM элемент node (идентификатор div node)
+                var div_node_id = document.getElementById('node_'+ elem.node);
+                var div_level_id = document.getElementById('level_description_'+ elem.level);
+                var height_node = div_node_id.clientHeight;
+                var h = div_node_id.offsetTop;
+                var height = height_node + h;
+                div_level_id.style.height = height + 5 + 'px';
+            });
+            //----------------------
+
         });
 
         $(".div-mechanism").mousemove(function(){
@@ -201,21 +251,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
             if (l + 69 >= width_level){
                 document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
-                //var s = $(".visual-diagram-top-layer").scrollLeft();
-                //$(".visual-diagram-top-layer").scrollLeft(s+10);
             }
 
             if (h + 80 >= height_level){
                 level.style.height = height_level + 5 + 'px';
-                //var s = $(".visual-diagram-top-layer").scrollTop();
-                //$(".visual-diagram-top-layer").scrollTop(s+10);
             }
-
+            //автоматическое свертывание по горизонтали
             var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
             var max_width = 0;
             //разбор полученного массива
             $.each(sequence_mas, function (i, mas) {
-
                 $.each(mas, function (j, elem) {
                     //второй элемент это id узла события или механизма
                     if (j == 1) {
@@ -224,12 +269,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         var div_node_id = document.getElementById('node_'+ elem);
 
                         var width_node = div_node_id.clientWidth;
-                        var height_node = div_node_id.clientHeight;
                         var w = div_node_id.offsetLeft;
-                        var h = div_node_id.offsetTop;
-
                         var width = width_node + w;
-                        var height = height_node + h;
 
                         if (max_width < width){max_width = width}
                         document.getElementById('top_layer').style.width = max_width + 105 + 'px';
@@ -237,9 +278,64 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 });
             });
 
+            //-----------
+            //автоматическое свертывание по вертикали
+            var mas_data = {};
+            var q = 0;
+            var id_level = "";
+            var id_node = "";
+            $.each(sequence_mas, function (i, mas) {
+                $.each(mas, function (j, elem) {
+                    //первый элемент это id уровня
+                    if (j == 0) {id_level = elem;}//записываем id уровня
+                    //второй элемент это id узла события или механизма
+                    if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
+                    mas_data[q] = {
+                        "level":id_level,
+                        "node":id_node,
+                    }
+                });
+                q = q+1;
+            });
+
+            var mas_otbor = {};
+            var q = 0;
+            $.each(mas_data, function (i, elem1) {
+                var max_height = 0;
+                var mas_node = 0;
+                var mas_level = 0;
+                $.each(mas_data, function (j, elem2) {
+                    var div_node_2 = document.getElementById('node_'+ elem2.node);
+                    var height_node = div_node_2.clientHeight;
+                    var h = div_node_2.offsetTop;
+                    var height = height_node + h;
+
+                    if (elem1.level == elem2.level) {
+                        if (max_height < height){
+                            max_height = height;
+                            mas_node = elem2.node;
+                            mas_level = elem2.level;
+                            q = q+1;
+                        }
+                    }
+                });
+                mas_otbor[q] = {
+                    "level":mas_level,
+                    "node":mas_node,
+                };
+            });
+
+            $.each(mas_otbor, function (j, elem) {
+                //находим DOM элемент node (идентификатор div node)
+                var div_node_id = document.getElementById('node_'+ elem.node);
+                var div_level_id = document.getElementById('level_description_'+ elem.level);
+                var height_node = div_node_id.clientHeight;
+                var h = div_node_id.offsetTop;
+                var height = height_node + h;
+                div_level_id.style.height = height + 5 + 'px';
+            });
+            //----------------------
         });
-
-
 
     });
 
