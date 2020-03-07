@@ -36,6 +36,20 @@ $this->params['menu'] = [
 ];
 ?>
 
+<?php Pjax::begin(); ?>
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-sequence-mas-button', 'style' => 'display:none']) ?>
+<?php
+// создаем массив из соотношения level и node для передачи в jsplumb
+$sequence_mas = array();
+foreach ($sequence_model_all as $s){
+    array_push($sequence_mas, [$s->level, $s->node]);
+}
+?>
+
+<?php Pjax::end(); ?>
+
+
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
     'level_model' => $level_model,
@@ -60,13 +74,6 @@ $this->params['menu'] = [
 
 <?php Pjax::end(); ?>
 
-<?php
-    // создаем массив из соотношения level и node для передачи в jsplumb
-    $sequence_mas = array();
-    foreach ($sequence_model_all as $s){
-        array_push($sequence_mas, [$s->level, $s->node]);
-    }
-?>
 
 <!-- Подключение скрипта для модальных форм -->
 <?php
@@ -131,212 +138,213 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
+    // работаю над редактированием элемента
+    //$(document).on('dblclick', '.div-event', function() {
+    //    var id_dblclick = $(this).attr('id');
+    //    alert(id_dblclick);
+    //});
 
-    $(document).ready(function() {
+    var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
 
-        $(".div-event").mousemove(function(){
-            var id_node = $(this).attr('id');
-            var event = document.getElementById(id_node);
-            var level = event.offsetParent;
+    $(document).on('mousemove', '.div-event', function() {
+        var id_node = $(this).attr('id');
+        var event = document.getElementById(id_node);
+        var level = event.offsetParent;
 
-            var width_level = level.clientWidth;
-            var height_level = level.clientHeight;
+        var width_level = level.clientWidth;
+        var height_level = level.clientHeight;
 
-            var top_layer_width = document.getElementById('top_layer').clientWidth;
+        var top_layer_width = document.getElementById('top_layer').clientWidth;
 
-            var l = event.offsetLeft;
-            var h = event.offsetTop;
+        var l = event.offsetLeft;
+        var h = event.offsetTop;
 
-            if (l + 140 >= width_level){
-                document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
-            }
+        if (l + 140 >= width_level){
+            document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
+        }
+        if (h + 80 >= height_level){
+            level.style.height = height_level + 5 + 'px';
+        }
+        //------------------------------------------
+        //автоматическое свертывание по горизонтали
+        var max_width = 0;
+        //разбор полученного массива
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //второй элемент это id узла события или механизма
+                if (j == 1) {
+                    var id_node = elem;//записываем id узла события node или механизма mechanism
+                    //находим DOM элемент node (идентификатор div node)
+                    var div_node_id = document.getElementById('node_'+ elem);
 
-            if (h + 80 >= height_level){
-                level.style.height = height_level + 5 + 'px';
-            }
-            //автоматическое свертывание по горизонтали
-            var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
-            var max_width = 0;
-            //разбор полученного массива
-            $.each(sequence_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //второй элемент это id узла события или механизма
-                    if (j == 1) {
-                        var id_node = elem;//записываем id узла события node или механизма mechanism
-                        //находим DOM элемент node (идентификатор div node)
-                        var div_node_id = document.getElementById('node_'+ elem);
+                    var width_node = div_node_id.clientWidth;
+                    var w = div_node_id.offsetLeft;
+                    var width = width_node + w;
 
-                        var width_node = div_node_id.clientWidth;
-                        var w = div_node_id.offsetLeft;
-                        var width = width_node + w;
-
-                        if (max_width < width){max_width = width}
-                        document.getElementById('top_layer').style.width = max_width + 105 + 'px';
-                    }
-                });
+                    if (max_width < width){max_width = width}
+                    document.getElementById('top_layer').style.width = max_width + 105 + 'px';
+                }
             });
-
-            //-----------
-            //автоматическое свертывание по вертикали
-            var mas_data = {};
-            var q = 0;
-            var id_level = "";
-            var id_node = "";
-            $.each(sequence_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //первый элемент это id уровня
-                    if (j == 0) {id_level = elem;}//записываем id уровня
-                    //второй элемент это id узла события или механизма
-                    if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
-                    mas_data[q] = {
-                        "level":id_level,
-                        "node":id_node,
-                    }
-                });
-                q = q+1;
+        });
+        //------------------------------------------
+        //автоматическое свертывание по вертикали
+        var mas_data = {};
+        var q = 0;
+        var id_level = "";
+        var id_node = "";
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //первый элемент это id уровня
+                if (j == 0) {id_level = elem;}//записываем id уровня
+                //второй элемент это id узла события или механизма
+                if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
+                mas_data[q] = {
+                    "level":id_level,
+                    "node":id_node,
+                }
             });
+            q = q+1;
+        });
 
-            var mas_otbor = {};
-            var q = 0;
-            $.each(mas_data, function (i, elem1) {
-                var max_height = 0;
-                var mas_node = 0;
-                var mas_level = 0;
-                $.each(mas_data, function (j, elem2) {
-                    var div_node_2 = document.getElementById('node_'+ elem2.node);
-                    var height_node = div_node_2.clientHeight;
-                    var h = div_node_2.offsetTop;
-                    var height = height_node + h;
-
-                    if (elem1.level == elem2.level) {
-                        if (max_height < height){
-                            max_height = height;
-                            mas_node = elem2.node;
-                            mas_level = elem2.level;
-                            q = q+1;
-                        }
-                    }
-                });
-                mas_otbor[q] = {
-                    "level":mas_level,
-                    "node":mas_node,
-                };
-            });
-
-            $.each(mas_otbor, function (j, elem) {
-                //находим DOM элемент node (идентификатор div node)
-                var div_node_id = document.getElementById('node_'+ elem.node);
-                var div_level_id = document.getElementById('level_description_'+ elem.level);
-                var height_node = div_node_id.clientHeight;
-                var h = div_node_id.offsetTop;
+        var mas_otbor = {};
+        var q = 0;
+        $.each(mas_data, function (i, elem1) {
+            var max_height = 0;
+            var mas_node = 0;
+            var mas_level = 0;
+            $.each(mas_data, function (j, elem2) {
+                var div_node_2 = document.getElementById('node_'+ elem2.node);
+                var height_node = div_node_2.clientHeight;
+                var h = div_node_2.offsetTop;
                 var height = height_node + h;
-                div_level_id.style.height = height + 5 + 'px';
+
+                if (elem1.level == elem2.level) {
+                    if (max_height < height){
+                        max_height = height;
+                        mas_node = elem2.node;
+                        mas_level = elem2.level;
+                        q = q+1;
+                    }
+                }
             });
-            //----------------------
+            mas_otbor[q] = {
+                "level":mas_level,
+                "node":mas_node,
+            };
+        });
+
+        $.each(mas_otbor, function (j, elem) {
+            //находим DOM элемент node (идентификатор div node)
+            var div_node_id = document.getElementById('node_'+ elem.node);
+            var div_level_id = document.getElementById('level_description_'+ elem.level);
+            var height_node = div_node_id.clientHeight;
+            var h = div_node_id.offsetTop;
+            var height = height_node + h;
+            div_level_id.style.height = height + 5 + 'px';
+        });
+        //------------------------------------------
 
         });
 
-        $(".div-mechanism").mousemove(function(){
-            var id_node = $(this).attr('id');
-            var event = document.getElementById(id_node);
-            var level = event.offsetParent;
+    $(document).on('mousemove', '.div-mechanism', function() {
+        var id_node = $(this).attr('id');
+        var event = document.getElementById(id_node);
+        var level = event.offsetParent;
 
-            var width_level = level.clientWidth;
-            var height_level = level.clientHeight;
+        var width_level = level.clientWidth;
+        var height_level = level.clientHeight;
 
-            var top_layer_width = document.getElementById('top_layer').clientWidth;
+        var top_layer_width = document.getElementById('top_layer').clientWidth;
 
-            var l = event.offsetLeft;
-            var h = event.offsetTop;
+        var l = event.offsetLeft;
+        var h = event.offsetTop;
 
-            if (l + 69 >= width_level){
-                document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
-            }
+        if (l + 69 >= width_level){
+            document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
+        }
 
-            if (h + 80 >= height_level){
-                level.style.height = height_level + 5 + 'px';
-            }
-            //автоматическое свертывание по горизонтали
-            var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
-            var max_width = 0;
-            //разбор полученного массива
-            $.each(sequence_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //второй элемент это id узла события или механизма
-                    if (j == 1) {
-                        var id_node = elem;//записываем id узла события node или механизма mechanism
-                        //находим DOM элемент node (идентификатор div node)
-                        var div_node_id = document.getElementById('node_'+ elem);
+        if (h + 80 >= height_level){
+            level.style.height = height_level + 5 + 'px';
+        }
+        //------------------------------------------
+        //автоматическое свертывание по горизонтали
+        var max_width = 0;
+        //разбор полученного массива
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //второй элемент это id узла события или механизма
+                if (j == 1) {
+                    var id_node = elem;//записываем id узла события node или механизма mechanism
+                    //находим DOM элемент node (идентификатор div node)
+                    var div_node_id = document.getElementById('node_'+ elem);
 
-                        var width_node = div_node_id.clientWidth;
-                        var w = div_node_id.offsetLeft;
-                        var width = width_node + w;
+                    var width_node = div_node_id.clientWidth;
+                    var w = div_node_id.offsetLeft;
+                    var width = width_node + w;
 
-                        if (max_width < width){max_width = width}
-                        document.getElementById('top_layer').style.width = max_width + 105 + 'px';
-                    }
-                });
+                    if (max_width < width){max_width = width}
+                    document.getElementById('top_layer').style.width = max_width + 105 + 'px';
+                }
             });
-
-            //-----------
-            //автоматическое свертывание по вертикали
-            var mas_data = {};
-            var q = 0;
-            var id_level = "";
-            var id_node = "";
-            $.each(sequence_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //первый элемент это id уровня
-                    if (j == 0) {id_level = elem;}//записываем id уровня
-                    //второй элемент это id узла события или механизма
-                    if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
-                    mas_data[q] = {
-                        "level":id_level,
-                        "node":id_node,
-                    }
-                });
-                q = q+1;
-            });
-
-            var mas_otbor = {};
-            var q = 0;
-            $.each(mas_data, function (i, elem1) {
-                var max_height = 0;
-                var mas_node = 0;
-                var mas_level = 0;
-                $.each(mas_data, function (j, elem2) {
-                    var div_node_2 = document.getElementById('node_'+ elem2.node);
-                    var height_node = div_node_2.clientHeight;
-                    var h = div_node_2.offsetTop;
-                    var height = height_node + h;
-
-                    if (elem1.level == elem2.level) {
-                        if (max_height < height){
-                            max_height = height;
-                            mas_node = elem2.node;
-                            mas_level = elem2.level;
-                            q = q+1;
-                        }
-                    }
-                });
-                mas_otbor[q] = {
-                    "level":mas_level,
-                    "node":mas_node,
-                };
-            });
-
-            $.each(mas_otbor, function (j, elem) {
-                //находим DOM элемент node (идентификатор div node)
-                var div_node_id = document.getElementById('node_'+ elem.node);
-                var div_level_id = document.getElementById('level_description_'+ elem.level);
-                var height_node = div_node_id.clientHeight;
-                var h = div_node_id.offsetTop;
-                var height = height_node + h;
-                div_level_id.style.height = height + 5 + 'px';
-            });
-            //----------------------
         });
 
+        //------------------------------------------
+        //автоматическое свертывание по вертикали
+        var mas_data = {};
+        var q = 0;
+        var id_level = "";
+        var id_node = "";
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //первый элемент это id уровня
+                if (j == 0) {id_level = elem;}//записываем id уровня
+                //второй элемент это id узла события или механизма
+                if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
+                mas_data[q] = {
+                    "level":id_level,
+                    "node":id_node,
+                }
+            });
+            q = q+1;
+        });
+
+        var mas_otbor = {};
+        var q = 0;
+        $.each(mas_data, function (i, elem1) {
+            var max_height = 0;
+            var mas_node = 0;
+            var mas_level = 0;
+            $.each(mas_data, function (j, elem2) {
+                var div_node_2 = document.getElementById('node_'+ elem2.node);
+                var height_node = div_node_2.clientHeight;
+                var h = div_node_2.offsetTop;
+                var height = height_node + h;
+
+                if (elem1.level == elem2.level) {
+                    if (max_height < height){
+                        max_height = height;
+                        mas_node = elem2.node;
+                        mas_level = elem2.level;
+                        q = q+1;
+                    }
+                }
+            });
+            mas_otbor[q] = {
+                "level":mas_level,
+                "node":mas_node,
+            };
+        });
+
+        $.each(mas_otbor, function (j, elem) {
+            //находим DOM элемент node (идентификатор div node)
+            var div_node_id = document.getElementById('node_'+ elem.node);
+            var div_level_id = document.getElementById('level_description_'+ elem.level);
+            var height_node = div_node_id.clientHeight;
+            var h = div_node_id.offsetTop;
+            var height = height_node + h;
+            div_level_id.style.height = height + 5 + 'px';
+        });
+        //------------------------------------------
     });
 
 
@@ -345,7 +353,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     //    var id_dblclick = $(this).attr('id');
     //    alert(id_dblclick);
     //});
-
 
 
     var instance = "";

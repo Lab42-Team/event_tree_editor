@@ -52,6 +52,7 @@ use app\modules\main\models\Lang;
                             div_mechanism.append(div_mechanism_m);
 
                             document.getElementById('add-mechanism-form').reset();
+                            document.getElementById("pjax-sequence-mas-button").click();
 
                             //применяем к новым элементам свойства plumb
                             //находим DOM элемент description уровня (идентификатор div level_description)
@@ -63,8 +64,9 @@ use app\modules\main\models\Lang;
                                 instance.addGroup({
                                     el: div_level_id,
                                     id: g_name,
-                                    draggable: false,
-                                    constrain: true,
+                                    draggable: false, //перетаскивание группы
+                                    //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                                    dropOverride:true,
                                 });
                             }
                             //находим DOM элемент node (идентификатор div node)
@@ -73,6 +75,11 @@ use app\modules\main\models\Lang;
                             instance.draggable(div_node_id);
                             //добавляем элемент div_node_id в группу с именем group_name
                             instance.addToGroup(g_name, div_node_id);
+
+                            var level = parseInt(data['id_level'], 10);
+                            var node = data['id'];
+
+                            var removed = sequence_mas.push([level, node]);
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-mechanism-form", data);
