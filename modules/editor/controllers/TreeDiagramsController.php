@@ -156,8 +156,9 @@ class TreeDiagramsController extends Controller
         $level_model_count = Level::find()->where(['tree_diagram' => $id])->count();
         $initial_event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->all();
         $event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::EVENT_TYPE])->all();
-        $sequence_model_all = Sequence::find()->where(['tree_diagram' => $id])->all();
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
+        $sequence_model_all = Sequence::find()->where(['tree_diagram' => $id])->all();
+        $node_model_all = Node::find()->where(['tree_diagram' => $id])->all();
         $level_model = new Level();
         $node_model = new Node();
 
@@ -174,7 +175,7 @@ class TreeDiagramsController extends Controller
             'event_model_all' => $event_model_all,
             'mechanism_model_all' => $mechanism_model_all,
             'sequence_model_all' => $sequence_model_all,
-
+            'node_model_all' => $node_model_all,
             'array_levels' => $array_levels,
             'array_levels_initial_without' => $array_levels_initial_without,
         ]);
@@ -352,7 +353,32 @@ class TreeDiagramsController extends Controller
 
             // Возвращение данных
             $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
 
+
+    public function actionAddRelationship($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id')])->one();
+            $model->parent_node = Yii::$app->request->post('parent_node_id');
+            $model->updateAttributes(['parent_node']);
+
+            $data["success"] = true;
+            $data["n_id"] = $model->id;
+            $data["p_n_id"] = $model->parent_node;
+
+            // Возвращение данных
+            $response->data = $data;
             return $response;
         }
         return false;

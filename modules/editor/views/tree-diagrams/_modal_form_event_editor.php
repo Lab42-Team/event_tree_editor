@@ -43,8 +43,12 @@ use app\modules\editor\models\Node;
 
                                 var div_initial_event = document.createElement('div');
                                 div_initial_event.id = 'node_' + data['id'];
-                                div_initial_event.className = 'div-event';
+                                div_initial_event.className = 'div-event node';
                                 div_level_layer.append(div_initial_event);
+
+                                var div_ep = document.createElement('div');
+                                div_ep.className = 'ep' ;
+                                div_initial_event.append(div_ep);
 
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.className = 'div-event-name' ;
@@ -55,8 +59,12 @@ use app\modules\editor\models\Node;
 
                                 var div_event = document.createElement('div');
                                 div_event.id = 'node_' + data['id'];
-                                div_event.className = 'div-event';
+                                div_event.className = 'div-event node';
                                 div_level_layer.append(div_event);
+
+                                var div_ep = document.createElement('div');
+                                div_ep.className = 'ep' ;
+                                div_event.append(div_ep);
 
                                 var div_event_name = document.createElement('div');
                                 div_event_name.className = 'div-event-name' ;
@@ -88,6 +96,20 @@ use app\modules\editor\models\Node;
                             instance.draggable(div_node_id);
                             //добавляем элемент div_node_id в группу с именем group_name
                             instance.addToGroup(g_name, div_node_id);
+
+
+                            instance.makeSource(div_node_id, {
+                                filter: ".ep",
+                                anchor: "Bottom",
+                            });
+
+                            instance.makeTarget(div_node_id, {
+                                dropOptions: { hoverClass: "dragHover" },
+                                anchor: "Top",
+                                allowLoopback: false, // Нельзя создать кольцевую связь
+                                maxConnections: -1,
+                            });
+
 
                             var level = parseInt(data['id_level'], 10);
                             var node = data['id'];

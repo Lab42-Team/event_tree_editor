@@ -42,9 +42,13 @@ use app\modules\main\models\Lang;
 
                             var div_mechanism = document.createElement('div');
                             div_mechanism.id = 'node_' + data['id'];
-                            div_mechanism.className = 'div-mechanism';
+                            div_mechanism.className = 'div-mechanism node';
                             div_mechanism.title = data['name'];
                             div_level_layer.append(div_mechanism);
+
+                            var div_ep = document.createElement('div');
+                            div_ep.className = 'ep' ;
+                            div_mechanism.append(div_ep);
 
                             var div_mechanism_m = document.createElement('div');
                             div_mechanism_m.className = 'div-mechanism-m' ;
@@ -75,6 +79,23 @@ use app\modules\main\models\Lang;
                             instance.draggable(div_node_id);
                             //добавляем элемент div_node_id в группу с именем group_name
                             instance.addToGroup(g_name, div_node_id);
+
+
+                            instance.makeSource(div_node_id, {
+                                filter: ".ep",
+                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                            });
+
+                            instance.makeTarget(div_node_id, {
+                                dropOptions: { hoverClass: "dragHover" },
+                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                allowLoopback: false, // Нельзя создать кольцевую связь
+                                maxConnections: 1,
+                                onMaxConnections: function (info, e) {
+                                    alert("Maximum connections (" + info.maxConnections + ") reached");
+                                }
+                            });
+
 
                             var level = parseInt(data['id_level'], 10);
                             var node = data['id'];

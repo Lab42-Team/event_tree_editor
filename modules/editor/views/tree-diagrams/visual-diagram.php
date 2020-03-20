@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\Pjax;
+use app\modules\main\models\Lang;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -48,6 +49,15 @@ foreach ($sequence_model_all as $s){
 ?>
 
 <?php Pjax::end(); ?>
+
+
+<?php
+// создаем массив из соотношения id и parent_node для передачи в jsplumb
+$node_mas = array();
+foreach ($node_model_all as $n){
+    array_push($node_mas, [$n->id, $n->parent_node]);
+}
+?>
 
 
 <?= $this->render('_modal_form_level_editor', [
@@ -138,13 +148,153 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
-    // работаю над редактированием элемента
-    //$(document).on('dblclick', '.div-event', function() {
-    //    var id_dblclick = $(this).attr('id');
-    //    alert(id_dblclick);
-    //});
-
     var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
+    var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
+
+
+    var mas_data_node = {};
+    var q = 0;
+    var id_node = "";
+    var id_parent_node = "";
+    $.each(node_mas, function (i, mas) {
+        $.each(mas, function (j, elem) {
+            //первый элемент это id уровня
+            if (j == 0) {id_node = elem;}//записываем id уровня
+            //второй элемент это id узла события или механизма
+            if (j == 1) {id_parent_node = elem;}//записываем id узла события node или механизма mechanism
+            mas_data_node[q] = {
+                "node":id_node,
+                "parent_node":id_parent_node,
+            }
+        });
+        q = q+1;
+    });
+
+
+    var instance = "";
+    jsPlumb.ready(function () {
+        instance = jsPlumb.getInstance({
+            Container: visual_diagram_field,
+            Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
+            Endpoint:["Dot", {radius:5}], //стиль точки соединения
+            EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
+            ConnectionsDetachable:true, // отсоединение соединений, false = нельзя отсоединить
+            PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
+            Overlays:[["PlainArrow", {location:1, width:15, length:15}]] //стрелка
+        });
+
+
+        var group_name = "";
+        //разбор полученного массива
+        $.each(sequence_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //первый элемент это id уровня
+                if (j == 0) {
+                    id_level = elem;//записываем id уровня
+                    //находим DOM элемент description уровня (идентификатор div level_description)
+                    var div_level_id = document.getElementById('level_description_'+ id_level);
+                    group_name = 'group'+ id_level; //определяем имя группы
+                    var grp = instance.getGroup(group_name);//определяем существует ли группа с таким именем
+                    if (grp == 0){
+                        //если группа не существует то создаем группу с определенным именем group_name
+                        instance.addGroup({
+                            el: div_level_id,
+                            id: group_name,
+                            draggable: false, //перетаскивание группы
+                            //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                            dropOverride:true,
+                        });
+                    }
+                }
+                //второй элемент это id узла события или механизма
+                if (j == 1) {
+                    var id_node = elem;//записываем id узла события node или механизма mechanism
+                    //находим DOM элемент node (идентификатор div node)
+                    var div_node_id = document.getElementById('node_'+ elem);
+                    //делаем node перетаскиваемым
+                    instance.draggable(div_node_id);
+                    //добавляем элемент div_node_id в группу с именем group_name
+                    instance.addToGroup(group_name, div_node_id);
+                }
+            });
+        });
+
+
+        var windows = jsPlumb.getSelector(".node");
+
+        instance.bind("beforeDrop", function (info) {
+            return true;
+        });
+
+        instance.batch(function () {
+            for (var i = 0; i < windows.length; i++) {
+                //определяет механизм ли. но нужно его вставить в свойство anchor у makeSource и makeTarget
+                var cl = windows[i].className;
+                //console.log(cl);
+                var anchor_top = "";
+                var anchor_bottom = "";
+                var max_con = "";
+                if (cl == "div-mechanism node jtk-managed jtk-draggable") {
+                    anchor_top = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
+                    anchor_bottom = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
+                    max_con = 1;
+                } else {
+                    anchor_top = "Top";
+                    anchor_bottom = "Bottom";
+                    max_con = -1;
+                }
+
+                instance.makeSource(windows[i], {
+                    filter: ".ep",
+                    anchor: anchor_bottom,
+                });
+
+                instance.makeTarget(windows[i], {
+                    dropOptions: { hoverClass: "dragHover" },
+                    anchor: anchor_top,
+                    allowLoopback: false, // Нельзя создать кольцевую связь
+                    //anchor: "Top",
+                    maxConnections: max_con,
+                    onMaxConnections: function (info, e) {
+                        alert("Maximum connections (" + info.maxConnections + ") reached");
+                    }
+                });
+            }
+
+            $.each(mas_data_node, function (j, elem_node) {
+                if (elem_node.parent_node != null){
+                    instance.connect({
+                        source: "node_" + elem_node.parent_node,
+                        target: "node_" + elem_node.node,
+                    });
+                }
+            });
+        });
+
+        instance.bind("connection", function(connection) {
+            var source_id = connection.sourceId;
+            var target_id = connection.targetId;
+            var parent_node_id = parseInt(source_id.match(/\d+/));
+            var node_id = parseInt(target_id.match(/\d+/));
+            $.ajax({
+                //переход на экшен левел
+                url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                '/tree-diagrams/add-relationship/' . $model->id ?>",
+                type: "post",
+                data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" +
+                "&parent_node_id=" + parent_node_id + "&node_id=" + node_id,
+                dataType: "json",
+                success: function(data) {
+                    if (data['success']) {
+                    }
+                },
+                error: function() {
+                    alert('Error!');
+                }
+            });
+        });
+    });
+
 
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
@@ -244,7 +394,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
         //------------------------------------------
 
-        });
+        // Обновление формы редактора
+        instance.repaintEverything();
+    });
 
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
@@ -345,6 +497,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             div_level_id.style.height = height + 5 + 'px';
         });
         //------------------------------------------
+        // Обновление формы редактора
+        instance.repaintEverything();
     });
 
 
@@ -355,50 +509,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     //});
 
 
-    var instance = "";
-    jsPlumb.ready(function () {
-        instance = jsPlumb.getInstance({
-            Container: visual_diagram_field,
-            Connector:"StateMachine",
-            Endpoint:["Dot", {radius:3}], Anchor:"Center"});
-
-        var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
-
-        var group_name = "";
-        //разбор полученного массива
-        $.each(sequence_mas, function (i, mas) {
-            $.each(mas, function (j, elem) {
-                //первый элемент это id уровня
-                if (j == 0) {
-                    id_level = elem;//записываем id уровня
-                    //находим DOM элемент description уровня (идентификатор div level_description)
-                    var div_level_id = document.getElementById('level_description_'+ id_level);
-                    group_name = 'group'+ id_level; //определяем имя группы
-                    var grp = instance.getGroup(group_name);//определяем существует ли группа с таким именем
-                    if (grp == 0){
-                        //если группа не существует то создаем группу с определенным именем group_name
-                        instance.addGroup({
-                            el: div_level_id,
-                            id: group_name,
-                            draggable: false, //перетаскивание группы
-                            //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
-                            dropOverride:true,
-                        });
-                    }
-                }
-                //второй элемент это id узла события или механизма
-                if (j == 1) {
-                    var id_node = elem;//записываем id узла события node или механизма mechanism
-                    //находим DOM элемент node (идентификатор div node)
-                    var div_node_id = document.getElementById('node_'+ elem);
-                    //делаем node перетаскиваемым
-                    instance.draggable(div_node_id);
-                    //добавляем элемент div_node_id в группу с именем group_name
-                    instance.addToGroup(group_name, div_node_id);
-                }
-            });
-        });
-    });
 </script>
 
 
@@ -418,7 +528,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <!--?= $level_value->description ?>-->
                 <!-- Вывод инициирующего события -->
                 <?php foreach ($initial_event_model_all as $initial_event_value): ?>
-                    <div id="node_<?= $initial_event_value->id ?>" class="div-event">
+                    <div id="node_<?= $initial_event_value->id ?>" class="div-event node">
+                        <div class="ep"></div>
                         <div class="div-event-name"><?= $initial_event_value->name ?></div>
                     </div>
                 <?php endforeach; ?>
@@ -428,7 +539,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <?php $event_id = $sequence_value->node; ?>
                         <?php foreach ($event_model_all as $event_value): ?>
                             <?php if ($event_value->id == $event_id){ ?>
-                                <div id="node_<?= $event_value->id ?>" class="div-event">
+                                <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                    <div class="ep"></div>
                                     <div class="div-event-name"><?= $event_value->name ?></div>
                                 </div>
                             <?php } ?>
@@ -457,7 +569,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                         <?php if ($mechanism_value->id == $node_id){ ?>
                                             <div id="node_<?= $mechanism_value->id ?>"
-                                                 class="div-mechanism" title="<?= $mechanism_value->name ?>">
+                                                 class="div-mechanism node" title="<?= $mechanism_value->name ?>">
+                                                <div class="ep"></div>
                                                 <div class="div-mechanism-m">M</div>
                                             </div>
                                         <?php } ?>
@@ -465,7 +578,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <!-- Вывод событий -->
                                     <?php foreach ($event_model_all as $event_value): ?>
                                         <?php if ($event_value->id == $node_id){ ?>
-                                            <div id="node_<?= $event_value->id ?>" class="div-event">
+                                            <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                                <div class="ep"></div>
                                                 <div class="div-event-name"><?= $event_value->name ?></div>
                                             </div>
                                         <?php } ?>
