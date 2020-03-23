@@ -296,23 +296,23 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-    $(document).on('mousemove', '.div-event', function() {
-        var id_node = $(this).attr('id');
-        var event = document.getElementById(id_node);
-        var level = event.offsetParent;
+    //функция расширения уровней и их свертывание
+    var mousemoveNode = function(x) {
+        var node = document.getElementById(x);
+        var level = node.offsetParent;
 
         var width_level = level.clientWidth;
         var height_level = level.clientHeight;
 
         var top_layer_width = document.getElementById('top_layer').clientWidth;
 
-        var l = event.offsetLeft;
-        var h = event.offsetTop;
+        var l = node.offsetLeft + node.clientWidth;
+        var h = node.offsetTop + node.clientHeight;
 
-        if (l + 140 >= width_level){
+        if (l >= width_level){
             document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
         }
-        if (h + 80 >= height_level){
+        if (h >= height_level){
             level.style.height = height_level + 5 + 'px';
         }
         //------------------------------------------
@@ -392,110 +392,20 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var height = height_node + h;
             div_level_id.style.height = height + 5 + 'px';
         });
-        //------------------------------------------
+    };
 
+
+    $(document).on('mousemove', '.div-event', function() {
+        var id_node = $(this).attr('id');
+        mousemoveNode(id_node);
+        //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
     });
 
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
-        var event = document.getElementById(id_node);
-        var level = event.offsetParent;
-
-        var width_level = level.clientWidth;
-        var height_level = level.clientHeight;
-
-        var top_layer_width = document.getElementById('top_layer').clientWidth;
-
-        var l = event.offsetLeft;
-        var h = event.offsetTop;
-
-        if (l + 69 >= width_level){
-            document.getElementById('top_layer').style.width = top_layer_width + 5 + 'px';
-        }
-
-        if (h + 80 >= height_level){
-            level.style.height = height_level + 5 + 'px';
-        }
-        //------------------------------------------
-        //автоматическое свертывание по горизонтали
-        var max_width = 0;
-        //разбор полученного массива
-        $.each(sequence_mas, function (i, mas) {
-            $.each(mas, function (j, elem) {
-                //второй элемент это id узла события или механизма
-                if (j == 1) {
-                    var id_node = elem;//записываем id узла события node или механизма mechanism
-                    //находим DOM элемент node (идентификатор div node)
-                    var div_node_id = document.getElementById('node_'+ elem);
-
-                    var width_node = div_node_id.clientWidth;
-                    var w = div_node_id.offsetLeft;
-                    var width = width_node + w;
-
-                    if (max_width < width){max_width = width}
-                    document.getElementById('top_layer').style.width = max_width + 105 + 'px';
-                }
-            });
-        });
-
-        //------------------------------------------
-        //автоматическое свертывание по вертикали
-        var mas_data = {};
-        var q = 0;
-        var id_level = "";
-        var id_node = "";
-        $.each(sequence_mas, function (i, mas) {
-            $.each(mas, function (j, elem) {
-                //первый элемент это id уровня
-                if (j == 0) {id_level = elem;}//записываем id уровня
-                //второй элемент это id узла события или механизма
-                if (j == 1) {id_node = elem;}//записываем id узла события node или механизма mechanism
-                mas_data[q] = {
-                    "level":id_level,
-                    "node":id_node,
-                }
-            });
-            q = q+1;
-        });
-
-        var mas_otbor = {};
-        var q = 0;
-        $.each(mas_data, function (i, elem1) {
-            var max_height = 0;
-            var mas_node = 0;
-            var mas_level = 0;
-            $.each(mas_data, function (j, elem2) {
-                var div_node_2 = document.getElementById('node_'+ elem2.node);
-                var height_node = div_node_2.clientHeight;
-                var h = div_node_2.offsetTop;
-                var height = height_node + h;
-
-                if (elem1.level == elem2.level) {
-                    if (max_height < height){
-                        max_height = height;
-                        mas_node = elem2.node;
-                        mas_level = elem2.level;
-                        q = q+1;
-                    }
-                }
-            });
-            mas_otbor[q] = {
-                "level":mas_level,
-                "node":mas_node,
-            };
-        });
-
-        $.each(mas_otbor, function (j, elem) {
-            //находим DOM элемент node (идентификатор div node)
-            var div_node_id = document.getElementById('node_'+ elem.node);
-            var div_level_id = document.getElementById('level_description_'+ elem.level);
-            var height_node = div_node_id.clientHeight;
-            var h = div_node_id.offsetTop;
-            var height = height_node + h;
-            div_level_id.style.height = height + 5 + 'px';
-        });
+        mousemoveNode(id_node);
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
@@ -503,10 +413,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     // работаю над редактированием элемента
-    //$(document).on('dblclick', '.div-event', function() {
-    //    var id_dblclick = $(this).attr('id');
-    //    alert(id_dblclick);
-    //});
+    $(document).on('dblclick', '.div-event', function() {
+        var node = $(this).attr('id');
+        var node_id = parseInt(node.match(/\d+/));
+        alert(node_id);
+    });
 
 
 </script>
