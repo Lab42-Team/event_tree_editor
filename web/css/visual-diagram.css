@@ -1,12 +1,15 @@
-.visual-diagram-top-layer {
-    max-height:700px;
+.visual-diagram {
+    height:700px;
     border:1px solid #b9def0;
     background-color:white;
-    /*flex-grow:1;*/
-    position:relative;
     /* Вкл Прокрутку*/
     overflow: auto !important;
     cursor:default;
+}
+
+.visual-diagram-top-layer {
+    position:relative;
+    /* Вкл Прокрутку*/
 }
 
 /* -Выравнивание ширины всех уровней по самой большой ширины уровня- */

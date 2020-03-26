@@ -174,13 +174,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var instance = "";
     jsPlumb.ready(function () {
         instance = jsPlumb.getInstance({
-            Container: visual_diagram_field,
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
             Endpoint:["Dot", {radius:5}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
             ConnectionsDetachable:true, // отсоединение соединений, false = нельзя отсоединить
             PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
-            Overlays:[["PlainArrow", {location:1, width:15, length:15}]] //стрелка
+            Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
+            Container: "visual_diagram_field"
         });
 
 
@@ -206,12 +206,14 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         });
                     }
                 }
+
                 //второй элемент это id узла события или механизма
                 if (j == 1) {
                     var id_node = elem;//записываем id узла события node или механизма mechanism
                     //находим DOM элемент node (идентификатор div node)
                     var div_node_id = document.getElementById('node_'+ elem);
                     //делаем node перетаскиваемым
+                    //instance.draggable(div_node_id, { containment: "#visual_diagram_field" });
                     instance.draggable(div_node_id);
                     //добавляем элемент div_node_id в группу с именем group_name
                     instance.addToGroup(group_name, div_node_id);
@@ -395,6 +397,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     };
 
 
+
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
@@ -427,84 +430,85 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
+<div class="visual-diagram col-md-12">
 <div id="visual_diagram_field" class="visual-diagram-top-layer col-md-12">
     <div id="top_layer" class="top">
-    <!-- Вывод уровней -->
-    <!-- Вывод начального уровня -->
-    <?php foreach ($level_model_all as $value): ?>
-    <?php if ($value->parent_level == null){ ?>
-        <div id="level_<?= $value->id ?>" class="div-level">
-            <div class="div-level-name"><?= $value->name ?></div>
-            <div class="div-level-description" id="level_description_<?= $value->id ?>">
-                <!--?= $level_value->description ?>-->
-                <!-- Вывод инициирующего события -->
-                <?php foreach ($initial_event_model_all as $initial_event_value): ?>
-                    <div id="node_<?= $initial_event_value->id ?>" class="div-event node">
-                        <div class="ep"></div>
-                        <div class="div-event-name"><?= $initial_event_value->name ?></div>
-                    </div>
-                <?php endforeach; ?>
+            <!-- Вывод уровней -->
+            <!-- Вывод начального уровня -->
+            <?php foreach ($level_model_all as $value): ?>
+            <?php if ($value->parent_level == null){ ?>
+                <div id="level_<?= $value->id ?>" class="div-level">
+                    <div class="div-level-name"><?= $value->name ?></div>
+                    <div class="div-level-description" id="level_description_<?= $value->id ?>">
+                        <!--?= $level_value->description ?>-->
+                        <!-- Вывод инициирующего события -->
+                        <?php foreach ($initial_event_model_all as $initial_event_value): ?>
+                            <div id="node_<?= $initial_event_value->id ?>" class="div-event node">
+                                <div class="ep"></div>
+                                <div class="div-event-name"><?= $initial_event_value->name ?></div>
+                            </div>
+                        <?php endforeach; ?>
 
-                <?php foreach ($sequence_model_all as $sequence_value): ?>
-                    <?php if ($sequence_value->level == $value->id){ ?>
-                        <?php $event_id = $sequence_value->node; ?>
-                        <?php foreach ($event_model_all as $event_value): ?>
-                            <?php if ($event_value->id == $event_id){ ?>
-                                <div id="node_<?= $event_value->id ?>" class="div-event node">
-                                    <div class="ep"></div>
-                                    <div class="div-event-name"><?= $event_value->name ?></div>
-                                </div>
+                        <?php foreach ($sequence_model_all as $sequence_value): ?>
+                            <?php if ($sequence_value->level == $value->id){ ?>
+                                <?php $event_id = $sequence_value->node; ?>
+                                <?php foreach ($event_model_all as $event_value): ?>
+                                    <?php if ($event_value->id == $event_id){ ?>
+                                        <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                            <div class="ep"></div>
+                                            <div class="div-event-name"><?= $event_value->name ?></div>
+                                        </div>
+                                    <?php } ?>
+                                <?php endforeach; ?>
                             <?php } ?>
                         <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php $a = $value->id; }?>
+            <?php endforeach; ?>
+            <!-- Вывод остальных уровней -->
+            <?php if ($level_model_count > 1){ ?>
+            <?php $i = 1; ?>
+            <?php do { ?>
+                <?php foreach ($level_model_all as $level_value): ?>
+                    <?php if ($level_value->parent_level == $a){ ?>
+                        <div id="level_<?= $level_value->id ?>" class="div-level">
+                            <div class="div-level-name"><?= $level_value->name ?></div>
+                            <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
+                                <!--?= $level_value->description ?>-->
+                                <?php foreach ($sequence_model_all as $sequence_value): ?>
+                                    <?php if ($sequence_value->level == $level_value->id){ ?>
+                                        <?php $node_id = $sequence_value->node; ?>
+                                        <!-- Вывод механизма -->
+                                        <?php foreach ($mechanism_model_all as $mechanism_value): ?>
+                                            <?php if ($mechanism_value->id == $node_id){ ?>
+                                                <div id="node_<?= $mechanism_value->id ?>"
+                                                    class="div-mechanism node" title="<?= $mechanism_value->name ?>">
+                                                    <div class="ep"></div>
+                                                    <div class="div-mechanism-m">M</div>
+                                                </div>
+                                            <?php } ?>
+                                        <?php endforeach; ?>
+                                        <!-- Вывод событий -->
+                                        <?php foreach ($event_model_all as $event_value): ?>
+                                            <?php if ($event_value->id == $node_id){ ?>
+                                                <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                                    <div class="ep"></div>
+                                                    <div class="div-event-name"><?= $event_value->name ?></div>
+                                                </div>
+                                            <?php } ?>
+                                        <?php endforeach; ?>
+                                    <?php } ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php $a = $level_value->id; ?>
+                        <?php break 1; ?>
                     <?php } ?>
                 <?php endforeach; ?>
-
-            </div>
-        </div>
-        <?php $a = $value->id; }?>
-        <?php endforeach; ?>
-        <!-- Вывод остальных уровней -->
-        <?php if ($level_model_count > 1){ ?>
-        <?php $i = 1; ?>
-        <?php do { ?>
-            <?php foreach ($level_model_all as $level_value): ?>
-                <?php if ($level_value->parent_level == $a){ ?>
-                    <div id="level_<?= $level_value->id ?>" class="div-level">
-                        <div class="div-level-name"><?= $level_value->name ?></div>
-                        <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
-                            <!--?= $level_value->description ?>-->
-                            <?php foreach ($sequence_model_all as $sequence_value): ?>
-                                <?php if ($sequence_value->level == $level_value->id){ ?>
-                                    <?php $node_id = $sequence_value->node; ?>
-                                    <!-- Вывод механизма -->
-                                    <?php foreach ($mechanism_model_all as $mechanism_value): ?>
-                                        <?php if ($mechanism_value->id == $node_id){ ?>
-                                            <div id="node_<?= $mechanism_value->id ?>"
-                                                 class="div-mechanism node" title="<?= $mechanism_value->name ?>">
-                                                <div class="ep"></div>
-                                                <div class="div-mechanism-m">M</div>
-                                            </div>
-                                        <?php } ?>
-                                    <?php endforeach; ?>
-                                    <!-- Вывод событий -->
-                                    <?php foreach ($event_model_all as $event_value): ?>
-                                        <?php if ($event_value->id == $node_id){ ?>
-                                            <div id="node_<?= $event_value->id ?>" class="div-event node">
-                                                <div class="ep"></div>
-                                                <div class="div-event-name"><?= $event_value->name ?></div>
-                                            </div>
-                                        <?php } ?>
-                                    <?php endforeach; ?>
-                                <?php } ?>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php $a = $level_value->id; ?>
-                    <?php break 1; ?>
-                <?php } ?>
-            <?php endforeach; ?>
-            <?php $i = $i + 1; ?>
-        <?php } while ($i <> $level_model_count); ?>
+                <?php $i = $i + 1; ?>
+            <?php } while ($i <> $level_model_count); ?>
+        <?php } ?>
     </div>
-<?php } ?>
+</div>
 </div>
