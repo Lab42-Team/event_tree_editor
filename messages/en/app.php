@@ -205,4 +205,10 @@ return [
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
+
+    /* Cообщения */
+    'MAXIMUM_CONNECTIONS' => 'Maximum connections ',
+    'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED' => 'The mechanisms should not be interconnected',
+    'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL' => 'Elements must not be associated with other elements at a higher level',
+    'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'The level must begin with a mechanism',
 ];

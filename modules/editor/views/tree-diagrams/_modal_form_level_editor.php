@@ -67,6 +67,10 @@ use app\modules\main\models\Lang;
                             document.getElementById('add-level-form').reset();
 
                             document.getElementById("pjax-event-editor-button").click();
+
+                            var id = data['id'];
+                            var parent_level = data['parent_level'];
+                            var removed = level_mas.push([id, parent_level]);
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);

@@ -92,7 +92,8 @@ use app\modules\main\models\Lang;
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: 1,
                                 onMaxConnections: function (info, e) {
-                                    alert("Maximum connections (" + info.maxConnections + ") reached");
+                                    var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
+                                    alert (message);
                                 }
                             });
 

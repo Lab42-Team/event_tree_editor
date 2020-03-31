@@ -47,7 +47,6 @@ foreach ($sequence_model_all as $s){
     array_push($sequence_mas, [$s->level, $s->node]);
 }
 ?>
-
 <?php Pjax::end(); ?>
 
 
@@ -57,6 +56,12 @@ $node_mas = array();
 foreach ($node_model_all as $n){
     array_push($node_mas, [$n->id, $n->parent_node]);
 }
+
+$level_mas = array();
+foreach ($level_model_all as $l){
+    array_push($level_mas, [$l->id, $l->parent_level]);
+}
+
 ?>
 
 
@@ -150,7 +155,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
     var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
     var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
-
+    var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива из php
 
     var mas_data_node = {};
     var q = 0;
@@ -225,25 +230,106 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var windows = jsPlumb.getSelector(".node");
 
         instance.bind("beforeDrop", function (info) {
-            return true;
+            var source_node = document.getElementById(info.sourceId);
+            var target_node = document.getElementById(info.targetId);
+
+            var source_level = source_node.offsetParent.getAttribute('id');
+            var target_level = target_node.offsetParent.getAttribute('id');
+
+            var source_id_level = parseInt(source_level.match(/\d+/));
+            var target_id_level = parseInt(target_level.match(/\d+/));
+
+
+            //построение одномерного массива по порядку следования уровней
+            var mas_level_order = {};
+            var q = 0;
+            var id_l = "";
+            var id_p_l = "";
+            var next_parent_level = "";
+            $.each(level_mas, function (i, mas) {
+                $.each(mas, function (j, elem) {
+                    //первый элемент это id уровня
+                    if (j == 0) {id_l = elem;}//записываем id уровня
+                    //второй элемент это id родительского уровня
+                    if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
+                    if (id_p_l == null){
+                        mas_level_order[q] = id_l;
+                        next_parent_level = id_l;
+                        q = q+1;
+                    }
+                });
+                id_l = "";
+                id_p_l = "";
+            });
+            for (let i = 1; i < level_mas.length; i++) {
+                $.each(level_mas, function (i, mas) {
+                    $.each(mas, function (j, elem) {
+                        //первый элемент это id уровня
+                        if (j == 0) {id_l = elem;}//записываем id уровня
+                        //второй элемент это id родительского уровня
+                        if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
+                        if (id_p_l == next_parent_level){
+                            mas_level_order[q] = id_l;
+                            next_parent_level = id_l;
+                            q = q+1;
+                        }
+                    });
+                    id_l = "";
+                    id_p_l = "";
+                });
+            }
+
+
+            //определение порядковых номеров source и target
+            var n_source = "";
+            var n_target = "";
+            $.each(mas_level_order, function (i, elem) {
+                if (elem == source_id_level) {n_source = i;}//записываем порядковый номер source
+                if (elem == target_id_level) {n_target = i;}//записываем порядковый номер target
+            });
+
+
+            // Запреты
+            // ------------------------------
+            // запрет на соединение механизмов
+            if ((source_node.getAttribute("class").search("mechanism") == target_node.getAttribute("class").search("mechanism"))
+                && (source_node.getAttribute("class").search("mechanism") != -1)){
+                var message = "<?php echo Yii::t('app', 'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED'); ?>";
+                alert (message);
+                return false;
+            } else {
+                // запрет на соединение c элементами на вышестоящем уровне
+                if (n_source > n_target){
+                    var message = "<?php echo Yii::t('app', 'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL'); ?>";
+                    alert (message);
+                    return false;
+                } else {
+                    // запрет на соединение c элементами кроме механизмов на нижестоящем уровне
+                    if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1)){
+                        var message = "<?php echo Yii::t('app', 'LEVEL_MUST_BEGIN_WITH_MECHANISM'); ?>";
+                        alert (message);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
         });
+
 
         instance.batch(function () {
             for (var i = 0; i < windows.length; i++) {
                 //определяет механизм ли. но нужно его вставить в свойство anchor у makeSource и makeTarget
                 var cl = windows[i].className;
-                //console.log(cl);
                 var anchor_top = "";
                 var anchor_bottom = "";
-                var max_con = "";
+                var max_con = 1;
                 if (cl == "div-mechanism node jtk-managed jtk-draggable") {
                     anchor_top = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
                     anchor_bottom = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
-                    max_con = 1;
                 } else {
                     anchor_top = "Top";
                     anchor_bottom = "Bottom";
-                    max_con = -1;
                 }
 
                 instance.makeSource(windows[i], {
@@ -258,7 +344,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     //anchor: "Top",
                     maxConnections: max_con,
                     onMaxConnections: function (info, e) {
-                        alert("Maximum connections (" + info.maxConnections + ") reached");
+                        var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
+                        alert (message);
                     }
                 });
             }

@@ -226,6 +226,7 @@ class TreeDiagramsController extends Controller
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
+                $data["parent_level"] = $model->parent_level;
             } else
                 $data = ActiveForm::validate($model);
 

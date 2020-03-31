@@ -113,7 +113,6 @@ use app\modules\editor\models\Node;
 
                             var level = parseInt(data['id_level'], 10);
                             var node = data['id'];
-
                             var removed = sequence_mas.push([level, node]);
                         } else {
                             // Отображение ошибок ввода

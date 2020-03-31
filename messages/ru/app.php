@@ -205,4 +205,10 @@ return [
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
+
+    /* Cообщения */
+    'MAXIMUM_CONNECTIONS' => 'Максимальное количество соединений ',
+    'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED' => 'Механизмы не должны быть связаны между собой',
+    'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL' => 'Элементы не должны быть связаны с другими элементами на вышестоящем уровне',
+    'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'Уровень должен начинаться с механизма',
 ];
