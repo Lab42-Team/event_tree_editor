@@ -45,8 +45,12 @@ use app\modules\main\models\Lang;
 
                             var div_level_name = document.createElement('div');
                             div_level_name.className = 'div-level-name' ;
-                            div_level_name.innerHTML = data['name'];
                             div_level.append(div_level_name);
+
+                            var div_name = document.createElement('div');
+                            div_name.innerHTML = data['name'];
+                            div_name.title = data['name'];
+                            div_level_name.append(div_name);
 
                             var div_level_description = document.createElement('div');
                             div_level_description.className = 'div-level-description' ;

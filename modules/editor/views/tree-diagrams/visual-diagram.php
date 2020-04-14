@@ -54,7 +54,7 @@ foreach ($sequence_model_all as $s){
 // создаем массив из соотношения id и parent_node для передачи в jsplumb
 $node_mas = array();
 foreach ($node_model_all as $n){
-    array_push($node_mas, [$n->id, $n->parent_node]);
+    array_push($node_mas, [$n->id, $n->parent_node, $n->name, $n->description]);
 }
 
 $level_mas = array();
@@ -88,6 +88,9 @@ foreach ($level_model_all as $l){
 ]) ?>
 
 <?php Pjax::end(); ?>
+
+<?= $this->render('_modal_form_view_message', [
+]) ?>
 
 
 <!-- Подключение скрипта для модальных форм -->
@@ -153,23 +156,33 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
+    var node_id_on_click = 0;
+    var level_id_on_click = 0;
+
     var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
     var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
     var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива из php
+
 
     var mas_data_node = {};
     var q = 0;
     var id_node = "";
     var id_parent_node = "";
+    var name_node = "";
+    var description_node = "";
     $.each(node_mas, function (i, mas) {
         $.each(mas, function (j, elem) {
             //первый элемент это id уровня
             if (j == 0) {id_node = elem;}//записываем id уровня
             //второй элемент это id узла события или механизма
             if (j == 1) {id_parent_node = elem;}//записываем id узла события node или механизма mechanism
+            if (j == 2) {name_node = elem;}
+            if (j == 3) {description_node = elem;}
             mas_data_node[q] = {
-                "node":id_node,
+                "id":id_node,
                 "parent_node":id_parent_node,
+                "name":name_node,
+                "description":description_node,
             }
         });
         q = q+1;
@@ -180,9 +193,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     jsPlumb.ready(function () {
         instance = jsPlumb.getInstance({
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
-            Endpoint:["Dot", {radius:5}], //стиль точки соединения
+            Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
-            ConnectionsDetachable:true, // отсоединение соединений, false = нельзя отсоединить
+            //ConnectionsDetachable:true, // отсоединение соединений, false = нельзя отсоединить
             PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
             Container: "visual_diagram_field"
@@ -289,28 +302,40 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             });
 
 
+
+
             // Запреты
             // ------------------------------
             // запрет на соединение механизмов
             if ((source_node.getAttribute("class").search("mechanism") == target_node.getAttribute("class").search("mechanism"))
                 && (source_node.getAttribute("class").search("mechanism") != -1)){
                 var message = "<?php echo Yii::t('app', 'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED'); ?>";
-                alert (message);
+                document.getElementById("message-text").lastChild.nodeValue = message;
+                $("#viewMessageModalForm").modal("show");
                 return false;
             } else {
                 // запрет на соединение c элементами на вышестоящем уровне
                 if (n_source > n_target){
                     var message = "<?php echo Yii::t('app', 'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL'); ?>";
-                    alert (message);
+                    document.getElementById("message-text").lastChild.nodeValue = message;
+                    $("#viewMessageModalForm").modal("show");
                     return false;
                 } else {
                     // запрет на соединение c элементами кроме механизмов на нижестоящем уровне
                     if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1)){
                         var message = "<?php echo Yii::t('app', 'LEVEL_MUST_BEGIN_WITH_MECHANISM'); ?>";
-                        alert (message);
+                        document.getElementById("message-text").lastChild.nodeValue = message;
+                        $("#viewMessageModalForm").modal("show");
                         return false;
                     } else {
-                        return true;
+                        if(target_node.getAttribute("class").search("div-initial-event") >= 0){
+                            var message = "<?php echo Yii::t('app', 'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS'); ?>";
+                            document.getElementById("message-text").lastChild.nodeValue = message;
+                            $("#viewMessageModalForm").modal("show");
+                            return false;
+                        } else {
+                            return true;
+                        }
                     }
                 }
             }
@@ -345,7 +370,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     maxConnections: max_con,
                     onMaxConnections: function (info, e) {
                         var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
-                        alert (message);
+                        document.getElementById("message-text").lastChild.nodeValue = message;
+                        $("#viewMessageModalForm").modal("show");
                     }
                 });
             }
@@ -354,7 +380,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 if (elem_node.parent_node != null){
                     instance.connect({
                         source: "node_" + elem_node.parent_node,
-                        target: "node_" + elem_node.node,
+                        target: "node_" + elem_node.id,
                     });
                 }
             });
@@ -375,6 +401,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 dataType: "json",
                 success: function(data) {
                     if (data['success']) {
+                        $.each(mas_data_node, function (i, elem_node) {
+                            //добавляем связь в массив
+                            if (data["n_id"] == elem_node.id){
+                                mas_data_node[i].parent_node = data["p_n_id"];
+                            }
+                        });
                     }
                 },
                 error: function() {
@@ -505,8 +537,68 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     // работаю над редактированием элемента
     $(document).on('dblclick', '.div-event', function() {
         var node = $(this).attr('id');
-        var node_id = parseInt(node.match(/\d+/));
-        alert(node_id);
+        node_id_on_click = parseInt(node.match(/\d+/));
+
+        console.log(node_id_on_click);
+        console.log("-----------------");
+
+        var div_node = document.getElementById(node);
+
+        var level = div_node.offsetParent.getAttribute('id');
+        level_id_on_click = parseInt(level.match(/\d+/));
+
+
+
+
+
+
+
+        //var source_node = document.getElementById(info.sourceId);
+        //if ((source_node.getAttribute("class").search("mechanism") == target_node.getAttribute("class").search("mechanism"))
+
+
+        //если событие инициирующее
+        if(div_node.getAttribute("class").search("div-initial-event") >= 0){
+            $.each(mas_data_node, function (i, elem) {
+                if (elem.id == node_id_on_click){
+                    document.forms["edit-event-form"].reset();
+                    document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                    document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
+                    document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
+                    //блокировка изменения левела
+                    document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "none";
+                    //document.forms["edit-event-form"].elements["Node[level_id]"].label = false;
+                    $("#editEventModalForm").modal("show");
+                }
+            });
+        } else {
+            $.each(mas_data_node, function (i, elem) {
+                if (elem.id == node_id_on_click){
+                    document.forms["edit-event-form"].reset();
+                    document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                    document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
+                    document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
+                    //разблокировка изменения левела
+                    document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "";
+
+                    $("#editEventModalForm").modal("show");
+                }
+            });
+        }
+        //instance.repaintEverything();
+
+
+
+
+
+
+
+
+
+
+
+
+
     });
 
 
@@ -518,21 +610,21 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 </div>
 
 <div class="visual-diagram col-md-12">
-<div id="visual_diagram_field" class="visual-diagram-top-layer col-md-12">
+<div id="visual_diagram_field" class="visual-diagram-top-layer">
     <div id="top_layer" class="top">
             <!-- Вывод уровней -->
             <!-- Вывод начального уровня -->
             <?php foreach ($level_model_all as $value): ?>
             <?php if ($value->parent_level == null){ ?>
                 <div id="level_<?= $value->id ?>" class="div-level">
-                    <div class="div-level-name"><?= $value->name ?></div>
+                    <div class="div-level-name"><div title="<?= $value->name ?>"><?= $value->name ?></div></div>
                     <div class="div-level-description" id="level_description_<?= $value->id ?>">
                         <!--?= $level_value->description ?>-->
                         <!-- Вывод инициирующего события -->
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
-                            <div id="node_<?= $initial_event_value->id ?>" class="div-event node">
+                            <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="ep"></div>
-                                <div class="div-event-name"><?= $initial_event_value->name ?></div>
+                                <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
                             </div>
                         <?php endforeach; ?>
 
@@ -543,7 +635,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node">
                                             <div class="ep"></div>
-                                            <div class="div-event-name"><?= $event_value->name ?></div>
+                                            <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                         </div>
                                     <?php } ?>
                                 <?php endforeach; ?>
@@ -560,7 +652,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <?php foreach ($level_model_all as $level_value): ?>
                     <?php if ($level_value->parent_level == $a){ ?>
                         <div id="level_<?= $level_value->id ?>" class="div-level">
-                            <div class="div-level-name"><?= $level_value->name ?></div>
+                            <div class="div-level-name"><div title="<?= $level_value->name ?>"><?= $level_value->name ?></div></div>
                             <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
                                 <!--?= $level_value->description ?>-->
                                 <?php foreach ($sequence_model_all as $sequence_value): ?>
@@ -581,7 +673,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node">
                                                     <div class="ep"></div>
-                                                    <div class="div-event-name"><?= $event_value->name ?></div>
+                                                    <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>
