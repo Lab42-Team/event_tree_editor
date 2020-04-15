@@ -169,9 +169,7 @@ use app\modules\editor\models\Node;
 
 
 
-
-
-<!-- Модальное окно изменения нового уровня -->
+<!-- Модальное окно изменения нового события -->
 <?php Modal::begin([
     'id' => 'editEventModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_EDIT_EVENT') . '</h3>',

@@ -438,4 +438,58 @@ class TreeDiagramsController extends Controller
 
         return false;
     }
+
+    public function actionEditMechanism($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+                $data["type"] = $model->type;
+                $data["id_level"] = $model->level_id;
+                $data["parent_node"] = $model->parent_node;
+
+
+                if ($model->level_id != Yii::$app->request->post('level_id_on_click')){
+                    $sequence = Sequence::find()->where(['node' => Yii::$app->request->post('node_id_on_click')])->one();
+                    $sequence->level = $model->level_id;
+                    $sequence->updateAttributes(['level']);
+
+                    //очистить связи в бд-----------------
+                    //очистить входящие связи
+                    $node = Node::find()->where(['tree_diagram' => $id, 'id' => $data["id"]])->one();
+                    $node->parent_node = null;
+                    $node->updateAttributes(['parent_node']);
+
+                    //очистить выходящие связи
+                    $node_out = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $data["id"]])->all();
+                    foreach ($node_out as $elem){
+                        $elem->parent_node = null;
+                        $elem->updateAttributes(['parent_node']);
+                    }
+                }
+
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+
+        return false;
+    }
 }

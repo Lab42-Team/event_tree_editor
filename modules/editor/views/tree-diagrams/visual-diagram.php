@@ -534,7 +534,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-    // работаю над редактированием элемента
+    // редактирование события
     $(document).on('dblclick', '.div-event', function() {
         var node = $(this).attr('id');
         node_id_on_click = parseInt(node.match(/\d+/));
@@ -546,16 +546,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
         var level = div_node.offsetParent.getAttribute('id');
         level_id_on_click = parseInt(level.match(/\d+/));
-
-
-
-
-
-
-
-        //var source_node = document.getElementById(info.sourceId);
-        //if ((source_node.getAttribute("class").search("mechanism") == target_node.getAttribute("class").search("mechanism"))
-
 
         //если событие инициирующее
         if(div_node.getAttribute("class").search("div-initial-event") >= 0){
@@ -585,22 +575,35 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 }
             });
         }
-        //instance.repaintEverything();
-
-
-
-
-
-
-
-
-
-
-
-
-
     });
 
+
+    // редактирование механизма
+    $(document).on('dblclick', '.div-mechanism', function() {
+        var node = $(this).attr('id');
+        node_id_on_click = parseInt(node.match(/\d+/));
+
+        console.log(node_id_on_click);
+        console.log("-----------------");
+
+        var div_node = document.getElementById(node);
+
+        var level = div_node.offsetParent.getAttribute('id');
+        level_id_on_click = parseInt(level.match(/\d+/));
+
+        $.each(mas_data_node, function (i, elem) {
+            if (elem.id == node_id_on_click){
+                document.forms["edit-mechanism-form"].reset();
+                document.forms["edit-mechanism-form"].elements["Node[name]"].value = elem.name;
+                document.forms["edit-mechanism-form"].elements["Node[description]"].value = elem.description;
+                document.forms["edit-mechanism-form"].elements["Node[level_id]"].value = level_id_on_click;
+                //разблокировка изменения левела
+                document.forms["edit-mechanism-form"].elements["Node[level_id]"].style.display = "";
+
+                $("#editMechanismModalForm").modal("show");
+            }
+        });
+    });
 
 </script>
 
