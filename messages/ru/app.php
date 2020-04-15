@@ -204,7 +204,9 @@ return [
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
+    'EVENT_EDIT_EVENT' => 'Изменение события',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
+    'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
 
     /* Cообщения */
@@ -213,4 +215,6 @@ return [
     'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL' => 'Элементы не должны быть связаны с другими элементами на вышестоящем уровне',
     'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'Уровень должен начинаться с механизма',
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'У начального события не должно быть входящих соединений',
+
+    'ALERT_CHANGE_LEVEL' => 'При изменении уровня, связи будут удалены.',
 ];

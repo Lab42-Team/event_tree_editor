@@ -195,7 +195,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
             Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
-            //ConnectionsDetachable:true, // отсоединение соединений, false = нельзя отсоединить
             PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
             Container: "visual_diagram_field"
@@ -231,7 +230,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     //находим DOM элемент node (идентификатор div node)
                     var div_node_id = document.getElementById('node_'+ elem);
                     //делаем node перетаскиваемым
-                    //instance.draggable(div_node_id, { containment: "#visual_diagram_field" });
                     instance.draggable(div_node_id);
                     //добавляем элемент div_node_id в группу с именем group_name
                     instance.addToGroup(group_name, div_node_id);
@@ -300,8 +298,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 if (elem == source_id_level) {n_source = i;}//записываем порядковый номер source
                 if (elem == target_id_level) {n_target = i;}//записываем порядковый номер target
             });
-
-
 
 
             // Запреты
@@ -516,7 +512,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     };
 
 
-
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
@@ -524,6 +519,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         // Обновление формы редактора
         instance.repaintEverything();
     });
+
 
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
@@ -539,13 +535,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var node = $(this).attr('id');
         node_id_on_click = parseInt(node.match(/\d+/));
 
-        console.log(node_id_on_click);
-        console.log("-----------------");
-
         var div_node = document.getElementById(node);
 
         var level = div_node.offsetParent.getAttribute('id');
         level_id_on_click = parseInt(level.match(/\d+/));
+
+        var alert = document.getElementById('alert_event_level_id');
+        alert.style = style="display:none;";
 
         //если событие инициирующее
         if(div_node.getAttribute("class").search("div-initial-event") >= 0){
@@ -583,13 +579,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var node = $(this).attr('id');
         node_id_on_click = parseInt(node.match(/\d+/));
 
-        console.log(node_id_on_click);
-        console.log("-----------------");
-
         var div_node = document.getElementById(node);
 
         var level = div_node.offsetParent.getAttribute('id');
         level_id_on_click = parseInt(level.match(/\d+/));
+
+        var alert = document.getElementById('alert_mechanism_level_id');
+        alert.style = style="display:none;";
 
         $.each(mas_data_node, function (i, elem) {
             if (elem.id == node_id_on_click){

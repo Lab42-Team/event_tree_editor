@@ -204,7 +204,9 @@ return [
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
+    'EVENT_EDIT_EVENT' => 'Event change',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
+    'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
 
     /* Cообщения */
@@ -213,4 +215,6 @@ return [
     'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL' => 'Elements must not be associated with other elements at a higher level',
     'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'The level must begin with a mechanism',
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'In the initial event should not be incoming connections',
+
+    'ALERT_CHANGE_LEVEL' => 'When you change the level, the connection will be deleted.',
 ];

@@ -11,6 +11,13 @@ use app\modules\main\models\Lang;
 
 ?>
 
+<script type="text/javascript">
+    $(document).on('change', '#node-level_id', function() {
+        var alert = document.getElementById('alert_mechanism_level_id');
+        alert.style = "";
+    });
+</script>
+
     <!-- Модальное окно добавления нового уровня -->
 <?php Modal::begin([
     'id' => 'addMechanismModalForm',
@@ -182,8 +189,6 @@ use app\modules\main\models\Lang;
                         // Скрывание модального окна
                         $("#editMechanismModalForm").modal("hide");
 
-                        console.log(mas_data_node);
-
                         $.each(mas_data_node, function (i, elem) {
                             if (elem.id == data['id']){
                                 mas_data_node[i].name = data['name'];
@@ -191,10 +196,7 @@ use app\modules\main\models\Lang;
                             }
                         });
 
-                        if (level_id_on_click == data['id_level']){
-                            var div_mechanism_name = document.getElementById('node_name_' + data['id']);
-                            div_mechanism_name.innerHTML = data['name'];
-                        } else {
+                        if (level_id_on_click != data['id_level']){
                             var div_mechanism = document.getElementById('node_' + data['id']);
                             var new_div_mechanism = div_mechanism.cloneNode(true); // клонировать сообщение
                             var div_level_layer = document.getElementById('level_description_'+ data['id_level']);
@@ -213,16 +215,20 @@ use app\modules\main\models\Lang;
                             var g_name = 'group'+ data['id_level']; //определяем имя группы
                             instance.addToGroup(g_name, new_div_mechanism);//добавляем в группу
 
-                            instance.makeSource(new_div_mechanism, {
+                            instance.makeSource(div_node_id, {
                                 filter: ".ep",
-                                anchor: "Bottom",
+                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
                             });
 
-                            instance.makeTarget(new_div_mechanism, {
+                            instance.makeTarget(div_node_id, {
                                 dropOptions: { hoverClass: "dragHover" },
-                                anchor: "Top",
+                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
-                                maxConnections: -1,
+                                maxConnections: 1,
+                                onMaxConnections: function (info, e) {
+                                    var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
+                                    alert (message);
+                                }
                             });
 
                             //----------удаляем все соединения
@@ -287,10 +293,6 @@ use app\modules\main\models\Lang;
     'enableClientValidation' => true,
 ]); ?>
 
-<?= Alert::widget([
-    'options' => ['class' => 'edit-mechanism-alert alert-warning'],
-    'closeButton' => false
-]); ?>
 
 <?= $form->errorSummary($node_model); ?>
 
@@ -299,6 +301,10 @@ use app\modules\main\models\Lang;
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
 <?= $form->field($node_model, 'level_id')->dropDownList($array_levels_initial_without)->label(); ?>
+
+<div id="alert_mechanism_level_id" style="display:none;" class="alert-warning alert">
+    <?php echo Yii::t('app', 'ALERT_CHANGE_LEVEL'); ?>
+</div>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_SAVE'),

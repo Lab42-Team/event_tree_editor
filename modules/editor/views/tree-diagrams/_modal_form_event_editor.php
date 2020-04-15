@@ -12,6 +12,13 @@ use app\modules\editor\models\Node;
 
 ?>
 
+<script type="text/javascript">
+    $(document).on('change', '#node-level_id', function() {
+        var alert = document.getElementById('alert_event_level_id');
+        alert.style = "";
+    });
+</script>
+
 <!-- Модальное окно добавления нового уровня -->
 <?php Modal::begin([
     'id' => 'addEventModalForm',
@@ -196,8 +203,6 @@ use app\modules\editor\models\Node;
                         // Скрывание модального окна
                         $("#editEventModalForm").modal("hide");
 
-                        console.log(mas_data_node);
-
                         $.each(mas_data_node, function (i, elem) {
                             if (elem.id == data['id']){
                                 mas_data_node[i].name = data['name'];
@@ -219,6 +224,9 @@ use app\modules\editor\models\Node;
                             div_event.remove(); // удаляем старый node
 
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
+
+                            var div_event_name = document.getElementById('node_name_' + data['id']);
+                            div_event_name.innerHTML = data['name'];
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_event);
@@ -301,11 +309,6 @@ use app\modules\editor\models\Node;
     'enableClientValidation' => true,
 ]); ?>
 
-<?= Alert::widget([
-    'options' => ['class' => 'edit-event-alert alert-warning'],
-    'closeButton' => false
-]); ?>
-
 <?= $form->errorSummary($node_model); ?>
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
@@ -313,6 +316,10 @@ use app\modules\editor\models\Node;
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
 <?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(); ?>
+
+<div id="alert_event_level_id" style="display:none;" class="alert-warning alert">
+    <?php echo Yii::t('app', 'ALERT_CHANGE_LEVEL'); ?>
+</div>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_SAVE'),
