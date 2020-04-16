@@ -203,6 +203,7 @@ return [
 
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
+    'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',

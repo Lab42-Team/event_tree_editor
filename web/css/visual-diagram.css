@@ -36,6 +36,7 @@ div.top > div {
 .div-level-name {
     min-width: 100px;
     border:0px solid #337ab7;
+    background-color: #fafafa;
 }
 
 .div-level-name > div {

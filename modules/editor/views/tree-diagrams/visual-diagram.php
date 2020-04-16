@@ -59,7 +59,7 @@ foreach ($node_model_all as $n){
 
 $level_mas = array();
 foreach ($level_model_all as $l){
-    array_push($level_mas, [$l->id, $l->parent_level]);
+    array_push($level_mas, [$l->id, $l->parent_level, $l->name, $l->description]);
 }
 
 ?>
@@ -163,6 +163,24 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
     var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива из php
 
+    var mas_data_level = {};
+    var q = 0;
+    var id_level = "";
+    var name_level = "";
+    var description_level = "";
+    $.each(level_mas, function (i, mas) {
+        $.each(mas, function (j, elem) {
+            if (j == 0) {id_level = elem;}
+            if (j == 2) {name_level = elem;}
+            if (j == 3) {description_level = elem;}
+            mas_data_level[q] = {
+                "id_level":id_level,
+                "name":name_level,
+                "description":description_level,
+            }
+        });
+        q = q+1;
+    });
 
     var mas_data_node = {};
     var q = 0;
@@ -601,6 +619,20 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
     });
 
+
+    // редактирование уровня
+    $(document).on('dblclick', '.div-level-name', function() {
+        level_id_on_click = parseInt($(this).attr('id').match(/\d+/));
+        $.each(mas_data_level, function (i, elem) {
+            if (elem.id_level == level_id_on_click){
+                document.forms["edit-level-form"].reset();
+                document.forms["edit-level-form"].elements["Level[name]"].value = elem.name;
+                document.forms["edit-level-form"].elements["Level[description]"].value = elem.description;
+
+                $("#editLevelModalForm").modal("show");
+            }
+        });
+    });
 </script>
 
 
@@ -616,7 +648,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             <?php foreach ($level_model_all as $value): ?>
             <?php if ($value->parent_level == null){ ?>
                 <div id="level_<?= $value->id ?>" class="div-level">
-                    <div class="div-level-name"><div title="<?= $value->name ?>"><?= $value->name ?></div></div>
+                    <div class="div-level-name" id="level_name_<?= $value->id ?>"><div title="<?= $value->name ?>"><?= $value->name ?></div></div>
                     <div class="div-level-description" id="level_description_<?= $value->id ?>">
                         <!--?= $level_value->description ?>-->
                         <!-- Вывод инициирующего события -->
@@ -651,7 +683,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <?php foreach ($level_model_all as $level_value): ?>
                     <?php if ($level_value->parent_level == $a){ ?>
                         <div id="level_<?= $level_value->id ?>" class="div-level">
-                            <div class="div-level-name"><div title="<?= $level_value->name ?>"><?= $level_value->name ?></div></div>
+                            <div class="div-level-name" id="level_name_<?= $level_value->id ?>"><div title="<?= $level_value->name ?>"><?= $level_value->name ?></div></div>
                             <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
                                 <!--?= $level_value->description ?>-->
                                 <?php foreach ($sequence_model_all as $sequence_value): ?>

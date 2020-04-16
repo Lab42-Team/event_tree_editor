@@ -44,7 +44,8 @@ use app\modules\main\models\Lang;
                             visual_diagram_top_layer.append(div_level);
 
                             var div_level_name = document.createElement('div');
-                            div_level_name.className = 'div-level-name' ;
+                            div_level_name.className = 'div-level-name';
+                            div_level_name.id = 'level_name_' + data['id'];
                             div_level.append(div_level_name);
 
                             var div_name = document.createElement('div');
@@ -74,7 +75,18 @@ use app\modules\main\models\Lang;
 
                             var id = data['id'];
                             var parent_level = data['parent_level'];
-                            var removed = level_mas.push([id, parent_level]);
+                            var name = data['name'];
+                            var description = data['description'];
+                            var removed = level_mas.push([id, parent_level, name, description]);
+
+
+                            console.log(mas_data_level);
+                            var j = 0;
+                            $.each(mas_data_level, function (i, elem) {
+                                j = j + 1;
+                            });
+                            console.log(j);
+                            mas_data_level[j] = {id_level:id, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);
@@ -119,5 +131,94 @@ use app\modules\main\models\Lang;
         ]); ?>
 
     <?php ActiveForm::end(); ?>
+
+<?php Modal::end(); ?>
+
+
+
+<!-- Модальное окно добавления нового уровня -->
+<?php Modal::begin([
+    'id' => 'editLevelModalForm',
+    'header' => '<h3>' . Yii::t('app', 'LEVEL_EDIT_LEVEL') . '</h3>',
+]); ?>
+
+<!-- Скрипт модального окна -->
+<script type="text/javascript">
+    // Выполнение скрипта при загрузке страницы
+    $(document).ready(function() {
+        // Обработка нажатия кнопки сохранения
+        $("#edit-level-button").click(function(e) {
+            var form = $("#edit-level-form");
+            // Ajax-запрос
+            $.ajax({
+                //переход на экшен левел
+                url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                '/tree-diagrams/edit-level/' . $model->id ?>",
+                type: "post",
+                data: form.serialize() + "&level_id_on_click=" + level_id_on_click,
+                dataType: "json",
+                success: function(data) {
+                    // Если валидация прошла успешно (нет ошибок ввода)
+                    if (data['success']) {
+                        // Скрывание модального окна
+                        $("#editLevelModalForm").modal("hide");
+
+                        $.each(mas_data_level, function (i, elem) {
+                            if (elem.id_level == data['id']){
+                                mas_data_level[i].name = data['name'];
+                                mas_data_level[i].description = data['description'];
+                            }
+                        });
+
+                        var div_level_name = document.getElementById('level_name_' + data['id']);
+                        div_level_name.innerHTML = "<div title=" + data['name'] + ">" + data['name'] +"</div>";
+
+                        document.getElementById('edit-level-form').reset();
+
+                        document.getElementById("pjax-event-editor-button").click();
+                    } else {
+                        // Отображение ошибок ввода
+                        viewErrors("#edit-level-form", data);
+                    }
+                },
+                error: function() {
+                    alert('Error!');
+                }
+            });
+        });
+    });
+</script>
+
+<?php $form = ActiveForm::begin([
+    'id' => 'edit-level-form',
+    'enableAjaxValidation' => true,
+    'enableClientValidation' => true,
+]); ?>
+
+<?= $form->errorSummary($level_model); ?>
+
+<?= $form->field($level_model, 'name')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($level_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_ADD'),
+    'options' => [
+        'id' => 'edit-level-button',
+        'class' => 'btn-success',
+        'style' => 'margin:5px'
+    ]
+]); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_CANCEL'),
+    'options' => [
+        'class' => 'btn-danger',
+        'style' => 'margin:5px',
+        'data-dismiss'=>'modal'
+    ]
+]); ?>
+
+<?php ActiveForm::end(); ?>
 
 <?php Modal::end(); ?>

@@ -385,6 +385,36 @@ class TreeDiagramsController extends Controller
         return false;
     }
 
+    public function actionEditLevel($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Level::find()->where(['id' => Yii::$app->request->post('level_id_on_click')])->one();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+
+        return false;
+    }
+
     public function actionEditEvent($id)
     {
         //Ajax-запрос
@@ -435,7 +465,6 @@ class TreeDiagramsController extends Controller
             $response->data = $data;
             return $response;
         }
-
         return false;
     }
 
@@ -489,7 +518,6 @@ class TreeDiagramsController extends Controller
             $response->data = $data;
             return $response;
         }
-
         return false;
     }
 }
