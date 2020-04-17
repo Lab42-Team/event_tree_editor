@@ -571,7 +571,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                     //блокировка изменения левела
                     document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "none";
-                    //document.forms["edit-event-form"].elements["Node[level_id]"].label = false;
+
+                    document.getElementById('label_level').style.display = "none";
+
                     $("#editEventModalForm").modal("show");
                 }
             });
@@ -584,6 +586,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                     //разблокировка изменения левела
                     document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "";
+
+                    document.getElementById('label_level').style.display = "";
 
                     $("#editEventModalForm").modal("show");
                 }
