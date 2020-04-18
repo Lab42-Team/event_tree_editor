@@ -552,7 +552,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('dblclick', '.div-event', function() {
         var node = $(this).attr('id');
         node_id_on_click = parseInt(node.match(/\d+/));
-
+        console.log(node_id_on_click);
         var div_node = document.getElementById(node);
 
         var level = div_node.offsetParent.getAttribute('id');
@@ -637,6 +637,32 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             }
         });
     });
+
+
+    // Обработка нажатия правой кнопки мыши на связи между элементами (соответствия между метаклассами)
+    //instance.bind("contextmenu", function(connection, originalEvent) {
+    //    originalEvent.preventDefault();
+        // Запоминаем id текущих метаклассов участвующих в данной связи (соответствия)
+    //    current_source_class_id = connection.sourceId;
+    //    current_target_class_id = connection.targetId;
+        // Запоминаем данную связь
+    //    current_connection = connection;
+        // Если нажата связь между метаклассами, то вызывается модальное окно удаления данного соответствия
+        // Иначе удаление соответствия между метаатрибутами
+    //    if (current_source_class_id.indexOf("class") + 1) {
+            // Вызов модального окна удаления соответствия между метаклассами
+    //        $('#deleteClassConnectionModalForm').modal('show');
+    //    } else {
+            // Запоминаем id текущих метаатрибутов участвующих в данной связи (соответствия)
+    //        current_source_attribute_id = connection.sourceId;
+    //        current_target_attribute_id = connection.targetId;
+            // Запоминаем id метаклассов которым принадлежат данные метаатрибуты
+    //        current_source_class_id = $('#' + current_source_attribute_id).parent('.source-class').attr('id');
+    //        current_target_class_id = $('#' + current_target_attribute_id).parent('.target-class').attr('id');
+            // Вызов модального окна удаления соответствия между метаатрибутами
+    //        $('#deleteAttributeConnectionModalForm').modal('show');
+    //    }
+
 </script>
 
 

@@ -80,7 +80,7 @@ use app\modules\main\models\Lang;
                             var removed = level_mas.push([id, parent_level, name, description]);
 
 
-                            console.log(mas_data_level);
+                            //console.log(mas_data_level);
                             var j = 0;
                             $.each(mas_data_level, function (i, elem) {
                                 j = j + 1;

@@ -123,7 +123,19 @@ use app\modules\editor\models\Node;
 
                             var level = parseInt(data['id_level'], 10);
                             var node = data['id'];
+                            var name = data['name'];
+                            var parent_node = data['parent_node'];
+                            var description = data['description'];
                             var removed = sequence_mas.push([level, node]);
+
+
+                            console.log(mas_data_node);
+                            var j = 0;
+                            $.each(mas_data_node, function (i, elem) {
+                                j = j + 1;
+                            });
+                            console.log(j);
+                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);

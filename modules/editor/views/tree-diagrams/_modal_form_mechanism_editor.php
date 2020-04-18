@@ -108,8 +108,19 @@ use app\modules\main\models\Lang;
 
                             var level = parseInt(data['id_level'], 10);
                             var node = data['id'];
-
+                            var name = data['name'];
+                            var parent_node = data['parent_node'];
+                            var description = data['description'];
                             var removed = sequence_mas.push([level, node]);
+
+
+                            console.log(mas_data_node);
+                            var j = 0;
+                            $.each(mas_data_node, function (i, elem) {
+                                j = j + 1;
+                            });
+                            console.log(j);
+                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-mechanism-form", data);
@@ -196,7 +207,10 @@ use app\modules\main\models\Lang;
                             }
                         });
 
-                        if (level_id_on_click != data['id_level']){
+                        if (level_id_on_click == data['id_level']){
+                            var div_mechanism = document.getElementById('node_' + data['id']);
+                            div_mechanism.title = data['name'];
+                        } else {
                             var div_mechanism = document.getElementById('node_' + data['id']);
                             var new_div_mechanism = div_mechanism.cloneNode(true); // клонировать сообщение
                             var div_level_layer = document.getElementById('level_description_'+ data['id_level']);
@@ -208,6 +222,8 @@ use app\modules\main\models\Lang;
 
                             div_level_layer.append(new_div_mechanism); // разместить клонированный элемент в новый уровень
 
+                            new_div_mechanism.title = data['name'];
+
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_mechanism);
 
@@ -215,12 +231,12 @@ use app\modules\main\models\Lang;
                             var g_name = 'group'+ data['id_level']; //определяем имя группы
                             instance.addToGroup(g_name, new_div_mechanism);//добавляем в группу
 
-                            instance.makeSource(div_node_id, {
+                            instance.makeSource(new_div_mechanism, {
                                 filter: ".ep",
                                 anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
                             });
 
-                            instance.makeTarget(div_node_id, {
+                            instance.makeTarget(new_div_mechanism, {
                                 dropOptions: { hoverClass: "dragHover" },
                                 anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
