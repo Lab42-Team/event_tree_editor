@@ -70,6 +70,10 @@ foreach ($level_model_all as $l){
     'level_model' => $level_model,
 ]) ?>
 
+<?= $this->render('_modal_form_relationship', [
+    'model' => $model,
+]) ?>
+
 <?php Pjax::begin(); ?>
 
 <?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
@@ -158,6 +162,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
     var node_id_on_click = 0;
     var level_id_on_click = 0;
+
+    var id_target;
 
     var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
     var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
@@ -400,6 +406,17 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             });
         });
 
+
+        // Обработка удаления связи
+        instance.bind("contextmenu", function(connection) {
+            //var source_node = connection.sourceId;
+            var target_node = connection.targetId;
+            //id_source = parseInt(source_node.match(/\d+/));
+            id_target = parseInt(target_node.match(/\d+/));
+            $("#deleteRelationshipModalForm").modal("show");
+        });
+
+
         instance.bind("connection", function(connection) {
             var source_id = connection.sourceId;
             var target_id = connection.targetId;
@@ -639,29 +656,22 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-    // Обработка нажатия правой кнопки мыши на связи между элементами (соответствия между метаклассами)
-    //instance.bind("contextmenu", function(connection, originalEvent) {
-    //    originalEvent.preventDefault();
-        // Запоминаем id текущих метаклассов участвующих в данной связи (соответствия)
-    //    current_source_class_id = connection.sourceId;
-    //    current_target_class_id = connection.targetId;
-        // Запоминаем данную связь
-    //    current_connection = connection;
-        // Если нажата связь между метаклассами, то вызывается модальное окно удаления данного соответствия
-        // Иначе удаление соответствия между метаатрибутами
-    //    if (current_source_class_id.indexOf("class") + 1) {
-            // Вызов модального окна удаления соответствия между метаклассами
-    //        $('#deleteClassConnectionModalForm').modal('show');
-    //    } else {
-            // Запоминаем id текущих метаатрибутов участвующих в данной связи (соответствия)
-    //        current_source_attribute_id = connection.sourceId;
-    //        current_target_attribute_id = connection.targetId;
-            // Запоминаем id метаклассов которым принадлежат данные метаатрибуты
-    //        current_source_class_id = $('#' + current_source_attribute_id).parent('.source-class').attr('id');
-    //        current_target_class_id = $('#' + current_target_attribute_id).parent('.target-class').attr('id');
-            // Вызов модального окна удаления соответствия между метаатрибутами
-    //        $('#deleteAttributeConnectionModalForm').modal('show');
-    //    }
+    // удаление события
+    $(document).on('contextmenu', '.div-event', function() {
+        var node = $(this).attr('id');
+        node_id_on_click = parseInt(node.match(/\d+/));
+        console.log(node_id_on_click);
+
+
+        console.log(sequence_mas);
+
+        $("#deleteEventModalForm").modal("show");
+    });
+
+
+
+
+
 
 </script>
 

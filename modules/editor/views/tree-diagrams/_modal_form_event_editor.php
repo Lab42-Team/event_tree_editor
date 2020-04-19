@@ -354,3 +354,120 @@ use app\modules\editor\models\Node;
 <?php ActiveForm::end(); ?>
 
 <?php Modal::end(); ?>
+
+
+
+
+
+
+
+
+    <!-- Модальное окно изменения нового события -->
+<?php Modal::begin([
+    'id' => 'deleteEventModalForm',
+    'header' => '<h3>' . Yii::t('app', 'EVENT_DELETE_EVENT') . '</h3>',
+]); ?>
+
+<!-- Скрипт модального окна -->
+<script type="text/javascript">
+    // Выполнение скрипта при загрузке страницы
+    $(document).ready(function() {
+        // Обработка нажатия кнопки сохранения
+        $("#delete-event-button").click(function(e) {
+            e.preventDefault();
+            // Ajax-запрос
+            $.ajax({
+                    //переход на экшен левел
+                    url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                    '/tree-diagrams/delete-event/' . $model->id ?>",
+                    type: "post",
+                    data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
+                    dataType: "json",
+                    success: function(data) {
+                        // Если валидация прошла успешно (нет ошибок ввода)
+                        if (data['success']) {
+                            // Скрывание модального окна
+                            $("#deleteEventModalForm").modal("hide");
+
+                            //console.log(node_id_on_click);
+
+                            var div_event = document.getElementById('node_' + node_id_on_click);
+                            instance.removeFromGroup(div_event);//удаляем из группы
+                            instance.deleteConnectionsForElement(div_event);//визуально убираем соединения
+                            div_event.remove(); // удаляем старый node
+
+
+                            //----------восстанавливаем нужные соединения
+                            //var del_i = 0;
+                            $.each(mas_data_node, function (i, elem_node) {
+                                //убираем входящие
+                                if (node_id_on_click == elem_node.id){
+                                    mas_data_node[i].parent_node = null;
+                                    //del_i = i
+                                }
+                                //убираем изходящие
+                                if (node_id_on_click == elem_node.parent_node){
+                                    mas_data_node[i].parent_node = null;
+                                }
+                            });
+                            //-----------------------------удалить id из массива ---------------------------
+                            //console.log(mas_data_node);
+                            //-----------------------------
+
+                            document.getElementById("pjax-sequence-mas-button").click();
+
+                            //заносим изменения в массив sequence_mas
+                            var pos_i = 0;
+                            $.each(sequence_mas, function (i, mas) {
+                                $.each(mas, function (j, elem) {
+                                    //второй элемент это id узла события или механизма
+                                    if (j == 1) {
+                                        if (elem == node_id_on_click){
+                                            pos_i = i;
+                                        }
+                                    };
+                                });
+                            });
+                            sequence_mas.splice(pos_i, 1);
+                            //console.log(sequence_mas);
+                        }
+                    },
+                    error: function() {
+                        alert('Error!');
+                    }
+            });
+        });
+    });
+</script>
+
+<?php $form = ActiveForm::begin([
+    'id' => 'delete-event-form',
+]); ?>
+
+<div class="modal-body">
+    <p style="font-size: 14px">
+        <?php echo Yii::t('app', 'RVML_EDITOR_PAGE_MODAL_FORM_DELETE_FACT_TEMPLATE_TEXT'); ?>
+    </p>
+</div>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_DELETE'),
+    'options' => [
+        'id' => 'delete-event-button',
+        'class' => 'btn-success',
+        'style' => 'margin:5px'
+    ]
+]); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_CANCEL'),
+    'options' => [
+        'class' => 'btn-danger',
+        'style' => 'margin:5px',
+        'data-dismiss'=>'modal'
+    ]
+]); ?>
+
+<?php ActiveForm::end(); ?>
+
+<?php Modal::end(); ?>

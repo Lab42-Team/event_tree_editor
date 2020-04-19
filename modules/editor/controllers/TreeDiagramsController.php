@@ -387,6 +387,34 @@ class TreeDiagramsController extends Controller
         return false;
     }
 
+
+    public function actionDeleteRelationship($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $id_target = Yii::$app->request->post('id_target');
+
+            $model = Node::find()->where(['id' => $id_target])->one();
+            $model->parent_node = null;
+            $model->updateAttributes(['parent_node']);
+
+            $data["success"] = true;
+            $data["id_target"] = $id_target;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
     public function actionEditLevel($id)
     {
         //Ajax-запрос
@@ -462,6 +490,29 @@ class TreeDiagramsController extends Controller
 
             } else
                 $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionDeleteEvent($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
+            $model -> delete();
+
+            $data["success"] = true;
 
             // Возвращение данных
             $response->data = $data;

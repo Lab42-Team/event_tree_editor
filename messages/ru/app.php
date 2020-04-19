@@ -209,6 +209,7 @@ return [
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
+    'DELETE_RELATIONSHIP' => 'Удаление связи',
 
     /* Cообщения */
     'MAXIMUM_CONNECTIONS' => 'Максимальное количество соединений ',
@@ -217,5 +218,7 @@ return [
     'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'Уровень должен начинаться с механизма',
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'У начального события не должно быть входящих соединений',
 
-    'ALERT_CHANGE_LEVEL' => 'При изменении уровня, связи будут удалены.',
+    'ALERT_CHANGE_LEVEL' => 'При изменении уровня, связи будут удалены!',
+
+    'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Вы действительно хотите удалить связь?',
 ];

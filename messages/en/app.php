@@ -209,6 +209,7 @@ return [
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
+    'DELETE_RELATIONSHIP' => 'Deleting connection',
 
     /* Cообщения */
     'MAXIMUM_CONNECTIONS' => 'Maximum connections ',
@@ -217,5 +218,7 @@ return [
     'LEVEL_MUST_BEGIN_WITH_MECHANISM' => 'The level must begin with a mechanism',
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'In the initial event should not be incoming connections',
 
-    'ALERT_CHANGE_LEVEL' => 'When you change the level, the connection will be deleted.',
+    'ALERT_CHANGE_LEVEL' => 'When you change the level, the connection will be deleted!',
+
+    'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Are you sure you want to delete the connection?',
 ];
