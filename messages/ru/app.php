@@ -209,6 +209,7 @@ return [
     'EVENT_DELETE_EVENT' => 'Удаление события',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
+    'MECHANISM_DELETE_MECHANISM' => 'Удаление механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
     'DELETE_RELATIONSHIP' => 'Удаление связи',
 
@@ -223,4 +224,5 @@ return [
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Вы действительно хотите удалить связь?',
     'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
+    'DELETE_MECHANISM_TEXT' => 'Вы действительно хотите удалить механизм?',
 ];

@@ -58,6 +58,11 @@ use app\modules\main\models\Lang;
                             div_ep.className = 'ep' ;
                             div_mechanism.append(div_ep);
 
+                            var div_del = document.createElement('div');
+                            div_del.id = 'node_del_' + data['id'];
+                            div_del.className = 'del del-mechanism' ;
+                            div_mechanism.append(div_del);
+
                             var div_mechanism_m = document.createElement('div');
                             div_mechanism_m.className = 'div-mechanism-m' ;
                             div_mechanism_m.innerHTML = 'M';
@@ -114,12 +119,12 @@ use app\modules\main\models\Lang;
                             var removed = sequence_mas.push([level, node]);
 
 
-                            console.log(mas_data_node);
+                            //console.log(mas_data_node);
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            console.log(j);
+                            //console.log(j);
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
@@ -326,6 +331,118 @@ use app\modules\main\models\Lang;
     'label' => Yii::t('app', 'BUTTON_SAVE'),
     'options' => [
         'id' => 'edit-mechanism-button',
+        'class' => 'btn-success',
+        'style' => 'margin:5px'
+    ]
+]); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_CANCEL'),
+    'options' => [
+        'class' => 'btn-danger',
+        'style' => 'margin:5px',
+        'data-dismiss'=>'modal'
+    ]
+]); ?>
+
+<?php ActiveForm::end(); ?>
+
+<?php Modal::end(); ?>
+
+
+
+
+<!-- Модальное окно изменения нового события -->
+<?php Modal::begin([
+    'id' => 'deleteMechanismModalForm',
+    'header' => '<h3>' . Yii::t('app', 'MECHANISM_DELETE_MECHANISM') . '</h3>',
+]); ?>
+
+    <!-- Скрипт модального окна -->
+    <script type="text/javascript">
+        // Выполнение скрипта при загрузке страницы
+        $(document).ready(function() {
+            // Обработка нажатия кнопки сохранения
+            $("#delete-mechanism-button").click(function(e) {
+                e.preventDefault();
+                // Ajax-запрос
+                $.ajax({
+                    //переход на экшен левел
+                    url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                    '/tree-diagrams/delete-mechanism/' . $model->id ?>",
+                    type: "post",
+                    data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
+                    dataType: "json",
+                    success: function(data) {
+                        // Если валидация прошла успешно (нет ошибок ввода)
+                        if (data['success']) {
+                            // Скрывание модального окна
+                            $("#deleteMechanismModalForm").modal("hide");
+
+                            //console.log(node_id_on_click);
+
+                            var div_mechanism = document.getElementById('node_' + node_id_on_click);
+                            instance.removeFromGroup(div_mechanism);//удаляем из группы
+                            instance.deleteConnectionsForElement(div_mechanism);//визуально убираем соединения
+                            div_mechanism.remove(); // удаляем старый node
+
+                            //убираем соединения от удаляемого элемента
+                            var del_i = 0;
+                            $.each(mas_data_node, function (i, elem_node) {
+                                //убираем входящие
+                                if (node_id_on_click == elem_node.id){
+                                    mas_data_node[i].parent_node = null;
+                                    del_i = i
+                                }
+                                //убираем изходящие
+                                if (node_id_on_click == elem_node.parent_node){
+                                    mas_data_node[i].parent_node = null;
+                                }
+                            });
+                            delete mas_data_node[del_i];
+                            //console.log(mas_data_node);
+                            //-----------------------------
+
+                            document.getElementById("pjax-sequence-mas-button").click();
+
+                            //заносим изменения в массив sequence_mas
+                            var pos_i = 0;
+                            $.each(sequence_mas, function (i, mas) {
+                                $.each(mas, function (j, elem) {
+                                    //второй элемент это id узла события или механизма
+                                    if (j == 1) {
+                                        if (elem == node_id_on_click){
+                                            pos_i = i;
+                                        }
+                                    };
+                                });
+                            });
+                            sequence_mas.splice(pos_i, 1);
+                            //console.log(sequence_mas);
+                        }
+                    },
+                    error: function() {
+                        alert('Error!');
+                    }
+                });
+            });
+        });
+    </script>
+
+<?php $form = ActiveForm::begin([
+    'id' => 'delete-mechanism-form',
+]); ?>
+
+<div class="modal-body">
+    <p style="font-size: 14px">
+        <?php echo Yii::t('app', 'DELETE_MECHANISM_TEXT'); ?>
+    </p>
+</div>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_DELETE'),
+    'options' => [
+        'id' => 'delete-mechanism-button',
         'class' => 'btn-success',
         'style' => 'margin:5px'
     ]

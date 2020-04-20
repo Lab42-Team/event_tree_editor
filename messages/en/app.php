@@ -209,6 +209,7 @@ return [
     'EVENT_DELETE_EVENT' => 'Delete event',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
+    'MECHANISM_DELETE_MECHANISM' => 'Delete mechanism',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
     'DELETE_RELATIONSHIP' => 'Deleting connection',
 
@@ -223,4 +224,5 @@ return [
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Are you sure you want to delete the connection?',
     'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
+    'DELETE_MECHANISM_TEXT' => 'Are you sure you want to delete the mechanism?',
 ];

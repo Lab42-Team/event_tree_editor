@@ -58,6 +58,11 @@ use app\modules\editor\models\Node;
                                 div_ep.className = 'ep' ;
                                 div_initial_event.append(div_ep);
 
+                                var div_del = document.createElement('div');
+                                div_del.id = 'node_del_' + data['id'];
+                                div_del.className = 'del del-event' ;
+                                div_initial_event.append(div_del);
+
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.id = 'node_name_' + data['id'];
                                 div_initial_event_name.className = 'div-event-name' ;
@@ -74,6 +79,11 @@ use app\modules\editor\models\Node;
                                 var div_ep = document.createElement('div');
                                 div_ep.className = 'ep' ;
                                 div_event.append(div_ep);
+
+                                var div_del = document.createElement('div');
+                                div_del.id = 'node_del_' + data['id'];
+                                div_del.className = 'del del-event' ;
+                                div_event.append(div_del);
 
                                 var div_event_name = document.createElement('div');
                                 div_event_name.id = 'node_name_' + data['id'];
@@ -129,12 +139,12 @@ use app\modules\editor\models\Node;
                             var removed = sequence_mas.push([level, node]);
 
 
-                            console.log(mas_data_node);
+                            //console.log(mas_data_node);
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            console.log(j);
+                            //console.log(j);
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
@@ -358,11 +368,7 @@ use app\modules\editor\models\Node;
 
 
 
-
-
-
-
-    <!-- Модальное окно изменения нового события -->
+<!-- Модальное окно изменения нового события -->
 <?php Modal::begin([
     'id' => 'deleteEventModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_DELETE_EVENT') . '</h3>',
@@ -377,64 +383,64 @@ use app\modules\editor\models\Node;
             e.preventDefault();
             // Ajax-запрос
             $.ajax({
-                    //переход на экшен левел
-                    url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                    '/tree-diagrams/delete-event/' . $model->id ?>",
-                    type: "post",
-                    data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
-                    dataType: "json",
-                    success: function(data) {
-                        // Если валидация прошла успешно (нет ошибок ввода)
-                        if (data['success']) {
-                            // Скрывание модального окна
-                            $("#deleteEventModalForm").modal("hide");
+                //переход на экшен левел
+                url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                '/tree-diagrams/delete-event/' . $model->id ?>",
+                type: "post",
+                data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
+                dataType: "json",
+                success: function(data) {
+                    // Если валидация прошла успешно (нет ошибок ввода)
+                    if (data['success']) {
+                        // Скрывание модального окна
+                        $("#deleteEventModalForm").modal("hide");
 
-                            //console.log(node_id_on_click);
+                        //console.log(node_id_on_click);
 
-                            var div_event = document.getElementById('node_' + node_id_on_click);
-                            instance.removeFromGroup(div_event);//удаляем из группы
-                            instance.deleteConnectionsForElement(div_event);//визуально убираем соединения
-                            div_event.remove(); // удаляем старый node
+                        var div_event = document.getElementById('node_' + node_id_on_click);
+                        instance.removeFromGroup(div_event);//удаляем из группы
+                        instance.deleteConnectionsForElement(div_event);//визуально убираем соединения
+                        div_event.remove(); // удаляем старый node
 
 
-                            //убираем соединения от удаляемого элемента
-                            var del_i = 0;
-                            $.each(mas_data_node, function (i, elem_node) {
-                                //убираем входящие
-                                if (node_id_on_click == elem_node.id){
-                                    mas_data_node[i].parent_node = null;
-                                    del_i = i
-                                }
-                                //убираем изходящие
-                                if (node_id_on_click == elem_node.parent_node){
-                                    mas_data_node[i].parent_node = null;
-                                }
+                        //убираем соединения от удаляемого элемента
+                        var del_i = 0;
+                        $.each(mas_data_node, function (i, elem_node) {
+                            //убираем входящие
+                            if (node_id_on_click == elem_node.id){
+                                mas_data_node[i].parent_node = null;
+                                del_i = i
+                            }
+                            //убираем изходящие
+                            if (node_id_on_click == elem_node.parent_node){
+                                mas_data_node[i].parent_node = null;
+                            }
+                        });
+                        delete mas_data_node[del_i];
+                        //console.log(mas_data_node);
+                        //-----------------------------
+
+                        document.getElementById("pjax-sequence-mas-button").click();
+
+                        //заносим изменения в массив sequence_mas
+                        var pos_i = 0;
+                        $.each(sequence_mas, function (i, mas) {
+                            $.each(mas, function (j, elem) {
+                                //второй элемент это id узла события или механизма
+                                if (j == 1) {
+                                    if (elem == node_id_on_click){
+                                        pos_i = i;
+                                    }
+                                };
                             });
-                            delete mas_data_node[del_i];
-                            //console.log(mas_data_node);
-                            //-----------------------------
-
-                            document.getElementById("pjax-sequence-mas-button").click();
-
-                            //заносим изменения в массив sequence_mas
-                            var pos_i = 0;
-                            $.each(sequence_mas, function (i, mas) {
-                                $.each(mas, function (j, elem) {
-                                    //второй элемент это id узла события или механизма
-                                    if (j == 1) {
-                                        if (elem == node_id_on_click){
-                                            pos_i = i;
-                                        }
-                                    };
-                                });
-                            });
-                            sequence_mas.splice(pos_i, 1);
-                            //console.log(sequence_mas);
-                        }
-                    },
-                    error: function() {
-                        alert('Error!');
+                        });
+                        sequence_mas.splice(pos_i, 1);
+                        //console.log(sequence_mas);
                     }
+                },
+                error: function() {
+                    alert('Error!');
+                }
             });
         });
     });
