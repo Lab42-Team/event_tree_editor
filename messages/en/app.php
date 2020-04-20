@@ -206,6 +206,7 @@ return [
     'LEVEL_EDIT_LEVEL' => 'Level change',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
+    'EVENT_DELETE_EVENT' => 'Delete event',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
@@ -221,4 +222,5 @@ return [
     'ALERT_CHANGE_LEVEL' => 'When you change the level, the connection will be deleted!',
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Are you sure you want to delete the connection?',
+    'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
 ];

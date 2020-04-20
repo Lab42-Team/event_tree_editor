@@ -397,20 +397,20 @@ use app\modules\editor\models\Node;
                             div_event.remove(); // удаляем старый node
 
 
-                            //----------восстанавливаем нужные соединения
-                            //var del_i = 0;
+                            //убираем соединения от удаляемого элемента
+                            var del_i = 0;
                             $.each(mas_data_node, function (i, elem_node) {
                                 //убираем входящие
                                 if (node_id_on_click == elem_node.id){
                                     mas_data_node[i].parent_node = null;
-                                    //del_i = i
+                                    del_i = i
                                 }
                                 //убираем изходящие
                                 if (node_id_on_click == elem_node.parent_node){
                                     mas_data_node[i].parent_node = null;
                                 }
                             });
-                            //-----------------------------удалить id из массива ---------------------------
+                            delete mas_data_node[del_i];
                             //console.log(mas_data_node);
                             //-----------------------------
 
@@ -446,7 +446,7 @@ use app\modules\editor\models\Node;
 
 <div class="modal-body">
     <p style="font-size: 14px">
-        <?php echo Yii::t('app', 'RVML_EDITOR_PAGE_MODAL_FORM_DELETE_FACT_TEMPLATE_TEXT'); ?>
+        <?php echo Yii::t('app', 'DELETE_EVENT_TEXT'); ?>
     </p>
 </div>
 

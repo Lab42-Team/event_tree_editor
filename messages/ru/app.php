@@ -206,6 +206,7 @@ return [
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
+    'EVENT_DELETE_EVENT' => 'Удаление события',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
@@ -221,4 +222,5 @@ return [
     'ALERT_CHANGE_LEVEL' => 'При изменении уровня, связи будут удалены!',
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Вы действительно хотите удалить связь?',
+    'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
 ];

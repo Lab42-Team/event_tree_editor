@@ -499,28 +499,6 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteEvent($id)
-    {
-        //Ajax-запрос
-        if (Yii::$app->request->isAjax) {
-            // Определение массива возвращаемых данных
-            $data = array();
-            // Установка формата JSON для возвращаемых данных
-            $response = Yii::$app->response;
-            $response->format = Response::FORMAT_JSON;
-
-            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
-            $model -> delete();
-
-            $data["success"] = true;
-
-            // Возвращение данных
-            $response->data = $data;
-            return $response;
-        }
-        return false;
-    }
-
     public function actionEditMechanism($id)
     {
         //Ajax-запрос
@@ -566,6 +544,37 @@ class TreeDiagramsController extends Controller
 
             } else
                 $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionDeleteEvent($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $node_id_on_click = Yii::$app->request->post('node_id_on_click');
+
+            $node_descendent = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $node_id_on_click])->all();
+            foreach ($node_descendent as $elem){
+                $elem->parent_node = null;
+                $elem->updateAttributes(['parent_node']);
+            }
+
+            $node = Node::find()->where(['tree_diagram' => $id, 'id' => $node_id_on_click])->one();
+            $node -> delete();
+
+            $data["success"] = true;
 
             // Возвращение данных
             $response->data = $data;

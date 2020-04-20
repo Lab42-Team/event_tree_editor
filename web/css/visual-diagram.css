@@ -133,3 +133,22 @@ div.top > div {
     -moz-transition: -moz-box-shadow 0.25s ease-in;
     transition: box-shadow 0.25s ease-in;*/
 }
+
+.del {
+    position: absolute;
+    bottom: 44%;
+    left: 10px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    cursor: pointer;
+    display:none;
+    /*box-shadow: 0 0 2px white;
+    -webkit-transition: -webkit-box-shadow 0.25s ease-in;
+    -moz-transition: -moz-box-shadow 0.25s ease-in;
+    transition: box-shadow 0.25s ease-in;*/
+}
+
+.node:hover .del{
+    display:block;
+}

@@ -569,7 +569,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('dblclick', '.div-event', function() {
         var node = $(this).attr('id');
         node_id_on_click = parseInt(node.match(/\d+/));
-        console.log(node_id_on_click);
+
         var div_node = document.getElementById(node);
 
         var level = div_node.offsetParent.getAttribute('id');
@@ -656,16 +656,19 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-    // удаление события
-    $(document).on('contextmenu', '.div-event', function() {
-        var node = $(this).attr('id');
-        node_id_on_click = parseInt(node.match(/\d+/));
-        console.log(node_id_on_click);
+    // удаление события и механизмов
+    $(document).on('click', '.del', function() {
+        var del = $(this).attr('id');
+        node_id_on_click = parseInt(del.match(/\d+/));
+        //console.log(node_id_on_click);
+        var node_class = document.getElementById('node_' + node_id_on_click).getAttribute('class');
+        if (node_class.search("event") >= 0){
+            //console.log("событие");
+            $("#deleteEventModalForm").modal("show");
+        } else if (node_class.search("mechanism") >= 0){
+            //console.log("механизм");
 
-
-        console.log(sequence_mas);
-
-        $("#deleteEventModalForm").modal("show");
+        }
     });
 
 
@@ -695,6 +698,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="ep"></div>
+                                <div id="node_del_<?= $initial_event_value->id ?>" class="del"></div>
                                 <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
                             </div>
                         <?php endforeach; ?>
@@ -706,6 +710,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node">
                                             <div class="ep"></div>
+                                            <div id="node_del_<?= $event_value->id ?>" class="del"></div>
                                             <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                         </div>
                                     <?php } ?>
@@ -735,6 +740,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                 <div id="node_<?= $mechanism_value->id ?>"
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
                                                     <div class="ep"></div>
+                                                    <div id="node_del_<?= $mechanism_value->id ?>" class="del"></div>
                                                     <div class="div-mechanism-m">M</div>
                                                 </div>
                                             <?php } ?>
@@ -744,6 +750,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node">
                                                     <div class="ep"></div>
+                                                    <div id="node_del_<?= $event_value->id ?>" class="del"></div>
                                                     <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                 </div>
                                             <?php } ?>
