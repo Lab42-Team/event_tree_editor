@@ -415,43 +415,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
 
 
-        instance.bind("mouseover", function(connection) {
-            //console.log("навел")
-            var message_label = "<?php echo Yii::t('app', 'LEVEL_DELETE'); ?>";
-            connection.addOverlay(["Label", { label: message_label, location:0.5, id: "label_connector", cssClass: "aLabel"} ]);
-        });
-
-        instance.bind("mouseout", function(connection) {
-            //console.log("отвел")
-            connection.removeOverlay("label_connector");
-        });
-
-        // Обработка удаления связи
-        instance.bind("click", function(connection) {
-            //var source_node = connection.sourceId;
-            var target_node = connection.targetId;
-            //id_source = parseInt(source_node.match(/\d+/));
-            id_target = parseInt(target_node.match(/\d+/));
-            $("#deleteRelationshipModalForm").modal("show");
-        });
-
-
-        //function setConnectionLabel(connection, label) {
-        //    connection.bind("mouseover", function(conn) {
-        //        if (conn.hasOwnProperty ('component')) {conn = conn.component}
-        //        conn.addOverlay(["Label", { label: label, location:0.5, id: "connLabel"} ]);
-        //    });
-
-        //    connection.bind("mouseout", function(conn) {
-         //       if (conn.hasOwnProperty ('component')) {conn = conn.component}
-        //        conn.removeOverlay("connLabel");
-        //    });
-        //}
-
-        //setConnectionLabel(connection.connection, "Labeltext");
-
-
-
         instance.bind("connection", function(connection) {
             var source_id = connection.sourceId;
             var target_id = connection.targetId;
@@ -479,6 +442,29 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     alert('Error!');
                 }
             });
+        });
+
+        // Обработка при наведении на связь показывает заголовок связи "удалить"
+        instance.bind("mouseover", function(connection) {
+            var target_id = connection.targetId;
+            if (target_id.search("node") >= 0){
+                var message_label = "<?php echo Yii::t('app', 'LEVEL_DELETE'); ?>";
+                connection.addOverlay(["Label", { label: message_label, location:0.5, id: "label_connector", cssClass: "aLabel"} ]);
+            }
+        });
+
+        // Обработка при отведении от связи скрывает заголовок
+        instance.bind("mouseout", function(connection) {
+            connection.removeOverlay("label_connector");
+        });
+
+        // Обработка удаления связи
+        instance.bind("click", function(connection) {
+            //var source_node = connection.sourceId;
+            var target_node = connection.targetId;
+            //id_source = parseInt(source_node.match(/\d+/));
+            id_target = parseInt(target_node.match(/\d+/));
+            $("#deleteRelationshipModalForm").modal("show");
         });
     });
 
