@@ -220,7 +220,15 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
             PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
+            HoverPaintStyle: {stroke: "#d00006", strokeWidth: 4 },
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
+            ConnectionOverlays: [
+                [ "Label", {
+                    label: "",
+                    id: "label_connector",
+                    //cssClass: "aLabel"
+                }]
+            ],
             Container: "visual_diagram_field"
         });
 
@@ -407,14 +415,41 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
 
 
+        instance.bind("mouseover", function(connection) {
+            //console.log("навел")
+            var message_label = "<?php echo Yii::t('app', 'LEVEL_DELETE'); ?>";
+            connection.addOverlay(["Label", { label: message_label, location:0.5, id: "label_connector", cssClass: "aLabel"} ]);
+        });
+
+        instance.bind("mouseout", function(connection) {
+            //console.log("отвел")
+            connection.removeOverlay("label_connector");
+        });
+
         // Обработка удаления связи
-        instance.bind("contextmenu", function(connection) {
+        instance.bind("click", function(connection) {
             //var source_node = connection.sourceId;
             var target_node = connection.targetId;
             //id_source = parseInt(source_node.match(/\d+/));
             id_target = parseInt(target_node.match(/\d+/));
             $("#deleteRelationshipModalForm").modal("show");
         });
+
+
+        //function setConnectionLabel(connection, label) {
+        //    connection.bind("mouseover", function(conn) {
+        //        if (conn.hasOwnProperty ('component')) {conn = conn.component}
+        //        conn.addOverlay(["Label", { label: label, location:0.5, id: "connLabel"} ]);
+        //    });
+
+        //    connection.bind("mouseout", function(conn) {
+         //       if (conn.hasOwnProperty ('component')) {conn = conn.component}
+        //        conn.removeOverlay("connLabel");
+        //    });
+        //}
+
+        //setConnectionLabel(connection.connection, "Labeltext");
+
 
 
         instance.bind("connection", function(connection) {

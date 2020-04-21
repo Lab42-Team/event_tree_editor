@@ -225,4 +225,7 @@ return [
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Вы действительно хотите удалить связь?',
     'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
     'DELETE_MECHANISM_TEXT' => 'Вы действительно хотите удалить механизм?',
+
+
+    'LEVEL_DELETE' => 'Удалить',
 ];
