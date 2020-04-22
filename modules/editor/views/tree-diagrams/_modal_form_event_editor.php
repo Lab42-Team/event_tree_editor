@@ -101,7 +101,7 @@ use app\modules\editor\models\Node;
                             var g_name = 'group'+ data['id_level']; //определяем имя группы
                             var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
                             if (grp == 0){
-                            //если группа не существует то создаем группу с определенным именем group_name
+                                //если группа не существует то создаем группу с определенным именем group_name
                                 instance.addGroup({
                                     el: div_level_id,
                                     id: g_name,
@@ -138,13 +138,10 @@ use app\modules\editor\models\Node;
                             var description = data['description'];
                             var removed = sequence_mas.push([level, node]);
 
-
-                            //console.log(mas_data_node);
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            //console.log(j);
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
@@ -254,7 +251,20 @@ use app\modules\editor\models\Node;
                             instance.draggable(new_div_event);
 
                             //добавляем элемент new_div_event в группу с именем g_name
+                            //находим DOM элемент description уровня (идентификатор div level_description)
+                            var div_level_id = document.getElementById('level_description_'+ data['id_level']);
                             var g_name = 'group'+ data['id_level']; //определяем имя группы
+                            var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                            if (grp == 0){
+                                //если группа не существует то создаем группу с определенным именем group_name
+                                instance.addGroup({
+                                    el: div_level_id,
+                                    id: g_name,
+                                    draggable: false, //перетаскивание группы
+                                    //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                                    dropOverride:true,
+                                });
+                            }
                             instance.addToGroup(g_name, new_div_event);//добавляем в группу
 
                             instance.makeSource(new_div_event, {
@@ -368,7 +378,7 @@ use app\modules\editor\models\Node;
 
 
 
-<!-- Модальное окно изменения нового события -->
+<!-- Модальное окно удаления события -->
 <?php Modal::begin([
     'id' => 'deleteEventModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_DELETE_EVENT') . '</h3>',
@@ -395,14 +405,14 @@ use app\modules\editor\models\Node;
                         // Скрывание модального окна
                         $("#deleteEventModalForm").modal("hide");
 
-                        //console.log(node_id_on_click);
+                        var div_del_event = document.getElementById('node_' + node_id_on_click);
+                        instance.removeFromGroup(div_del_event);//удаляем из группы
+                        instance.deleteConnectionsForElement(div_del_event);//визуально убираем соединения
+                        div_del_event.remove(); // удаляем старый node
 
-                        var div_event = document.getElementById('node_' + node_id_on_click);
-                        instance.removeFromGroup(div_event);//удаляем из группы
-                        instance.deleteConnectionsForElement(div_event);//визуально убираем соединения
-                        div_event.remove(); // удаляем старый node
-
-
+                        //----------удаляем все соединения
+                        instance.deleteEveryEndpoint();
+                        //----------восстанавливаем нужные соединения
                         //убираем соединения от удаляемого элемента
                         var del_i = 0;
                         $.each(mas_data_node, function (i, elem_node) {
@@ -417,7 +427,15 @@ use app\modules\editor\models\Node;
                             }
                         });
                         delete mas_data_node[del_i];
-                        //console.log(mas_data_node);
+
+                        $.each(mas_data_node, function (j, elem_node) {
+                            if (elem_node.parent_node != null){
+                                instance.connect({
+                                    source: "node_" + elem_node.parent_node,
+                                    target: "node_" + elem_node.id,
+                                });
+                            }
+                        });
                         //-----------------------------
 
                         document.getElementById("pjax-sequence-mas-button").click();
@@ -435,7 +453,6 @@ use app\modules\editor\models\Node;
                             });
                         });
                         sequence_mas.splice(pos_i, 1);
-                        //console.log(sequence_mas);
                     }
                 },
                 error: function() {

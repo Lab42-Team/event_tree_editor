@@ -219,7 +219,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
             Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
-            PaintStyle : { strokeWidth:2, stroke: "#337ab7", fill: "transparent",},//стиль линии
+            PaintStyle : { strokeWidth:3, stroke: "#337ab7", fill: "transparent",},//стиль линии
             HoverPaintStyle: {stroke: "#d00006", strokeWidth: 4 },
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
             ConnectionOverlays: [

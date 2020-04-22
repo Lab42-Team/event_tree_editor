@@ -118,13 +118,10 @@ use app\modules\main\models\Lang;
                             var description = data['description'];
                             var removed = sequence_mas.push([level, node]);
 
-
-                            //console.log(mas_data_node);
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            //console.log(j);
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
@@ -233,7 +230,20 @@ use app\modules\main\models\Lang;
                             instance.draggable(new_div_mechanism);
 
                             //добавляем элемент new_div_mechanism в группу с именем g_name
+                            //находим DOM элемент description уровня (идентификатор div level_description)
+                            var div_level_id = document.getElementById('level_description_'+ data['id_level']);
                             var g_name = 'group'+ data['id_level']; //определяем имя группы
+                            var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                            if (grp == 0){
+                                //если группа не существует то создаем группу с определенным именем group_name
+                                instance.addGroup({
+                                    el: div_level_id,
+                                    id: g_name,
+                                    draggable: false, //перетаскивание группы
+                                    //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                                    dropOverride:true,
+                                });
+                            }
                             instance.addToGroup(g_name, new_div_mechanism);//добавляем в группу
 
                             instance.makeSource(new_div_mechanism, {
@@ -352,7 +362,7 @@ use app\modules\main\models\Lang;
 
 
 
-<!-- Модальное окно изменения нового события -->
+<!-- Модальное окно удаления механизма -->
 <?php Modal::begin([
     'id' => 'deleteMechanismModalForm',
     'header' => '<h3>' . Yii::t('app', 'MECHANISM_DELETE_MECHANISM') . '</h3>',
@@ -379,13 +389,14 @@ use app\modules\main\models\Lang;
                             // Скрывание модального окна
                             $("#deleteMechanismModalForm").modal("hide");
 
-                            //console.log(node_id_on_click);
-
                             var div_mechanism = document.getElementById('node_' + node_id_on_click);
                             instance.removeFromGroup(div_mechanism);//удаляем из группы
                             instance.deleteConnectionsForElement(div_mechanism);//визуально убираем соединения
                             div_mechanism.remove(); // удаляем старый node
 
+                            //----------удаляем все соединения
+                            instance.deleteEveryEndpoint();
+                            //----------восстанавливаем нужные соединения
                             //убираем соединения от удаляемого элемента
                             var del_i = 0;
                             $.each(mas_data_node, function (i, elem_node) {
@@ -400,7 +411,15 @@ use app\modules\main\models\Lang;
                                 }
                             });
                             delete mas_data_node[del_i];
-                            //console.log(mas_data_node);
+
+                            $.each(mas_data_node, function (j, elem_node) {
+                                if (elem_node.parent_node != null){
+                                    instance.connect({
+                                        source: "node_" + elem_node.parent_node,
+                                        target: "node_" + elem_node.id,
+                                    });
+                                }
+                            });
                             //-----------------------------
 
                             document.getElementById("pjax-sequence-mas-button").click();
@@ -418,7 +437,6 @@ use app\modules\main\models\Lang;
                                 });
                             });
                             sequence_mas.splice(pos_i, 1);
-                            //console.log(sequence_mas);
                         }
                     },
                     error: function() {

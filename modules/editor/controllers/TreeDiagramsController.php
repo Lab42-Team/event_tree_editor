@@ -262,19 +262,20 @@ class TreeDiagramsController extends Controller
             $model->tree_diagram = $id;
             // Задание AND_OPERATOR для оператора по умолчанию
             $model->operator = Node::AND_OPERATOR;
-
-            // Условие проверки является ли событие инициирующим
-            $i = Node::find()->where(['tree_diagram' => $id, 'type' => 0])->count();
-            // Если инициирующие события есть
-            if ($i > '0') {
-                // Тип присваивается константа "EVENT_TYPE" как событие
-                $model->type = Node::EVENT_TYPE;
-            } else {
-                // Тип присваивается константа "INITIAL_EVENT_TYPE" как инициирующее событие
-                $model->type = Node::INITIAL_EVENT_TYPE;
-            }
             // Определение полей модели уровня и валидация формы
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                // Условие проверки является ли событие инициирующим
+                $i = Node::find()->where(['tree_diagram' => $id, 'type' => 0])->count();
+                // Если инициирующие события есть
+                if ($i > '0') {
+                    // Тип присваивается константа "EVENT_TYPE" как событие
+                    $model->type = Node::EVENT_TYPE;
+                } else {
+                    // Тип присваивается константа "INITIAL_EVENT_TYPE" как инициирующее событие
+                    $model->type = Node::INITIAL_EVENT_TYPE;
+                    $level = Level::find()->where(['tree_diagram' => $id, 'parent_level' => null])->one();
+                    $model->level_id = $level->id;
+                }
                 // Успешный ввод данных
                 $data["success"] = true;
                 // Добавление нового уровня в БД
@@ -285,19 +286,18 @@ class TreeDiagramsController extends Controller
                 $data["description"] = $model->description;
                 $data["parent_node"] = $model->parent_node;
                 $data["type"] = $model->type;
+
+                $sequence = new Sequence();
+                $sequence->tree_diagram = $id;
+                $sequence->level = $model->level_id;
+                $sequence->node = $model->id;
+                $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
+                $sequence->priority = $sequence_model_count;
+                $sequence->save();
+
+                $data["id_level"] = $model->level_id;
             } else
                 $data = ActiveForm::validate($model);
-
-            $sequence = new Sequence();
-            $sequence->tree_diagram = $id;
-            $sequence->level = $model->level_id;
-            $sequence->node = $model->id;
-            $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
-            $sequence->priority = $sequence_model_count;
-            $sequence->save();
-
-            $data["id_level"] = $sequence->level;
-
             // Возвращение данных
             $response->data = $data;
 
@@ -341,19 +341,18 @@ class TreeDiagramsController extends Controller
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
                 $data["parent_node"] = $model->parent_node;
+
+                $sequence = new Sequence();
+                $sequence->tree_diagram = $id;
+                $sequence->level = $model->level_id;
+                $sequence->node = $model->id;
+                $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
+                $sequence->priority = $sequence_model_count;
+                $sequence->save();
+
+                $data["id_level"] = $model->level_id;
             } else
                 $data = ActiveForm::validate($model);
-
-            $sequence = new Sequence();
-            $sequence->tree_diagram = $id;
-            $sequence->level = $model->level_id;
-            $sequence->node = $model->id;
-            $sequence_model_count = Sequence::find()->where(['tree_diagram' => $id])->count();
-            $sequence->priority = $sequence_model_count;
-            $sequence->save();
-
-            $data["id_level"] = $sequence->level;
-
             // Возвращение данных
             $response->data = $data;
             return $response;
