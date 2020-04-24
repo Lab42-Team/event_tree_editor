@@ -219,8 +219,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
             Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
-            PaintStyle : { strokeWidth:3, stroke: "#337ab7", fill: "transparent",},//стиль линии
-            HoverPaintStyle: {stroke: "#d00006", strokeWidth: 4 },
+            PaintStyle : { strokeWidth:3, stroke: "#337ab7", fill: "transparent"},//стиль линии
+            HoverPaintStyle: {stroke: "#d00006", strokeWidth: 4},
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
             ConnectionOverlays: [
                 [ "Label", {
@@ -231,7 +231,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             ],
             Container: "visual_diagram_field"
         });
-
+    //, "dashstyle": "2 4"
 
         var group_name = "";
         //разбор полученного массива
@@ -566,6 +566,112 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             div_level_id.style.height = height + 5 + 'px';
         });
     };
+
+
+    // Равномерное размещение всех объектов на рабочей области редактора
+    $(document).ready(function() {
+        var id_node_any;
+        $(".div-level-description").each(function(i) {
+            var id_level = $(this).attr('id');
+
+            var left = 0;
+            var top = 0;
+
+            //счетчик элементов в линии
+            var line_quantity = 0;
+
+            var height_mechanism = 0;
+
+            $(".div-mechanism").each(function(i) {
+                var id_node = $(this).attr('id');
+                var node = document.getElementById(id_node);
+                id_node_any = id_node;
+
+                var level_parent = node.offsetParent;
+                var id_level_parent = level_parent.getAttribute('id');
+
+                // ширина и высота элемента + отступ
+                //var width_node = node.clientWidth + 40;
+                //var height_node = node.clientHeight + 80;
+                var width_node = 150 + 40;
+                var height_node = 100 + 80;
+
+                // curent_ первоначальное положение элемента + 20 отступ от края
+                var current_left = 20 + $(this).position().left;
+                var current_top = 20 + $(this).position().top;
+
+                if (id_level_parent == id_level){
+                    $(this).css({
+                        left: current_left + left,
+                        top: current_top + top
+                    });
+                    left = left + width_node;
+                    line_quantity = line_quantity + 1;
+
+                    //если счетчик эементов равен числу то перенос на новую строку
+                    if (line_quantity == 10) {
+                        top = top + height_node;
+                        left = 0;
+                        line_quantity = 0;
+                        height_mechanism = top;
+                    } else {
+                        height_mechanism = height_node;
+                    }
+                }
+            });
+
+            left = 0;
+            line_quantity = 0;
+
+            $(".div-event").each(function(i) {
+                var id_node = $(this).attr('id');
+                var node = document.getElementById(id_node);
+                id_node_any = id_node;
+
+                var level_parent = node.offsetParent;
+                var id_level_parent = level_parent.getAttribute('id');
+
+                // ширина и высота элемента + отступ
+                var width_node = 150 + 40;
+                var height_node = 100 + 80;
+
+                // curent_ первоначальное положение элемента + 20 отступ от края
+                var current_left = 20 + $(this).position().left;
+                var current_top = 20 + $(this).position().top;
+
+                if (id_level_parent == id_level){
+                    if (node.getAttribute("class").search("div-initial-event") >= 0){
+                        $(this).css({
+                            left: current_left + left,
+                            top: current_top + top
+                        });
+                        left = 0;
+                        top = top + height_node;
+                    } else {
+                        $(this).css({
+                            left: current_left + left,
+                            top: height_mechanism + current_top + top
+                        });
+                        left = left + width_node;
+                        line_quantity = line_quantity + 1;
+
+                        //если счетчик эементов равен числу то перенос на новую строку
+                        if (line_quantity == 10) {
+                            top = top + height_node;
+                            left = 0;
+                            line_quantity = 0;
+                        }
+                    }
+                }
+            });
+        });
+        // отрисовка
+        if (id_node_any != null){
+            mousemoveNode(id_node_any);
+            // Обновление формы редактора
+            instance.repaintEverything();
+        }
+    });
 
 
     $(document).on('mousemove', '.div-event', function() {
