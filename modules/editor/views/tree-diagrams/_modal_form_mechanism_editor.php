@@ -69,7 +69,7 @@ use app\modules\main\models\Lang;
                             div_mechanism.append(div_mechanism_m);
 
                             document.getElementById('add-mechanism-form').reset();
-                            document.getElementById("pjax-sequence-mas-button").click();
+                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //применяем к новым элементам свойства plumb
                             //находим DOM элемент description уровня (идентификатор div level_description)
@@ -286,7 +286,7 @@ use app\modules\main\models\Lang;
                             });
                             //-----------------------------
 
-                            document.getElementById("pjax-sequence-mas-button").click();
+                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //заносим изменения в массив sequence_mas
                             var level = parseInt(data['id_level'], 10);
@@ -422,7 +422,7 @@ use app\modules\main\models\Lang;
                             });
                             //-----------------------------
 
-                            document.getElementById("pjax-sequence-mas-button").click();
+                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //заносим изменения в массив sequence_mas
                             var pos_i = 0;
