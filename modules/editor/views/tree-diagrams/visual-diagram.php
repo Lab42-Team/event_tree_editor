@@ -814,9 +814,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <!-- Вывод инициирующего события -->
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
+                                <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
                                 <div class="ep"></div>
                                 <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event"></div>
-                                <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
                             </div>
                         <?php endforeach; ?>
 
@@ -826,9 +826,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <?php foreach ($event_model_all as $event_value): ?>
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                            <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                             <div class="ep"></div>
                                             <div id="node_del_<?= $event_value->id ?>" class="del del-event"></div>
-                                            <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                         </div>
                                     <?php } ?>
                                 <?php endforeach; ?>
@@ -856,9 +856,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($mechanism_value->id == $node_id){ ?>
                                                 <div id="node_<?= $mechanism_value->id ?>"
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
+                                                    <div class="div-mechanism-m">M</div>
                                                     <div class="ep"></div>
                                                     <div id="node_del_<?= $mechanism_value->id ?>" class="del del-mechanism"></div>
-                                                    <div class="div-mechanism-m">M</div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>
@@ -866,9 +866,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <?php foreach ($event_model_all as $event_value): ?>
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                                    <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                     <div class="ep"></div>
                                                     <div id="node_del_<?= $event_value->id ?>" class="del del-event"></div>
-                                                    <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>

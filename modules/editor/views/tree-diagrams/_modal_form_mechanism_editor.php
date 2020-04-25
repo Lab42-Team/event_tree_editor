@@ -54,6 +54,11 @@ use app\modules\main\models\Lang;
                             div_mechanism.title = data['name'];
                             div_level_layer.append(div_mechanism);
 
+                            var div_mechanism_m = document.createElement('div');
+                            div_mechanism_m.className = 'div-mechanism-m' ;
+                            div_mechanism_m.innerHTML = 'M';
+                            div_mechanism.append(div_mechanism_m);
+
                             var div_ep = document.createElement('div');
                             div_ep.className = 'ep' ;
                             div_mechanism.append(div_ep);
@@ -63,10 +68,6 @@ use app\modules\main\models\Lang;
                             div_del.className = 'del del-mechanism' ;
                             div_mechanism.append(div_del);
 
-                            var div_mechanism_m = document.createElement('div');
-                            div_mechanism_m.className = 'div-mechanism-m' ;
-                            div_mechanism_m.innerHTML = 'M';
-                            div_mechanism.append(div_mechanism_m);
 
                             document.getElementById('add-mechanism-form').reset();
                             //document.getElementById("pjax-sequence-mas-button").click();

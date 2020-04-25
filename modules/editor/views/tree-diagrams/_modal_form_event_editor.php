@@ -54,6 +54,12 @@ use app\modules\editor\models\Node;
                                 div_initial_event.className = 'div-event node div-initial-event';
                                 div_level_layer.append(div_initial_event);
 
+                                var div_initial_event_name = document.createElement('div');
+                                div_initial_event_name.id = 'node_name_' + data['id'];
+                                div_initial_event_name.className = 'div-event-name' ;
+                                div_initial_event_name.innerHTML = data['name'];
+                                div_initial_event.append(div_initial_event_name);
+
                                 var div_ep = document.createElement('div');
                                 div_ep.className = 'ep' ;
                                 div_initial_event.append(div_ep);
@@ -62,12 +68,6 @@ use app\modules\editor\models\Node;
                                 div_del.id = 'node_del_' + data['id'];
                                 div_del.className = 'del del-event' ;
                                 div_initial_event.append(div_del);
-
-                                var div_initial_event_name = document.createElement('div');
-                                div_initial_event_name.id = 'node_name_' + data['id'];
-                                div_initial_event_name.className = 'div-event-name' ;
-                                div_initial_event_name.innerHTML = data['name'];
-                                div_initial_event.append(div_initial_event_name);
                             } else {
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
 
@@ -75,6 +75,12 @@ use app\modules\editor\models\Node;
                                 div_event.id = 'node_' + data['id'];
                                 div_event.className = 'div-event node';
                                 div_level_layer.append(div_event);
+
+                                var div_event_name = document.createElement('div');
+                                div_event_name.id = 'node_name_' + data['id'];
+                                div_event_name.className = 'div-event-name' ;
+                                div_event_name.innerHTML = data['name'];
+                                div_event.append(div_event_name);
 
                                 var div_ep = document.createElement('div');
                                 div_ep.className = 'ep' ;
@@ -84,12 +90,6 @@ use app\modules\editor\models\Node;
                                 div_del.id = 'node_del_' + data['id'];
                                 div_del.className = 'del del-event' ;
                                 div_event.append(div_del);
-
-                                var div_event_name = document.createElement('div');
-                                div_event_name.id = 'node_name_' + data['id'];
-                                div_event_name.className = 'div-event-name' ;
-                                div_event_name.innerHTML = data['name'];
-                                div_event.append(div_event_name);
                             }
 
                             document.getElementById('add-event-form').reset();
