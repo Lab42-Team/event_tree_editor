@@ -153,7 +153,7 @@ use app\modules\main\models\Lang;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/edit-level/' . $model->id ?>",
+                '/tree-diagrams/edit-level'?>",
                 type: "post",
                 data: form.serialize() + "&level_id_on_click=" + level_id_on_click,
                 dataType: "json",

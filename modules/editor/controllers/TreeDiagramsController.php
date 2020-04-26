@@ -361,7 +361,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionAddRelationship($id)
+    public function actionAddRelationship()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -387,7 +387,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteRelationship($id)
+    public function actionDeleteRelationship()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -414,7 +414,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionEditLevel($id)
+    public function actionEditLevel()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -444,7 +444,7 @@ class TreeDiagramsController extends Controller
         return false;
     }
 
-    public function actionEditEvent($id)
+    public function actionEditEvent()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -475,12 +475,12 @@ class TreeDiagramsController extends Controller
 
                     //очистить связи в бд-----------------
                     //очистить входящие связи
-                    $node = Node::find()->where(['tree_diagram' => $id, 'id' => $data["id"]])->one();
+                    $node = Node::find()->where(['id' => $data["id"]])->one();
                     $node->parent_node = null;
                     $node->updateAttributes(['parent_node']);
 
                     //очистить выходящие связи
-                    $node_out = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $data["id"]])->all();
+                    $node_out = Node::find()->where(['parent_node' => $data["id"]])->all();
                     foreach ($node_out as $elem){
                         $elem->parent_node = null;
                         $elem->updateAttributes(['parent_node']);
@@ -498,7 +498,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionEditMechanism($id)
+    public function actionEditMechanism()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -529,12 +529,12 @@ class TreeDiagramsController extends Controller
 
                     //очистить связи в бд-----------------
                     //очистить входящие связи
-                    $node = Node::find()->where(['tree_diagram' => $id, 'id' => $data["id"]])->one();
+                    $node = Node::find()->where(['id' => $data["id"]])->one();
                     $node->parent_node = null;
                     $node->updateAttributes(['parent_node']);
 
                     //очистить выходящие связи
-                    $node_out = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $data["id"]])->all();
+                    $node_out = Node::find()->where(['parent_node' => $data["id"]])->all();
                     foreach ($node_out as $elem){
                         $elem->parent_node = null;
                         $elem->updateAttributes(['parent_node']);
@@ -552,7 +552,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteEvent($id)
+    public function actionDeleteEvent()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -564,13 +564,13 @@ class TreeDiagramsController extends Controller
 
             $node_id_on_click = Yii::$app->request->post('node_id_on_click');
 
-            $node_descendent = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $node_id_on_click])->all();
+            $node_descendent = Node::find()->where(['parent_node' => $node_id_on_click])->all();
             foreach ($node_descendent as $elem){
                 $elem->parent_node = null;
                 $elem->updateAttributes(['parent_node']);
             }
 
-            $node = Node::find()->where(['tree_diagram' => $id, 'id' => $node_id_on_click])->one();
+            $node = Node::find()->where(['id' => $node_id_on_click])->one();
             $node -> delete();
 
             $data["success"] = true;
@@ -583,7 +583,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteMechanism($id)
+    public function actionDeleteMechanism()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -595,13 +595,13 @@ class TreeDiagramsController extends Controller
 
             $node_id_on_click = Yii::$app->request->post('node_id_on_click');
 
-            $node_descendent = Node::find()->where(['tree_diagram' => $id, 'parent_node' => $node_id_on_click])->all();
+            $node_descendent = Node::find()->where(['parent_node' => $node_id_on_click])->all();
             foreach ($node_descendent as $elem){
                 $elem->parent_node = null;
                 $elem->updateAttributes(['parent_node']);
             }
 
-            $node = Node::find()->where(['tree_diagram' => $id, 'id' => $node_id_on_click])->one();
+            $node = Node::find()->where(['id' => $node_id_on_click])->one();
             $node -> delete();
 
             $data["success"] = true;

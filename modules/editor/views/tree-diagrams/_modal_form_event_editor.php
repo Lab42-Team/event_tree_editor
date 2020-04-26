@@ -212,7 +212,7 @@ use app\modules\editor\models\Node;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/edit-event/' . $model->id ?>",
+                '/tree-diagrams/edit-event'?>",
                 type: "post",
                 data: form.serialize() + "&node_id_on_click=" + node_id_on_click + "&level_id_on_click=" + level_id_on_click,
                 dataType: "json",
@@ -395,7 +395,7 @@ use app\modules\editor\models\Node;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/delete-event/' . $model->id ?>",
+                '/tree-diagrams/delete-event'?>",
                 type: "post",
                 data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
                 dataType: "json",

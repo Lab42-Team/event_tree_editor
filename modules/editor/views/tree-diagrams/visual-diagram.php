@@ -419,7 +419,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/add-relationship/' . $model->id ?>",
+                '/tree-diagrams/add-relationship'?>",
                 type: "post",
                 data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" +
                 "&parent_node_id=" + parent_node_id + "&node_id=" + node_id,

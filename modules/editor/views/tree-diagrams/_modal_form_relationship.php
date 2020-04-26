@@ -28,7 +28,7 @@ use app\modules\main\models\Lang;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/delete-relationship/' . $model->id ?>",
+                '/tree-diagrams/delete-relationship'?>",
                 type: "post",
                 data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&id_target=" + id_target,
                 dataType: "json",
