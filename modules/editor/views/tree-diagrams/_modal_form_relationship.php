@@ -57,6 +57,11 @@ use app\modules\main\models\Lang;
                             }
                         });
                         //-----------------------------
+
+                        //console.log("Массив после удаления связи где тарджет = " + data['id']);
+                        //console.log(mas_data_node);
+                        //console.log("--------------------");
+
                     }
                 },
                 error: function() {

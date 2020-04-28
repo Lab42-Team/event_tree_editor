@@ -93,7 +93,6 @@ use app\modules\editor\models\Node;
                             }
 
                             document.getElementById('add-event-form').reset();
-                            //document.getElementById("pjax-sequence-mas-button").click();
 
                             //применяем к новым элементам свойства plumb
                             //находим DOM элемент description уровня (идентификатор div level_description)
@@ -143,6 +142,11 @@ use app\modules\editor\models\Node;
                                 j = j + 1;
                             });
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
+
+                            //console.log("Массив после добавления события = " + data['id']);
+                            //console.log(mas_data_node);
+                            //console.log("--------------------");
+
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
@@ -303,7 +307,9 @@ use app\modules\editor\models\Node;
                             });
                             //-----------------------------
 
-                            //document.getElementById("pjax-sequence-mas-button").click();
+                            //console.log("Массив после изменения события = " + data['id']);
+                            //console.log(mas_data_node);
+                            //console.log("--------------------");
 
                             //заносим изменения в массив sequence_mas
                             var level = parseInt(data['id_level'], 10);
@@ -414,20 +420,33 @@ use app\modules\editor\models\Node;
                         instance.deleteEveryEndpoint();
                         //----------восстанавливаем нужные соединения
                         //убираем соединения от удаляемого элемента
-                        var del_i = 0;
+                        var temporary_mas_data_node = {};
+                        var q = 0;
                         $.each(mas_data_node, function (i, elem_node) {
                             //убираем входящие
-                            if (node_id_on_click == elem_node.id){
-                                mas_data_node[i].parent_node = null;
-                                del_i = i
-                            }
-                            //убираем изходящие
-                            if (node_id_on_click == elem_node.parent_node){
-                                mas_data_node[i].parent_node = null;
+                            if (node_id_on_click != elem_node.id){//убираем элемент
+                                //убираем изходящие
+                                if (node_id_on_click == elem_node.parent_node){
+                                    temporary_mas_data_node[q] = {
+                                        "id":elem_node.id,
+                                        "parent_node":null,
+                                        "name":elem_node.name,
+                                        "description":elem_node.description,
+                                    };
+                                    q = q+1;
+                                } else {
+                                    temporary_mas_data_node[q] = {
+                                        "id":elem_node.id,
+                                        "parent_node":elem_node.parent_node,
+                                        "name":elem_node.name,
+                                        "description":elem_node.description,
+                                    };
+                                    q = q+1;
+                                }
                             }
                         });
-                        delete mas_data_node[del_i];
-
+                        mas_data_node = temporary_mas_data_node;
+                        //-----------------------------
                         $.each(mas_data_node, function (j, elem_node) {
                             if (elem_node.parent_node != null){
                                 instance.connect({
@@ -438,7 +457,9 @@ use app\modules\editor\models\Node;
                         });
                         //-----------------------------
 
-                        //document.getElementById("pjax-sequence-mas-button").click();
+                        //console.log("Массив после удаления события = " + data['id']);
+                        //console.log(mas_data_node);
+                        //console.log("--------------------");
 
                         //заносим изменения в массив sequence_mas
                         var pos_i = 0;

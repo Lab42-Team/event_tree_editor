@@ -428,8 +428,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (data['success']) {
                         $.each(mas_data_node, function (i, elem_node) {
                             //добавляем связь в массив
+                            var p_n_id = parseInt(data["p_n_id"], 10);
                             if (data["n_id"] == elem_node.id){
-                                mas_data_node[i].parent_node = data["p_n_id"];
+                                mas_data_node[i].parent_node = p_n_id;
                             }
                         });
                     }
@@ -777,6 +778,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             }
         });
     });
+
+    //
+    //$(document).on('contextmenu', '.node', function() {
+    //    node = $(this).attr('id');
+    //    console.log(node);
+    //    console.log("------------");
+    //    console.log("текущее значение массива");
+    //    console.log(mas_data_node);
+    //    console.log("--------------------");
+    //});
 
 
     // удаление события и механизмов
