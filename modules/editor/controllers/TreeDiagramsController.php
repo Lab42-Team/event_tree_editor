@@ -552,6 +552,72 @@ class TreeDiagramsController extends Controller
     }
 
 
+    public function actionDeleteLevel()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $level_id_on_click = Yii::$app->request->post('level_id_on_click');
+
+            //удаляемый уровень
+            $level = Level::find()->where(['id' => $level_id_on_click])->one();
+            //следующий уровень за удаляемым
+            $level_descendent = Level::find()->where(['parent_level' => $level_id_on_click])->one();
+
+            //если удаляется начальный уровень то удаляются механизмы на следующем
+            if (($level->parent_level == null)&&($level_descendent != null)){
+                $sequence_mas = Sequence::find()->where(['level' => $level_descendent->id])->all();
+                foreach ($sequence_mas as $elem){
+                    $node = Node::find()->where(['id' => $elem->node, 'type' => Node::MECHANISM_TYPE])->one();
+                    if ($node != null){
+                        $node_mas = Node::find()->where(['parent_node' => $node->id])->all();
+                        foreach ($node_mas as $el){
+                                $el->parent_node = null;
+                                $el->updateAttributes(['parent_node']);
+                        }
+                        $node -> delete();
+                    }
+                }
+                $data["initial"] = true;
+            }
+
+            //удаляем события и механизмы на удаляемом уровне
+            $sequence_mas = Sequence::find()->where(['level' => $level_id_on_click])->all();
+            foreach ($sequence_mas as $elem){
+                $node_mas = Node::find()->where(['parent_node' => $elem->node])->all();
+                foreach ($node_mas as $el){
+                    $el->parent_node = null;
+                    $el->updateAttributes(['parent_node']);
+                }
+                $node = Node::find()->where(['id' => $elem->node])->one();
+                $node -> delete();
+            }
+
+            //удаляем уровень с учетом родительского уровня
+            if ($level_descendent != null){
+                $level_descendent->parent_level = $level->parent_level;
+                $level_descendent->updateAttributes(['parent_level']);
+                $data["id_level_descendent"] = $level_descendent->id;
+            }
+            $level -> delete();
+
+            $data["success"] = true;
+
+
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
     public function actionDeleteEvent()
     {
         //Ajax-запрос

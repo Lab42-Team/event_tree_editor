@@ -445,7 +445,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         instance.bind("mouseover", function(connection) {
             var target_id = connection.targetId;
             if (target_id.search("node") >= 0){
-                var message_label = "<?php echo Yii::t('app', 'LEVEL_DELETE'); ?>";
+                var message_label = "<?php echo Yii::t('app', 'CONNECTION_DELETE'); ?>";
                 connection.addOverlay(["Label", { label: message_label, location:0.5, id: "label_connector", cssClass: "aLabel"} ]);
             }
         });
@@ -790,20 +790,81 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     //});
 
 
-    // удаление события и механизмов
-    $(document).on('click', '.del', function() {
+
+    //$(document).on('contextmenu', '.div-level', function() {
+    //    id_level = parseInt($(this).attr('id').match(/\d+/));
+    //    console.log("уровень----" + id_level);
+    //    var div_level_layer = document.getElementById('level_description_'+ id_level);
+    //    //console.log(div_level_layer);
+    //    mas_node = div_level_layer.getElementsByClassName("node");
+    //
+    //    $.each(mas_node, function (i, elem) {
+    //        id_node = parseInt(elem.getAttribute('id').match(/\d+/));
+    //        console.log(id_node);
+    //    });
+    //    console.log("mas_data_level----первоначальное----");
+    //    console.log(mas_data_level);
+    //    console.log("mas_data_node----первоначальное----");
+    //    console.log(mas_data_node);
+    //    console.log("sequence_mas----первоначальное----");
+    //    console.log(sequence_mas);
+    //});
+
+
+
+
+    // удаление события
+    $(document).on('click', '.del-event', function() {
         var del = $(this).attr('id');
         node_id_on_click = parseInt(del.match(/\d+/));
-        //console.log(node_id_on_click);
-        var node_class = document.getElementById('node_' + node_id_on_click).getAttribute('class');
-        if (node_class.search("event") >= 0){
-            //console.log("событие");
-            $("#deleteEventModalForm").modal("show");
-        } else if (node_class.search("mechanism") >= 0){
-            //console.log("механизм");
-            $("#deleteMechanismModalForm").modal("show");
-        }
+        $("#deleteEventModalForm").modal("show");
     });
+
+    // удаление механизма
+    $(document).on('click', '.del-mechanism', function() {
+        var del = $(this).attr('id');
+        node_id_on_click = parseInt(del.match(/\d+/));
+        $("#deleteMechanismModalForm").modal("show");
+    });
+
+    // удаление уровня
+    $(document).on('click', '.del-level', function() {
+        var del = $(this).attr('id');
+        level_id_on_click = parseInt(del.match(/\d+/));
+
+
+        var number;
+        var mas_level = document.getElementsByClassName("div-level");
+        $.each(mas_level, function (i, elem) {
+            var id_level = parseInt(elem.getAttribute('id').match(/\d+/));
+            if (level_id_on_click == id_level){number = i;}
+        });
+        // Если уровень начальный то выводим сообщение
+        if (number == 0){
+            var alert_initial_level = document.getElementById('alert_level_initial_level');
+            alert_initial_level.style = "";
+        } else {
+            var alert_initial_level = document.getElementById('alert_level_initial_level');
+            alert_initial_level.style = "display:none;";
+        }
+
+
+        var del_level = document.getElementById('level_' + level_id_on_click);
+        var mas_node = del_level.getElementsByClassName("node");
+        // Если на уровне есть элементы то выводим сообщение
+        if (mas_node.length != 0){
+            var alert_delete_level = document.getElementById('alert_level_delete_level');
+            alert_delete_level.style = "";
+        } else {
+            var alert_delete_level = document.getElementById('alert_level_delete_level');
+            alert_delete_level.style = "display:none;";
+        }
+
+        $("#deleteLevelModalForm").modal("show");
+    });
+
+
+
 </script>
 
 
@@ -819,7 +880,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             <?php foreach ($level_model_all as $value): ?>
             <?php if ($value->parent_level == null){ ?>
                 <div id="level_<?= $value->id ?>" class="div-level">
-                    <div class="div-level-name" id="level_name_<?= $value->id ?>"><div title="<?= $value->name ?>"><?= $value->name ?></div></div>
+                    <div class="div-level-name" id="level_name_<?= $value->id ?>">
+                        <div class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
+                        <div id="level_del_<?= $value->id ?>" class="del del-level"></div>
+                    </div>
                     <div class="div-level-description" id="level_description_<?= $value->id ?>">
                         <!--?= $level_value->description ?>-->
                         <!-- Вывод инициирующего события -->
@@ -856,7 +920,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <?php foreach ($level_model_all as $level_value): ?>
                     <?php if ($level_value->parent_level == $a){ ?>
                         <div id="level_<?= $level_value->id ?>" class="div-level">
-                            <div class="div-level-name" id="level_name_<?= $level_value->id ?>"><div title="<?= $level_value->name ?>"><?= $level_value->name ?></div></div>
+                            <div class="div-level-name" id="level_name_<?= $level_value->id ?>">
+                                <div class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
+                                <div id="level_del_<?= $level_value->id ?>" class="del del-level"></div>
+                            </div>
                             <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
                                 <!--?= $level_value->description ?>-->
                                 <?php foreach ($sequence_model_all as $sequence_value): ?>

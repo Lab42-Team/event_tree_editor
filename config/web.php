@@ -41,7 +41,7 @@ $config = [
                 '/' => 'main/default/index',
                 'contact' => 'main/default/contact',
                 'sing-in' => 'main/default/sing-in',
-                '/tree-diagrams/<_ev:(index|create|edit-level|edit-event|edit-mechanism|delete-event|delete-mechanism|add-relationship|delete-relationship)>' =>
+                '/tree-diagrams/<_ev:(index|create|edit-level|edit-event|edit-mechanism|delete-level|delete-event|delete-mechanism|add-relationship|delete-relationship)>' =>
                     'editor/tree-diagrams/<_ev>',
                 '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level|add-event|add-mechanism)>/<id:\d+>' =>
                     'editor/tree-diagrams/<_ev>',

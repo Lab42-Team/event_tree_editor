@@ -37,9 +37,10 @@ div.top > div {
     min-width: 100px;
     border:0px solid #337ab7;
     background-color: #fafafa;
+    cursor: pointer;
 }
 
-.div-level-name > div {
+.div-level-name > .div-title-name {
     width: 100px;
     transform: rotate(-90deg);
     margin-left: -30px;
@@ -136,8 +137,6 @@ div.top > div {
 
 .del {
     position: absolute;
-    bottom: 44%;
-
     width: 11px;
     height: 11px;
     background-image:url(/web/images/del.png);
@@ -153,12 +152,23 @@ div.top > div {
     display:block;
 }
 
+.div-level-name:hover .del{
+    display:block;
+}
+
+.del-level {
+    left: 75px;
+
+}
+
 .del-event {
     left: 10px;
+    bottom: 44%;
 }
 
 .del-mechanism {
     left: 5px;
+    bottom: 44%;
 }
 
 .aLabel {

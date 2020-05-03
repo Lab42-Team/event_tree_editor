@@ -204,6 +204,7 @@ return [
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'LEVEL_EDIT_LEVEL' => 'Level change',
+    'LEVEL_DELETE_LEVEL' => 'Level delete',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
     'EVENT_DELETE_EVENT' => 'Delete event',
@@ -221,11 +222,13 @@ return [
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'In the initial event should not be incoming connections',
 
     'ALERT_CHANGE_LEVEL' => 'When you change the level, the connection will be deleted!',
+    'ALERT_INITIAL_LEVEL' => 'The initial level is deleted, so the mechanisms at the next level will be deleted!',
+    'ALERT_DELETE_LEVEL' => 'When deleting, all the elements on the level will be deleted!',
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Are you sure you want to delete the connection?',
+    'DELETE_LEVEL_TEXT' => 'Are you sure you want to delete the level?',
     'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
     'DELETE_MECHANISM_TEXT' => 'Are you sure you want to delete the mechanism?',
 
-
-    'LEVEL_DELETE' => 'Delete',
+    'CONNECTION_DELETE' => 'Delete',
 ];

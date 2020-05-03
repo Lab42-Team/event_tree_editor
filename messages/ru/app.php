@@ -204,6 +204,7 @@ return [
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
+    'LEVEL_DELETE_LEVEL' => 'Удаление уровня',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
     'EVENT_DELETE_EVENT' => 'Удаление события',
@@ -221,11 +222,14 @@ return [
     'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS' => 'У начального события не должно быть входящих соединений',
 
     'ALERT_CHANGE_LEVEL' => 'При изменении уровня, связи будут удалены!',
+    'ALERT_INITIAL_LEVEL' => 'Удаляется начальный уровень, поэтому будут удалены механизмы на следующем уровне!',
+    'ALERT_DELETE_LEVEL' => 'При удалении будут удалены все элементы на уровне!',
 
     'RELATIONSHIP_PAGE_DELETE_CONNECTION_TEXT' => 'Вы действительно хотите удалить связь?',
+    'DELETE_LEVEL_TEXT' => 'Вы действительно хотите удалить уровень?',
     'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
     'DELETE_MECHANISM_TEXT' => 'Вы действительно хотите удалить механизм?',
 
 
-    'LEVEL_DELETE' => 'Удалить',
+    'CONNECTION_DELETE' => 'Удалить',
 ];
