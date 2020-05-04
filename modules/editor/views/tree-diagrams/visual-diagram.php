@@ -154,6 +154,20 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 $(this).text("");
             });
         });
+
+        // Обработка открытия модального окна добавления нового события
+        $("#addEventModalForm").on("shown.bs.modal", function() {
+            //если начальное событие есть тогда
+            var initial_event = document.getElementsByClassName("div-initial-event");
+            if (initial_event.length == 0){
+                //блокировка изменения левела
+                document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
+                document.getElementById('label_level').style.display = "none";
+            } else {
+                document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
+                document.getElementById('label_level').style.display = "";
+            }
+        });
     });
 
     var node_id_on_click = 0;

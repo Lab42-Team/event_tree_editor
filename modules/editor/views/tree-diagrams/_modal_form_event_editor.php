@@ -172,7 +172,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList($array_levels) ?>
+<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'label_level']); ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
