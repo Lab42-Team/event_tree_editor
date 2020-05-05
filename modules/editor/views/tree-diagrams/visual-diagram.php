@@ -143,7 +143,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
 
         // Обработка закрытия модального окна добавления нового механизма
-        $("#addMechanismModalForm").on("hidden.bs.modal", function() {
+        $("#addMechanismModalForm").on("hidden.af.modal", function() {
             // Скрытие списка ошибок ввода в модальном окне
             $("#add-mechanism-form .error-summary").hide();
             $("#add-mechanism-form .form-group").each(function() {
@@ -156,7 +156,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
 
         // Обработка открытия модального окна добавления нового события
-        $("#addEventModalForm").on("shown.bs.modal", function() {
+        $("#addEventModalForm").on("show.bs.modal", function() {
             //если начальное событие есть тогда
             var initial_event = document.getElementsByClassName("div-initial-event");
             if (initial_event.length == 0){
