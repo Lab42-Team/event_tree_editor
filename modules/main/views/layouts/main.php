@@ -43,12 +43,14 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav navbar-right'],
             'encodeLabels' => false,
             'items' => array_filter([
-                 // условие проверки есть ли visual-diagram в URL
-                (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
-                     //и тогда выводить кнопку меню на экран
-                    ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
-                        Yii::t('app', 'NAV_ADD'),
-                        'items' => $this->params['menu']                    ]
+                !Yii::$app->user->isGuest ? (
+                    // условие проверки есть ли visual-diagram в URL
+                    (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
+                         //и тогда выводить кнопку меню на экран
+                        ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
+                            Yii::t('app', 'NAV_ADD'),
+                            'items' => $this->params['menu']                    ]
+                    ):("")
                 ):(""),
                 ['label' => '<span class="glyphicon glyphicon-tree-deciduous"></span> ' .
                     Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],

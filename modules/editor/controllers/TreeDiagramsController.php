@@ -13,7 +13,7 @@ use app\modules\editor\models\Node;
 use app\modules\editor\models\Sequence;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
-
+use yii\filters\AccessControl;
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
@@ -27,11 +27,26 @@ class TreeDiagramsController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
+                    'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
+                    'add-relationship', 'delete-relationship'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
+                            'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
+                            'add-relationship', 'delete-relationship'],
+                        'roles' => ['@'],
+                    ],
                 ],
+            ],
+            'verbs' => [
+                        'class' => VerbFilter::className(),
+                        'actions' => [
+                            'delete' => ['POST'],
+                        ],
             ],
         ];
     }
@@ -43,8 +58,13 @@ class TreeDiagramsController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new TreeDiagramSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if (!Yii::$app->user->isGuest) {
+            $searchModel = new TreeDiagramSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        } else {
+            $searchModel = new TreeDiagramSearch();
+            $dataProvider = $searchModel->searchPublic(Yii::$app->request->queryParams);
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,

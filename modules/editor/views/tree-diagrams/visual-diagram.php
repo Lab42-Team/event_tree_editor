@@ -38,8 +38,6 @@ $this->params['menu'] = [
 ?>
 
 
-
-
 <?php
 // создаем массив из соотношения level и node для передачи в jsplumb
 $sequence_mas = array();
@@ -103,71 +101,87 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 ?>
 
 <script type="text/javascript">
+
+    var guest = <?php echo json_encode(Yii::$app->user->isGuest); ?>;//переменная гость определяет пользователь гость или нет
+
     $(document).ready(function() {
-        // Включение переходов на модальные окна
-        var nav_add_event = document.getElementById('nav_add_event');
-        var nav_add_mechanism = document.getElementById('nav_add_mechanism');
-        if ('<?php echo $level_model_count; ?>' > 0){
-            nav_add_event.className = 'enabled';
-            nav_add_event.setAttribute("data-target", "#addEventModalForm");
-        }
-        if ('<?php echo $level_model_count; ?>' > 1){
-            nav_add_mechanism.className = 'enabled';
-            nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
-        }
-
-        // Обработка закрытия модального окна добавления нового уровня
-        $("#addLevelModalForm").on("hidden.bs.modal", function() {
-            // Скрытие списка ошибок ввода в модальном окне
-            $("#add-level-form .error-summary").hide();
-            $("#add-level-form .form-group").each(function() {
-                $(this).removeClass("has-error");
-                $(this).removeClass("has-success");
-            });
-            $("#add-level-form .help-block").each(function() {
-                $(this).text("");
-            });
-        });
-
-        // Обработка закрытия модального окна добавления нового события
-        $("#addEventModalForm").on("hidden.bs.modal", function() {
-            // Скрытие списка ошибок ввода в модальном окне
-            $("#add-event-form .error-summary").hide();
-            $("#add-event-form .form-group").each(function() {
-                $(this).removeClass("has-error");
-                $(this).removeClass("has-success");
-            });
-            $("#add-event-form .help-block").each(function() {
-                $(this).text("");
-            });
-        });
-
-        // Обработка закрытия модального окна добавления нового механизма
-        $("#addMechanismModalForm").on("hidden.af.modal", function() {
-            // Скрытие списка ошибок ввода в модальном окне
-            $("#add-mechanism-form .error-summary").hide();
-            $("#add-mechanism-form .form-group").each(function() {
-                $(this).removeClass("has-error");
-                $(this).removeClass("has-success");
-            });
-            $("#add-mechanism-form .help-block").each(function() {
-                $(this).text("");
-            });
-        });
-
-        // Обработка открытия модального окна добавления нового события
-        $("#addEventModalForm").on("show.bs.modal", function() {
-            //если начальное событие есть тогда
-            var initial_event = document.getElementsByClassName("div-initial-event");
-            if (initial_event.length == 0){
-                //блокировка изменения левела
-                document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
-                document.getElementById('label_level').style.display = "none";
-            } else {
-                document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
-                document.getElementById('label_level').style.display = "";
+        if (!guest){
+            // Включение переходов на модальные окна
+            var nav_add_event = document.getElementById('nav_add_event');
+            var nav_add_mechanism = document.getElementById('nav_add_mechanism');
+            if ('<?php echo $level_model_count; ?>' > 0){
+                nav_add_event.className = 'enabled';
+                nav_add_event.setAttribute("data-target", "#addEventModalForm");
             }
-        });
+            if ('<?php echo $level_model_count; ?>' > 1){
+                nav_add_mechanism.className = 'enabled';
+                nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+            }
+
+            // Обработка закрытия модального окна добавления нового уровня
+            $("#addLevelModalForm").on("hidden.bs.modal", function() {
+                // Скрытие списка ошибок ввода в модальном окне
+                $("#add-level-form .error-summary").hide();
+                $("#add-level-form .form-group").each(function() {
+                    $(this).removeClass("has-error");
+                    $(this).removeClass("has-success");
+                });
+                $("#add-level-form .help-block").each(function() {
+                    $(this).text("");
+                });
+            });
+
+            // Обработка закрытия модального окна добавления нового события
+            $("#addEventModalForm").on("hidden.bs.modal", function() {
+                // Скрытие списка ошибок ввода в модальном окне
+                $("#add-event-form .error-summary").hide();
+                $("#add-event-form .form-group").each(function() {
+                    $(this).removeClass("has-error");
+                    $(this).removeClass("has-success");
+                });
+                $("#add-event-form .help-block").each(function() {
+                    $(this).text("");
+                });
+            });
+
+            // Обработка закрытия модального окна добавления нового механизма
+            $("#addMechanismModalForm").on("hidden.af.modal", function() {
+                // Скрытие списка ошибок ввода в модальном окне
+                $("#add-mechanism-form .error-summary").hide();
+                $("#add-mechanism-form .form-group").each(function() {
+                    $(this).removeClass("has-error");
+                    $(this).removeClass("has-success");
+                });
+                $("#add-mechanism-form .help-block").each(function() {
+                    $(this).text("");
+                });
+            });
+
+            // Обработка открытия модального окна добавления нового события
+            $("#addEventModalForm").on("show.bs.modal", function() {
+                //если начальное событие есть тогда
+                var initial_event = document.getElementsByClassName("div-initial-event");
+                if (initial_event.length == 0){
+                    //блокировка изменения левела
+                    document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
+                    document.getElementById('label_level').style.display = "none";
+                } else {
+                    document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
+                    document.getElementById('label_level').style.display = "";
+                }
+            });
+        } else {
+            // Если гость тогда скрываем кнопки удаления и создание связи
+            var ep_node = document.getElementsByClassName("ep");
+            $.each(ep_node, function (i, node) {
+                node.style = "display:none;";
+            });
+
+            var del_node = document.getElementsByClassName("del");
+            $.each(del_node, function (i, node) {
+                node.style = "display:none;";
+            });
+        }
     });
 
     var node_id_on_click = 0;
@@ -414,6 +428,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 });
             }
 
+
             $.each(mas_data_node, function (j, elem_node) {
                 if (elem_node.parent_node != null){
                     instance.connect({
@@ -426,56 +441,69 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
         instance.bind("connection", function(connection) {
-            var source_id = connection.sourceId;
-            var target_id = connection.targetId;
-            var parent_node_id = parseInt(source_id.match(/\d+/));
-            var node_id = parseInt(target_id.match(/\d+/));
-            $.ajax({
-                //переход на экшен левел
-                url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/add-relationship'?>",
-                type: "post",
-                data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" +
-                "&parent_node_id=" + parent_node_id + "&node_id=" + node_id,
-                dataType: "json",
-                success: function(data) {
-                    if (data['success']) {
-                        $.each(mas_data_node, function (i, elem_node) {
-                            //добавляем связь в массив
-                            var p_n_id = parseInt(data["p_n_id"], 10);
-                            if (data["n_id"] == elem_node.id){
-                                mas_data_node[i].parent_node = p_n_id;
-                            }
-                        });
+            if (!guest) {
+                var source_id = connection.sourceId;
+                var target_id = connection.targetId;
+                var parent_node_id = parseInt(source_id.match(/\d+/));
+                var node_id = parseInt(target_id.match(/\d+/));
+                $.ajax({
+                    //переход на экшен левел
+                    url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                    '/tree-diagrams/add-relationship'?>",
+                    type: "post",
+                    data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" +
+                    "&parent_node_id=" + parent_node_id + "&node_id=" + node_id,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data['success']) {
+                            $.each(mas_data_node, function (i, elem_node) {
+                                //добавляем связь в массив
+                                var p_n_id = parseInt(data["p_n_id"], 10);
+                                if (data["n_id"] == elem_node.id) {
+                                    mas_data_node[i].parent_node = p_n_id;
+                                }
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert('Error!');
                     }
-                },
-                error: function() {
-                    alert('Error!');
-                }
-            });
+                });
+            }
         });
 
         // Обработка при наведении на связь показывает заголовок связи "удалить"
         instance.bind("mouseover", function(connection) {
-            var target_id = connection.targetId;
-            if (target_id.search("node") >= 0){
-                var message_label = "<?php echo Yii::t('app', 'CONNECTION_DELETE'); ?>";
-                connection.addOverlay(["Label", { label: message_label, location:0.5, id: "label_connector", cssClass: "aLabel"} ]);
+            if (!guest) {
+                var target_id = connection.targetId;
+                if (target_id.search("node") >= 0) {
+                    var message_label = "<?php echo Yii::t('app', 'CONNECTION_DELETE'); ?>";
+                    connection.addOverlay(["Label", {
+                        label: message_label,
+                        location: 0.5,
+                        id: "label_connector",
+                        cssClass: "aLabel"
+                    }]);
+                }
             }
         });
 
         // Обработка при отведении от связи скрывает заголовок
         instance.bind("mouseout", function(connection) {
-            connection.removeOverlay("label_connector");
+            if (!guest) {
+                connection.removeOverlay("label_connector");
+            }
         });
 
         // Обработка удаления связи
         instance.bind("click", function(connection) {
-            //var source_node = connection.sourceId;
-            var target_node = connection.targetId;
-            //id_source = parseInt(source_node.match(/\d+/));
-            id_target = parseInt(target_node.match(/\d+/));
-            $("#deleteRelationshipModalForm").modal("show");
+            if (!guest) {
+                //var source_node = connection.sourceId;
+                var target_node = connection.targetId;
+                //id_source = parseInt(source_node.match(/\d+/));
+                id_target = parseInt(target_node.match(/\d+/));
+                $("#deleteRelationshipModalForm").modal("show");
+            }
         });
     });
 
@@ -705,92 +733,98 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
     // редактирование события
     $(document).on('dblclick', '.div-event', function() {
-        var node = $(this).attr('id');
-        node_id_on_click = parseInt(node.match(/\d+/));
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
 
-        var div_node = document.getElementById(node);
+            var div_node = document.getElementById(node);
 
-        var level = div_node.offsetParent.getAttribute('id');
-        level_id_on_click = parseInt(level.match(/\d+/));
+            var level = div_node.offsetParent.getAttribute('id');
+            level_id_on_click = parseInt(level.match(/\d+/));
 
-        var alert = document.getElementById('alert_event_level_id');
-        alert.style = style="display:none;";
+            var alert = document.getElementById('alert_event_level_id');
+            alert.style = style = "display:none;";
 
-        //если событие инициирующее
-        if(div_node.getAttribute("class").search("div-initial-event") >= 0){
-            $.each(mas_data_node, function (i, elem) {
-                if (elem.id == node_id_on_click){
-                    document.forms["edit-event-form"].reset();
-                    document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
-                    document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
-                    document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
-                    //блокировка изменения левела
-                    document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "none";
+            //если событие инициирующее
+            if (div_node.getAttribute("class").search("div-initial-event") >= 0) {
+                $.each(mas_data_node, function (i, elem) {
+                    if (elem.id == node_id_on_click) {
+                        document.forms["edit-event-form"].reset();
+                        document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
+                        document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
+                        //блокировка изменения левела
+                        document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "none";
 
-                    document.getElementById('label_level').style.display = "none";
+                        document.getElementById('label_level').style.display = "none";
 
-                    $("#editEventModalForm").modal("show");
-                }
-            });
-        } else {
-            $.each(mas_data_node, function (i, elem) {
-                if (elem.id == node_id_on_click){
-                    document.forms["edit-event-form"].reset();
-                    document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
-                    document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
-                    document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
-                    //разблокировка изменения левела
-                    document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "";
+                        $("#editEventModalForm").modal("show");
+                    }
+                });
+            } else {
+                $.each(mas_data_node, function (i, elem) {
+                    if (elem.id == node_id_on_click) {
+                        document.forms["edit-event-form"].reset();
+                        document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
+                        document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
+                        //разблокировка изменения левела
+                        document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "";
 
-                    document.getElementById('label_level').style.display = "";
+                        document.getElementById('label_level').style.display = "";
 
-                    $("#editEventModalForm").modal("show");
-                }
-            });
+                        $("#editEventModalForm").modal("show");
+                    }
+                });
+            }
         }
     });
 
 
     // редактирование механизма
     $(document).on('dblclick', '.div-mechanism', function() {
-        var node = $(this).attr('id');
-        node_id_on_click = parseInt(node.match(/\d+/));
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
 
-        var div_node = document.getElementById(node);
+            var div_node = document.getElementById(node);
 
-        var level = div_node.offsetParent.getAttribute('id');
-        level_id_on_click = parseInt(level.match(/\d+/));
+            var level = div_node.offsetParent.getAttribute('id');
+            level_id_on_click = parseInt(level.match(/\d+/));
 
-        var alert = document.getElementById('alert_mechanism_level_id');
-        alert.style = style="display:none;";
+            var alert = document.getElementById('alert_mechanism_level_id');
+            alert.style = style = "display:none;";
 
-        $.each(mas_data_node, function (i, elem) {
-            if (elem.id == node_id_on_click){
-                document.forms["edit-mechanism-form"].reset();
-                document.forms["edit-mechanism-form"].elements["Node[name]"].value = elem.name;
-                document.forms["edit-mechanism-form"].elements["Node[description]"].value = elem.description;
-                document.forms["edit-mechanism-form"].elements["Node[level_id]"].value = level_id_on_click;
-                //разблокировка изменения левела
-                document.forms["edit-mechanism-form"].elements["Node[level_id]"].style.display = "";
+            $.each(mas_data_node, function (i, elem) {
+                if (elem.id == node_id_on_click) {
+                    document.forms["edit-mechanism-form"].reset();
+                    document.forms["edit-mechanism-form"].elements["Node[name]"].value = elem.name;
+                    document.forms["edit-mechanism-form"].elements["Node[description]"].value = elem.description;
+                    document.forms["edit-mechanism-form"].elements["Node[level_id]"].value = level_id_on_click;
+                    //разблокировка изменения левела
+                    document.forms["edit-mechanism-form"].elements["Node[level_id]"].style.display = "";
 
-                $("#editMechanismModalForm").modal("show");
-            }
-        });
+                    $("#editMechanismModalForm").modal("show");
+                }
+            });
+        }
     });
 
 
     // редактирование уровня
     $(document).on('dblclick', '.div-level-name', function() {
-        level_id_on_click = parseInt($(this).attr('id').match(/\d+/));
-        $.each(mas_data_level, function (i, elem) {
-            if (elem.id_level == level_id_on_click){
-                document.forms["edit-level-form"].reset();
-                document.forms["edit-level-form"].elements["Level[name]"].value = elem.name;
-                document.forms["edit-level-form"].elements["Level[description]"].value = elem.description;
+        if (!guest) {
+            level_id_on_click = parseInt($(this).attr('id').match(/\d+/));
+            $.each(mas_data_level, function (i, elem) {
+                if (elem.id_level == level_id_on_click) {
+                    document.forms["edit-level-form"].reset();
+                    document.forms["edit-level-form"].elements["Level[name]"].value = elem.name;
+                    document.forms["edit-level-form"].elements["Level[description]"].value = elem.description;
 
-                $("#editLevelModalForm").modal("show");
-            }
-        });
+                    $("#editLevelModalForm").modal("show");
+                }
+            });
+        }
     });
 
     //
@@ -829,54 +863,61 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
     // удаление события
     $(document).on('click', '.del-event', function() {
-        var del = $(this).attr('id');
-        node_id_on_click = parseInt(del.match(/\d+/));
-        $("#deleteEventModalForm").modal("show");
+        if (!guest) {
+            var del = $(this).attr('id');
+            node_id_on_click = parseInt(del.match(/\d+/));
+            $("#deleteEventModalForm").modal("show");
+        }
     });
 
     // удаление механизма
     $(document).on('click', '.del-mechanism', function() {
-        var del = $(this).attr('id');
-        node_id_on_click = parseInt(del.match(/\d+/));
-        $("#deleteMechanismModalForm").modal("show");
+        if (!guest) {
+            var del = $(this).attr('id');
+            node_id_on_click = parseInt(del.match(/\d+/));
+            $("#deleteMechanismModalForm").modal("show");
+        }
     });
 
     // удаление уровня
     $(document).on('click', '.del-level', function() {
-        var del = $(this).attr('id');
-        level_id_on_click = parseInt(del.match(/\d+/));
+        if (!guest) {
+            var del = $(this).attr('id');
+            level_id_on_click = parseInt(del.match(/\d+/));
 
 
-        var number;
-        var mas_level = document.getElementsByClassName("div-level");
-        $.each(mas_level, function (i, elem) {
-            var id_level = parseInt(elem.getAttribute('id').match(/\d+/));
-            if (level_id_on_click == id_level){number = i;}
-        });
-        // Если уровень начальный то выводим сообщение
-        if (number == 0){
-            var alert_initial_level = document.getElementById('alert_level_initial_level');
-            alert_initial_level.style = "";
-        } else {
-            var alert_initial_level = document.getElementById('alert_level_initial_level');
-            alert_initial_level.style = "display:none;";
+            var number;
+            var mas_level = document.getElementsByClassName("div-level");
+            $.each(mas_level, function (i, elem) {
+                var id_level = parseInt(elem.getAttribute('id').match(/\d+/));
+                if (level_id_on_click == id_level) {
+                    number = i;
+                }
+            });
+            // Если уровень начальный то выводим сообщение
+            if (number == 0) {
+                var alert_initial_level = document.getElementById('alert_level_initial_level');
+                alert_initial_level.style = "";
+            } else {
+                var alert_initial_level = document.getElementById('alert_level_initial_level');
+                alert_initial_level.style = "display:none;";
+            }
+
+
+            var del_level = document.getElementById('level_' + level_id_on_click);
+            var mas_node = del_level.getElementsByClassName("node");
+            // Если на уровне есть элементы то выводим сообщение
+            if (mas_node.length != 0) {
+                var alert_delete_level = document.getElementById('alert_level_delete_level');
+                alert_delete_level.style = "";
+            } else {
+                var alert_delete_level = document.getElementById('alert_level_delete_level');
+                alert_delete_level.style = "display:none;";
+            }
+
+            $("#deleteLevelModalForm").modal("show");
         }
-
-
-        var del_level = document.getElementById('level_' + level_id_on_click);
-        var mas_node = del_level.getElementsByClassName("node");
-        // Если на уровне есть элементы то выводим сообщение
-        if (mas_node.length != 0){
-            var alert_delete_level = document.getElementById('alert_level_delete_level');
-            alert_delete_level.style = "";
-        } else {
-            var alert_delete_level = document.getElementById('alert_level_delete_level');
-            alert_delete_level.style = "display:none;";
-        }
-
-        $("#deleteLevelModalForm").modal("show");
     });
-
 
 
 </script>
