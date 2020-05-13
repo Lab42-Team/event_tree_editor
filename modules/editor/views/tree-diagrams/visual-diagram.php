@@ -56,6 +56,10 @@ foreach ($level_model_all as $l){
     array_push($level_mas, [$l->id, $l->parent_level, $l->name, $l->description]);
 }
 
+$parameter_mas = array();
+foreach ($parameter_model_all as $p){
+    array_push($parameter_mas, [$p->id, $p->name, $p->description, $p->operator, $p->value]);
+}
 ?>
 
 
@@ -66,6 +70,10 @@ foreach ($level_model_all as $l){
 
 <?= $this->render('_modal_form_relationship', [
     'model' => $model,
+]) ?>
+
+<?= $this->render('_modal_form_parameter_editor', [
+    'parameter_model' => $parameter_model,
 ]) ?>
 
 <?php Pjax::begin(); ?>
@@ -186,12 +194,15 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
     var node_id_on_click = 0;
     var level_id_on_click = 0;
+    var parameter_id_on_click = 0;
 
     var id_target;
 
-    var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива из php
-    var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива из php
-    var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива из php
+    var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива последовательностей из php
+    var node_mas = <?php echo json_encode($node_mas); ?>;//прием массива событий из php
+    var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива уровней из php
+    var parameter_mas = <?php echo json_encode($parameter_mas); ?>;//прием массива параметров из php
+
 
     var mas_data_level = {};
     var q = 0;
@@ -235,6 +246,35 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
         q = q+1;
     });
+
+    var mas_data_parameter = {};
+    var q = 0;
+    var id_parameter = "";
+    var name_parameter = "";
+    var description_parameter = "";
+    var operator_parameter = "";
+    var value_parameter = "";
+
+    $.each(parameter_mas, function (i, mas) {
+        $.each(mas, function (j, elem) {
+            //первый элемент это id уровня
+            if (j == 0) {id_parameter = elem;}//записываем id уровня
+            //второй элемент это id узла события или механизма
+            if (j == 1) {name_parameter = elem;}//записываем id узла события node или механизма mechanism
+            if (j == 2) {description_parameter = elem;}
+            if (j == 3) {operator_parameter = elem;}
+            if (j == 4) {value_parameter = elem;}
+            mas_data_parameter[q] = {
+                "id":id_parameter,
+                "name":name_parameter,
+                "description":description_parameter,
+                "operator":operator_parameter,
+                "value":value_parameter,
+            }
+        });
+        q = q+1;
+    });
+
 
 
     var instance = "";
@@ -632,7 +672,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 // ширина и высота элемента + отступ
                 //var width_node = node.clientWidth + 40;
                 //var height_node = node.clientHeight + 80;
-                var width_node = 150 + 40;
+                var width_node = 200 + 40;
                 var height_node = 100 + 80;
 
                 // curent_ первоначальное положение элемента + 20 отступ от края
@@ -671,7 +711,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 var id_level_parent = level_parent.getAttribute('id');
 
                 // ширина и высота элемента + отступ
-                var width_node = 150 + 40;
+                var width_node = 200 + 40;
                 var height_node = 100 + 80;
 
                 // curent_ первоначальное положение элемента + 20 отступ от края
@@ -731,13 +771,18 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
+    $(document).on('mouseout', '.div-event', function() {
+        // Обновление формы редактора
+        instance.repaintEverything();
+    });
+
     // редактирование события
-    $(document).on('dblclick', '.div-event', function() {
+    $(document).on('click', '.edit-event', function() {
         if (!guest) {
             var node = $(this).attr('id');
             node_id_on_click = parseInt(node.match(/\d+/));
 
-            var div_node = document.getElementById(node);
+            var div_node = document.getElementById("node_" + node_id_on_click);
 
             var level = div_node.offsetParent.getAttribute('id');
             level_id_on_click = parseInt(level.match(/\d+/));
@@ -779,6 +824,14 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             }
         }
     });
+    // редактирование события на даблклик
+    $(document).on('dblclick', '.div-event', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+            document.getElementById("node_edit_" + node_id_on_click).click();
+        }
+    });
 
 
     // редактирование механизма
@@ -812,7 +865,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     // редактирование уровня
-    $(document).on('dblclick', '.div-level-name', function() {
+    $(document).on('click', '.edit-level', function() {
         if (!guest) {
             level_id_on_click = parseInt($(this).attr('id').match(/\d+/));
             $.each(mas_data_level, function (i, elem) {
@@ -824,6 +877,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     $("#editLevelModalForm").modal("show");
                 }
             });
+        }
+    });
+    // редактирование уровня на даблклик
+    $(document).on('dblclick', '.div-level-name', function() {
+        if (!guest) {
+            level_id_on_click = parseInt($(this).attr('id').match(/\d+/));
+            document.getElementById("level_edit_" + level_id_on_click).click();
         }
     });
 
@@ -885,7 +945,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var del = $(this).attr('id');
             level_id_on_click = parseInt(del.match(/\d+/));
 
-
             var number;
             var mas_level = document.getElementsByClassName("div-level");
             $.each(mas_level, function (i, elem) {
@@ -903,7 +962,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 alert_initial_level.style = "display:none;";
             }
 
-
             var del_level = document.getElementById('level_' + level_id_on_click);
             var mas_node = del_level.getElementsByClassName("node");
             // Если на уровне есть элементы то выводим сообщение
@@ -919,6 +977,41 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+    // добавление параметра
+    $(document).on('click', '.add-parameter', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+            $("#addParameterModalForm").modal("show");
+        }
+    });
+
+    // изменение параметра
+    $(document).on('click', '.edit-parameter', function() {
+        if (!guest) {
+            var parameter = $(this).attr('id');
+            parameter_id_on_click = parseInt(parameter.match(/\d+/));
+            $.each(mas_data_parameter, function (i, elem) {
+                if (elem.id == parameter_id_on_click) {
+                    document.forms["edit-parameter-form"].reset();
+                    document.forms["edit-parameter-form"].elements["Parameter[name]"].value = elem.name;
+                    document.forms["edit-parameter-form"].elements["Parameter[description]"].value = elem.description;
+                    document.forms["edit-parameter-form"].elements["Parameter[operator]"].value = elem.operator;
+                    document.forms["edit-parameter-form"].elements["Parameter[value]"].value = elem.value;
+                    $("#editParameterModalForm").modal("show");
+                }
+            });
+        }
+    });
+
+    // удаление параметра
+    $(document).on('click', '.del-parameter', function() {
+        if (!guest) {
+            var parameter = $(this).attr('id');
+            parameter_id_on_click = parseInt(parameter.match(/\d+/));
+            $("#deleteParameterModalForm").modal("show");
+        }
+    });
 
 </script>
 
@@ -937,16 +1030,34 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <div id="level_<?= $value->id ?>" class="div-level">
                     <div class="div-level-name" id="level_name_<?= $value->id ?>">
                         <div class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
-                        <div id="level_del_<?= $value->id ?>" class="del del-level"></div>
+                        <div id="level_del_<?= $value->id ?>" class="del-level glyphicon-trash"></div>
+                        <div id="level_edit_<?= $value->id ?>" class="edit-level glyphicon-pencil"></div>
                     </div>
                     <div class="div-level-description" id="level_description_<?= $value->id ?>">
                         <!--?= $level_value->description ?>-->
                         <!-- Вывод инициирующего события -->
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
-                                <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
-                                <div class="ep"></div>
-                                <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event"></div>
+                                <div class="content-event">
+                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
+                                    <div class="ep glyphicon-share-alt"></div>
+                                    <div id="node_del_<?= $initial_event_value->id ?>" class="del-event glyphicon-trash"></div>
+                                    <div id="node_edit_<?= $initial_event_value->id ?>" class="edit-event glyphicon-pencil"></div>
+                                    <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="add-parameter glyphicon-plus"></div>
+                                </div>
+
+                                <?php foreach ($parameter_model_all as $parameter_value): ?>
+                                    <?php if ($parameter_value->node == $initial_event_value->id){ ?>
+                                        <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
+                                            <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                            <div class="button-parameter">
+                                                <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
+                                                <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                <?php endforeach; ?>
+
                             </div>
                         <?php endforeach; ?>
 
@@ -956,9 +1067,26 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <?php foreach ($event_model_all as $event_value): ?>
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node">
-                                            <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
-                                            <div class="ep"></div>
-                                            <div id="node_del_<?= $event_value->id ?>" class="del del-event"></div>
+                                            <div class="content-event">
+                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                <div class="ep glyphicon-share-alt"></div>
+                                                <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash"></div>
+                                                <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil"></div>
+                                                <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus"></div>
+                                            </div>
+
+                                            <?php foreach ($parameter_model_all as $parameter_value): ?>
+                                                <?php if ($parameter_value->node == $event_value->id){ ?>
+                                                    <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
+                                                        <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                                        <div class="button-parameter">
+                                                            <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
+                                                            <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
+                                                        </div>
+                                                    </div>
+                                                <?php } ?>
+                                            <?php endforeach; ?>
+
                                         </div>
                                     <?php } ?>
                                 <?php endforeach; ?>
@@ -977,7 +1105,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <div id="level_<?= $level_value->id ?>" class="div-level">
                             <div class="div-level-name" id="level_name_<?= $level_value->id ?>">
                                 <div class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
-                                <div id="level_del_<?= $level_value->id ?>" class="del del-level"></div>
+                                <div id="level_del_<?= $level_value->id ?>" class="del-level glyphicon-trash"></div>
+                                <div id="level_edit_<?= $level_value->id ?>" class="edit-level glyphicon-pencil"></div>
                             </div>
                             <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
                                 <!--?= $level_value->description ?>-->
@@ -990,8 +1119,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                 <div id="node_<?= $mechanism_value->id ?>"
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
                                                     <div class="div-mechanism-m">M</div>
-                                                    <div class="ep"></div>
-                                                    <div id="node_del_<?= $mechanism_value->id ?>" class="del del-mechanism"></div>
+                                                    <div class="ep glyphicon-share-alt"></div>
+                                                    <div id="node_del_<?= $mechanism_value->id ?>" class="del-mechanism glyphicon-trash"></div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>
@@ -999,9 +1128,26 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <?php foreach ($event_model_all as $event_value): ?>
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node">
-                                                    <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
-                                                    <div class="ep"></div>
-                                                    <div id="node_del_<?= $event_value->id ?>" class="del del-event"></div>
+                                                    <div class="content-event">
+                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                        <div class="ep glyphicon-share-alt"></div>
+                                                        <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash"></div>
+                                                        <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil"></div>
+                                                        <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus"></div>
+                                                    </div>
+
+                                                    <?php foreach ($parameter_model_all as $parameter_value): ?>
+                                                        <?php if ($parameter_value->node == $event_value->id){ ?>
+                                                            <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
+                                                                <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                                                <div class="button-parameter">
+                                                                    <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
+                                                                    <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
+                                                                </div>
+                                                            </div>
+                                                        <?php } ?>
+                                                    <?php endforeach; ?>
+
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>

@@ -208,6 +208,9 @@ return [
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
     'EVENT_DELETE_EVENT' => 'Delete event',
+    'PARAMETER_ADD_NEW_PARAMETER' => 'Add new parameter',
+    'PARAMETER_EDIT_PARAMETER' => 'Parameter change',
+    'PARAMETER_DELETE_PARAMETER' => 'Parameter delete',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Add new mechanism',
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'MECHANISM_DELETE_MECHANISM' => 'Delete mechanism',
@@ -229,6 +232,7 @@ return [
     'DELETE_LEVEL_TEXT' => 'Are you sure you want to delete the level?',
     'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
     'DELETE_MECHANISM_TEXT' => 'Are you sure you want to delete the mechanism?',
+    'DELETE_PARAMETER_TEXT' => 'Are you sure you want to delete the parameter?',
 
     'CONNECTION_DELETE' => 'Delete',
 ];

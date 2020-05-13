@@ -11,6 +11,7 @@ use yii\bootstrap\ActiveForm;
 use app\modules\editor\models\Level;
 use app\modules\editor\models\Node;
 use app\modules\editor\models\Sequence;
+use app\modules\editor\models\Parameter;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
 use yii\filters\AccessControl;
@@ -179,8 +180,10 @@ class TreeDiagramsController extends Controller
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
         $sequence_model_all = Sequence::find()->where(['tree_diagram' => $id])->all();
         $node_model_all = Node::find()->where(['tree_diagram' => $id])->all();
+        $parameter_model_all = Parameter::find()->all();
         $level_model = new Level();
         $node_model = new Node();
+        $parameter_model = new Parameter();
 
         $array_levels = Level::getLevelsArray($id);
         $array_levels_initial_without = Level::getWithoutInitialLevelsArray($id);
@@ -189,6 +192,7 @@ class TreeDiagramsController extends Controller
             'model' => $this->findModel($id),
             'level_model' => $level_model,
             'node_model' => $node_model,
+            'parameter_model' => $parameter_model,
             'level_model_all' => $level_model_all,
             'level_model_count' => $level_model_count,
             'initial_event_model_all' =>$initial_event_model_all,
@@ -196,6 +200,7 @@ class TreeDiagramsController extends Controller
             'mechanism_model_all' => $mechanism_model_all,
             'sequence_model_all' => $sequence_model_all,
             'node_model_all' => $node_model_all,
+            'parameter_model_all' => $parameter_model_all,
             'array_levels' => $array_levels,
             'array_levels_initial_without' => $array_levels_initial_without,
         ]);
@@ -689,6 +694,99 @@ class TreeDiagramsController extends Controller
 
             $node = Node::find()->where(['id' => $node_id_on_click])->one();
             $node -> delete();
+
+            $data["success"] = true;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionAddParameter()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            // Формирование модели уровня
+            $model = new Parameter();
+
+            $model->node = Yii::$app->request->post('node_id_on_click');
+
+            // Определение полей модели уровня и валидация формы
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Добавление нового уровня в БД
+                $model->save();
+                // Формирование данных о новом уровне
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+                $data["operator"] = $model->operator;
+                $data["value"] = $model->value;
+
+            } else
+                $data = ActiveForm::validate($model);
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionEditParameter()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Parameter::find()->where(['id' => Yii::$app->request->post('parameter_id_on_click')])->one();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+
+                $data["id"] = $model->id;
+                $data["name"] = $model->name;
+                $data["description"] = $model->description;
+                $data["operator"] = $model->operator;
+                $data["value"] = $model->value;
+
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionDeleteParameter()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Parameter::find()->where(['id' => Yii::$app->request->post('parameter_id_on_click')])->one();
+            $model -> delete();
 
             $data["success"] = true;
 

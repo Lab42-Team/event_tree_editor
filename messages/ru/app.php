@@ -208,6 +208,9 @@ return [
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
     'EVENT_DELETE_EVENT' => 'Удаление события',
+    'PARAMETER_ADD_NEW_PARAMETER' => 'Добавить новый параметр',
+    'PARAMETER_EDIT_PARAMETER' => 'Изменение параметра',
+    'PARAMETER_DELETE_PARAMETER' => 'Удаление параметра',
     'MECHANISM_ADD_NEW_MECHANISM' => 'Добавить новый механизм',
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'MECHANISM_DELETE_MECHANISM' => 'Удаление механизма',
@@ -229,7 +232,7 @@ return [
     'DELETE_LEVEL_TEXT' => 'Вы действительно хотите удалить уровень?',
     'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
     'DELETE_MECHANISM_TEXT' => 'Вы действительно хотите удалить механизм?',
-
+    'DELETE_PARAMETER_TEXT' => 'Вы действительно хотите удалить параметр?',
 
     'CONNECTION_DELETE' => 'Удалить',
 ];

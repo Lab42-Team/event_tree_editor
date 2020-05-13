@@ -8,6 +8,7 @@ use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\Level;
 use app\modules\editor\models\Node;
 use app\modules\editor\models\Sequence;
+use app\modules\editor\models\Parameter;
 use app\modules\main\models\User;
 
 
@@ -84,6 +85,22 @@ class EventTreesController extends Controller
                 $sequence->node = $event->id;
                 $sequence->priority = 2;
                 $this->log($sequence->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Местоположение';
+                    $parameter->description = 'Местоположение – «на поверхности»';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'на поверхности';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Длина';
+                    $parameter->description = 'Длина < 100 нм';
+                    $parameter->operator = Parameter::LESS_OPERATOR;
+                    $parameter->value = '100 нм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
 
 
                 $event = new Node();
