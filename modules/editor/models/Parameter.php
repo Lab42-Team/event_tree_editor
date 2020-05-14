@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -100,7 +101,7 @@ class Parameter extends \yii\db\ActiveRecord
      */
     public function getOperatorName()
     {
-        return ArrayHelper::getValue(self::getOperatorArray(), $this->type);
+        return ArrayHelper::getValue(self::getOperatorArray(), $this->operator);
     }
 
 

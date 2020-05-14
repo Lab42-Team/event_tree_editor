@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use app\modules\main\models\Lang;
+use app\modules\editor\models\Parameter;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -1049,7 +1050,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <?php foreach ($parameter_model_all as $parameter_value): ?>
                                     <?php if ($parameter_value->node == $initial_event_value->id){ ?>
                                         <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                            <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                            <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                             <div class="button-parameter">
                                                 <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
                                                 <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
@@ -1078,7 +1079,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                 <?php if ($parameter_value->node == $event_value->id){ ?>
                                                     <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                        <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                                        <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                                         <div class="button-parameter">
                                                             <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
                                                             <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
@@ -1139,7 +1140,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                     <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                         <?php if ($parameter_value->node == $event_value->id){ ?>
                                                             <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                                <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->operator ?> <?= $parameter_value->value ?></div>
+                                                                <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                                                 <div class="button-parameter">
                                                                     <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil"></div>
                                                                     <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"></div>
