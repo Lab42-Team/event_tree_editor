@@ -42,10 +42,10 @@ div.top > div {
 }
 
 .div-level-name > .div-title-name {
-    width: 100px;
+    width: 150px;
     transform: rotate(-90deg);
     margin-left: -30px;
-    margin-top: 50px;
+    margin-top: 100px;
     white-space: nowrap; /* Запрещаем перенос строк */
     overflow: hidden; /* Обрезаем все, что не помещается в область */
     text-overflow: ellipsis; /* Добавляем многоточие */
@@ -198,15 +198,14 @@ div.top > div {
 
 
 /*кнопки*/
-
+/*кнопки уровней*/
 .edit-level {
     position: absolute;
     right: 30px;
     top: 10px;
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
 
@@ -214,22 +213,27 @@ div.top > div {
     position: absolute;
     right: 10px;
     top: 10px;
-    /*display:none;*/
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
+/*показать скрытые кнопки*/
+.div-level-name:hover .edit-level {
+    display:block;
+}
+.div-level-name:hover .del-level {
+    display:block;
+}
 
+/*кнопки событий*/
 .edit-event {
     position: absolute;
     right: 30px;
     top: 5px;
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
 
@@ -237,56 +241,94 @@ div.top > div {
     position: absolute;
     right: 10px;
     top: 5px;
-    /*display:none;*/
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
 
-.del-mechanism {
-    position: absolute;
-    left: 5px;
-    top: 30px;
-    /*display:none;*/
-
-    color: #337ab7;
-    font-size: 13px;
-
-    font-family: "Glyphicons Halflings";
-}
-
-.ep {
+.ep-event {
     position: absolute;
     top: 5px;
     right: 50px;
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
 
 .add-parameter {
     position: absolute;
-    top: 58px;
-    right: 10px;
-
+    top: 5px;
+    right: 70px;
+    display:none;
     color: #337ab7;
     font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.node:hover .edit-event {
+    display:block;
+}
+.node:hover .del-event {
+    display:block;
+}
+.node:hover .ep-event {
+    display:block;
+}
+.node:hover .add-parameter {
+    display:block;
+}
 
+/*кнопки механизмов*/
+.edit-mechanism {
+    position: absolute;
+    right: 20px;
+    top: -5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
     font-family: "Glyphicons Halflings";
 }
 
+.del-mechanism {
+    position: absolute;
+    right: 0px;
+    top: -5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.ep-mechanism {
+    position: absolute;
+    top: -5px;
+    right: 40px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.node:hover .edit-mechanism {
+    display:block;
+}
+.node:hover .del-mechanism {
+    display:block;
+}
+.node:hover .ep-mechanism {
+    display:block;
+}
+
+/*кнопки параметров*/
 .edit-parameter {
     position: absolute;
     right: 30px;
     top: 2px;
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
 }
 
@@ -294,9 +336,15 @@ div.top > div {
     position: absolute;
     right: 10px;
     top: 2px;
-
+    display:none;
     color: #337ab7;
     font-size: 13px;
-
     font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.div-parameter:hover .edit-parameter {
+    display:block;
+}
+.div-parameter:hover .del-parameter {
+    display:block;
 }

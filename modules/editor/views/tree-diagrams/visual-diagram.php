@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use app\modules\main\models\Lang;
-use app\modules\editor\models\Parameter;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -762,7 +761,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         instance.repaintEverything();
     });
 
-
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
@@ -771,11 +769,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         instance.repaintEverything();
     });
 
-
     $(document).on('mouseout', '.div-event', function() {
         // Обновление формы редактора
         instance.repaintEverything();
     });
+
 
     // редактирование события
     $(document).on('click', '.edit-event', function() {
@@ -836,12 +834,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     // редактирование механизма
-    $(document).on('dblclick', '.div-mechanism', function() {
+    $(document).on('click', '.edit-mechanism', function() {
         if (!guest) {
             var node = $(this).attr('id');
             node_id_on_click = parseInt(node.match(/\d+/));
 
-            var div_node = document.getElementById(node);
+            var div_node = document.getElementById("node_" + node_id_on_click);
 
             var level = div_node.offsetParent.getAttribute('id');
             level_id_on_click = parseInt(level.match(/\d+/));
@@ -861,6 +859,14 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     $("#editMechanismModalForm").modal("show");
                 }
             });
+        }
+    });
+    // редактирование механизма на даблклик
+    $(document).on('dblclick', '.div-mechanism', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+            document.getElementById("node_edit_" + node_id_on_click).click();
         }
     });
 
@@ -1041,7 +1047,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="content-event">
                                     <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
-                                    <div class="ep glyphicon-share-alt"></div>
+                                    <div class="ep ep-event glyphicon-share-alt"></div>
                                     <div id="node_del_<?= $initial_event_value->id ?>" class="del-event glyphicon-trash"></div>
                                     <div id="node_edit_<?= $initial_event_value->id ?>" class="edit-event glyphicon-pencil"></div>
                                     <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="add-parameter glyphicon-plus"></div>
@@ -1070,7 +1076,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <div id="node_<?= $event_value->id ?>" class="div-event node">
                                             <div class="content-event">
                                                 <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
-                                                <div class="ep glyphicon-share-alt"></div>
+                                                <div class="ep ep-event glyphicon-share-alt"></div>
                                                 <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash"></div>
                                                 <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil"></div>
                                                 <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus"></div>
@@ -1120,8 +1126,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                 <div id="node_<?= $mechanism_value->id ?>"
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
                                                     <div class="div-mechanism-m">M</div>
-                                                    <div class="ep glyphicon-share-alt"></div>
+                                                    <div class="ep ep-mechanism glyphicon-share-alt"></div>
                                                     <div id="node_del_<?= $mechanism_value->id ?>" class="del-mechanism glyphicon-trash"></div>
+                                                    <div id="node_edit_<?= $mechanism_value->id ?>" class="edit-mechanism glyphicon-pencil"></div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>
@@ -1131,7 +1138,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node">
                                                     <div class="content-event">
                                                         <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
-                                                        <div class="ep glyphicon-share-alt"></div>
+                                                        <div class="ep ep-event glyphicon-share-alt"></div>
                                                         <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash"></div>
                                                         <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil"></div>
                                                         <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus"></div>

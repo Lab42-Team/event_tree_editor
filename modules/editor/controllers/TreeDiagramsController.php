@@ -729,7 +729,7 @@ class TreeDiagramsController extends Controller
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
-                $data["operator"] = $model->operator;
+                $data["operator"] = $model->getOperatorName();
                 $data["value"] = $model->value;
 
             } else
@@ -761,7 +761,7 @@ class TreeDiagramsController extends Controller
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
-                $data["operator"] = $model->operator;
+                $data["operator"] = $model->getOperatorName();
                 $data["value"] = $model->value;
 
             } else
