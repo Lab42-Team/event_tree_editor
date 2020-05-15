@@ -54,20 +54,35 @@ use app\modules\editor\models\Node;
                                 div_initial_event.className = 'div-event node div-initial-event';
                                 div_level_layer.append(div_initial_event);
 
+                                var div_content_event = document.createElement('div');
+                                div_content_event.className = 'content-event';
+                                div_initial_event.append(div_content_event);
+
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.id = 'node_name_' + data['id'];
                                 div_initial_event_name.className = 'div-event-name' ;
                                 div_initial_event_name.innerHTML = data['name'];
-                                div_initial_event.append(div_initial_event_name);
+                                div_content_event.append(div_initial_event_name);
 
                                 var div_ep = document.createElement('div');
-                                div_ep.className = 'ep' ;
-                                div_initial_event.append(div_ep);
+                                div_ep.className = 'ep ep-event glyphicon-share-alt' ;
+                                div_content_event.append(div_ep);
 
                                 var div_del = document.createElement('div');
                                 div_del.id = 'node_del_' + data['id'];
-                                div_del.className = 'del del-event' ;
-                                div_initial_event.append(div_del);
+                                div_del.className = 'del-event glyphicon-trash' ;
+                                div_content_event.append(div_del);
+
+                                var div_edit = document.createElement('div');
+                                div_edit.id = 'node_edit_' + data['id'];
+                                div_edit.className = 'edit-event glyphicon-pencil' ;
+                                div_content_event.append(div_edit);
+
+                                var div_add_parameter = document.createElement('div');
+                                div_add_parameter.id = 'node_add_parameter_' + data['id'];
+                                div_add_parameter.className = 'add-parameter glyphicon-plus' ;
+                                div_content_event.append(div_add_parameter);
+
                             } else {
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
 
@@ -76,20 +91,34 @@ use app\modules\editor\models\Node;
                                 div_event.className = 'div-event node';
                                 div_level_layer.append(div_event);
 
+                                var div_content_event = document.createElement('div');
+                                div_content_event.className = 'content-event';
+                                div_event.append(div_content_event);
+
                                 var div_event_name = document.createElement('div');
                                 div_event_name.id = 'node_name_' + data['id'];
                                 div_event_name.className = 'div-event-name' ;
                                 div_event_name.innerHTML = data['name'];
-                                div_event.append(div_event_name);
+                                div_content_event.append(div_event_name);
 
                                 var div_ep = document.createElement('div');
-                                div_ep.className = 'ep' ;
-                                div_event.append(div_ep);
+                                div_ep.className = 'ep ep-event glyphicon-share-alt' ;
+                                div_content_event.append(div_ep);
 
                                 var div_del = document.createElement('div');
                                 div_del.id = 'node_del_' + data['id'];
-                                div_del.className = 'del del-event' ;
-                                div_event.append(div_del);
+                                div_del.className = 'del-event glyphicon-trash' ;
+                                div_content_event.append(div_del);
+
+                                var div_edit = document.createElement('div');
+                                div_edit.id = 'node_edit_' + data['id'];
+                                div_edit.className = 'edit-event glyphicon-pencil' ;
+                                div_content_event.append(div_edit);
+
+                                var div_add_parameter = document.createElement('div');
+                                div_add_parameter.id = 'node_add_parameter_' + data['id'];
+                                div_add_parameter.className = 'add-parameter glyphicon-plus' ;
+                                div_content_event.append(div_add_parameter);
                             }
 
                             document.getElementById('add-event-form').reset();

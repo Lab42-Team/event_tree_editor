@@ -786,6 +786,7 @@ class TreeDiagramsController extends Controller
             $response->format = Response::FORMAT_JSON;
 
             $model = Parameter::find()->where(['id' => Yii::$app->request->post('parameter_id_on_click')])->one();
+            $data["node"] = $model->node;
             $model -> delete();
 
             $data["success"] = true;

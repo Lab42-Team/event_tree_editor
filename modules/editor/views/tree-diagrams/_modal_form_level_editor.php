@@ -44,25 +44,32 @@ use app\modules\main\models\Lang;
                             visual_diagram_top_layer.append(div_level);
 
                             var div_level_name = document.createElement('div');
-                            div_level_name.className = 'div-level-name';
                             div_level_name.id = 'level_name_' + data['id'];
+                            div_level_name.className = 'div-level-name';
                             div_level.append(div_level_name);
 
                             var div_name = document.createElement('div');
-                            div_name.innerHTML = data['name'];
+                            div_name.id = 'level_title_' + data['id'];
                             div_name.className = 'div-title-name';
                             div_name.title = data['name'];
+                            div_name.innerHTML = data['name'];
                             div_level_name.append(div_name);
 
                             var div_del = document.createElement('div');
                             div_del.id = 'level_del_' + data['id'];
-                            div_del.className = 'del del-level';
+                            div_del.className = 'del-level glyphicon-trash';
                             div_level_name.append(div_del);
 
+                            var div_edit = document.createElement('div');
+                            div_edit.id = 'level_edit_' + data['id'];
+                            div_edit.className = 'edit-level glyphicon-pencil';
+                            div_level_name.append(div_edit);
+
                             var div_level_description = document.createElement('div');
-                            div_level_description.className = 'div-level-description' ;
                             div_level_description.id = 'level_description_' + data['id'];
+                            div_level_description.className = 'div-level-description' ;
                             div_level.append(div_level_description);
+
 
                             var nav_add_event = document.getElementById('nav_add_event');
                             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
@@ -76,7 +83,6 @@ use app\modules\main\models\Lang;
                             }
 
                             document.getElementById('add-level-form').reset();
-
                             document.getElementById("pjax-event-editor-button").click();
 
                             var id = data['id'];
@@ -142,7 +148,7 @@ use app\modules\main\models\Lang;
 
 
 
-<!-- Модальное окно добавления нового уровня -->
+<!-- Модальное окно изменения нового уровня -->
 <?php Modal::begin([
     'id' => 'editLevelModalForm',
     'header' => '<h3>' . Yii::t('app', 'LEVEL_EDIT_LEVEL') . '</h3>',
@@ -176,8 +182,9 @@ use app\modules\main\models\Lang;
                             }
                         });
 
-                        var div_level_name = document.getElementById('level_name_' + data['id']);
-                        div_level_name.innerHTML = "<div title=" + data['name'] + ">" + data['name'] +"</div>";
+                        var div_level_name = document.getElementById('level_title_' + level_id_on_click);
+                        div_level_name.innerHTML = data['name'];
+                        div_level_name.title = data['name'];
 
                         document.getElementById('edit-level-form').reset();
 
@@ -379,6 +386,7 @@ use app\modules\main\models\Lang;
                         }
                     //------------------------------
 
+                        //удаление элементов со страницы
                         var del_mechanism_node = {};
                         var q = 0;
                         if (data['id_level_descendent'] != null) {
@@ -409,7 +417,11 @@ use app\modules\main\models\Lang;
 
                         var div_level = document.getElementById('level_' + level_id_on_click);
                         var g_name = 'group'+ level_id_on_click; //определяем имя группы
-                        instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
+                        var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                        if (grp != 0){
+                            //если группа существует то
+                            instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
+                        }
                         div_level.remove(); // удаляем визуально уровень
 
                         //----------удаляем все соединения

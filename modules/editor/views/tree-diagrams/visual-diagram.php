@@ -1017,6 +1017,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var parameter = $(this).attr('id');
             parameter_id_on_click = parseInt(parameter.match(/\d+/));
             $("#deleteParameterModalForm").modal("show");
+            // Обновление формы редактора
+            instance.repaintEverything();
         }
     });
 
@@ -1035,12 +1037,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             <?php foreach ($level_model_all as $value): ?>
             <?php if ($value->parent_level == null){ ?>
                 <div id="level_<?= $value->id ?>" class="div-level">
-                    <div class="div-level-name" id="level_name_<?= $value->id ?>">
-                        <div class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
+                    <div id="level_name_<?= $value->id ?>" class="div-level-name">
+                        <div id="level_title_<?= $value->id ?>" class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
                         <div id="level_del_<?= $value->id ?>" class="del-level glyphicon-trash"></div>
                         <div id="level_edit_<?= $value->id ?>" class="edit-level glyphicon-pencil"></div>
                     </div>
-                    <div class="div-level-description" id="level_description_<?= $value->id ?>">
+                    <div id="level_description_<?= $value->id ?>" class="div-level-description">
                         <!--?= $level_value->description ?>-->
                         <!-- Вывод инициирующего события -->
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
@@ -1110,12 +1112,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 <?php foreach ($level_model_all as $level_value): ?>
                     <?php if ($level_value->parent_level == $a){ ?>
                         <div id="level_<?= $level_value->id ?>" class="div-level">
-                            <div class="div-level-name" id="level_name_<?= $level_value->id ?>">
-                                <div class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
+                            <div id="level_name_<?= $level_value->id ?>" class="div-level-name">
+                                <div id="level_title_<?= $level_value->id ?>" class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
                                 <div id="level_del_<?= $level_value->id ?>" class="del-level glyphicon-trash"></div>
                                 <div id="level_edit_<?= $level_value->id ?>" class="edit-level glyphicon-pencil"></div>
                             </div>
-                            <div class="div-level-description" id="level_description_<?= $level_value->id ?>">
+                            <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->
                                 <?php foreach ($sequence_model_all as $sequence_value): ?>
                                     <?php if ($sequence_value->level == $level_value->id){ ?>

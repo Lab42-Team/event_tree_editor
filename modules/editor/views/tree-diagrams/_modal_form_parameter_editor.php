@@ -81,6 +81,11 @@ use app\modules\editor\models\Parameter;
 
 
                             document.getElementById('add-parameter-form').reset();
+
+                            var id_node = 'node_' + node_id_on_click;
+                            mousemoveNode(id_node);
+                            // Обновление формы редактора
+                            instance.repaintEverything();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-parameter-form", data);
@@ -277,6 +282,11 @@ use app\modules\editor\models\Parameter;
 
                             var div_parameter = document.getElementById('parameter_' + parameter_id_on_click);
                             div_parameter.remove(); // удаляем
+
+                            var id_node = 'node_' + data['node'];
+                            mousemoveNode(id_node);
+                            // Обновление формы редактора
+                            instance.repaintEverything();
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#delete-parameter-form", data);

@@ -68,6 +68,37 @@ class EventTreesController extends Controller
                 $sequence->priority = 0;
                 $this->log($sequence->save());
 
+                    $parameter = new Parameter();
+                    $parameter->name = 'Материал';
+                    $parameter->description = 'Материал – низколегированная сталь;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'Низколегированная сталь';
+                    $parameter->node = $initial_event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Макронапряжения';
+                    $parameter->description = 'Остаточные макронапряжения;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'Остаточные';
+                    $parameter->node = $initial_event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Нагрузка';
+                    $parameter->description = 'Нагрузка – растягивающие механические и термические напряжения;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'Растягивающие механические и термические напряжения';
+                    $parameter->node = $initial_event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Среда';
+                    $parameter->description = 'Среда – активная;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'Активная';
+                    $parameter->node = $initial_event->id;
+                    $this->log($parameter->save());
 
                 $event = new Node();
                 $event->name = 'Субмикротрещины';
@@ -102,7 +133,6 @@ class EventTreesController extends Controller
                     $parameter->node = $event->id;
                     $this->log($parameter->save());
 
-
                 $event = new Node();
                 $event->name = 'Питтинги';
                 $event->description = 'Местоположение – «на поверхности»; диаметр – 1-2 мм; глубина - 1-2 мм';
@@ -120,6 +150,29 @@ class EventTreesController extends Controller
                 $sequence->priority = 2;
                 $this->log($sequence->save());
 
+                    $parameter = new Parameter();
+                    $parameter->name = 'Местоположение';
+                    $parameter->description = 'Местоположение – «на поверхности»;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'на поверхности';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Диаметр';
+                    $parameter->description = 'Диаметр – 1-2 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '1-2 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Глубина';
+                    $parameter->description = 'Глубина - 1-2 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '1-2 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
 
                 $event = new Node();
                 $event->name = 'Язвы';
@@ -138,6 +191,29 @@ class EventTreesController extends Controller
                 $sequence->priority = 2;
                 $this->log($sequence->save());
 
+                    $parameter = new Parameter();
+                    $parameter->name = 'Местоположение';
+                    $parameter->description = 'Местоположение – «на поверхности»;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = 'на поверхности';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Диаметр';
+                    $parameter->description = 'Диаметр – 3-5 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '3-5 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Глубина';
+                    $parameter->description = 'Глубина - 1-3 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '1-3 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
 
                 $event = new Node();
                 $event->name = 'Микротрещины';
@@ -156,6 +232,21 @@ class EventTreesController extends Controller
                 $sequence->priority = 2;
                 $this->log($sequence->save());
 
+                    $parameter = new Parameter();
+                    $parameter->name = 'Длина';
+                    $parameter->description = 'Длина < 500 мкм;';
+                    $parameter->operator = Parameter::LESS_OPERATOR;
+                    $parameter->value = '500 мкм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Источник';
+                    $parameter->description = 'Источник – «питтинги»;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '«питтинги»';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
 
                 $event = new Node();
                 $event->name = 'Макротрещины';
@@ -175,6 +266,29 @@ class EventTreesController extends Controller
                 $sequence->priority = 2;
                 $this->log($sequence->save());
 
+                    $parameter = new Parameter();
+                    $parameter->name = 'Направление';
+                    $parameter->description = 'Направление –  «поперечные»;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '«поперечные»';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Длина';
+                    $parameter->description = 'Длина < 7 мм;';
+                    $parameter->operator = Parameter::LESS_OPERATOR;
+                    $parameter->value = '7 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Глубина';
+                    $parameter->description = 'Глубина < 4 мм;';
+                    $parameter->operator = Parameter::LESS_OPERATOR;
+                    $parameter->value = '4 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
 
                 $event = new Node();
                 $event->name = 'Сквозная трещина';
@@ -192,6 +306,30 @@ class EventTreesController extends Controller
                 $sequence->node = $event->id;
                 $sequence->priority = 2;
                 $this->log($sequence->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Направление';
+                    $parameter->description = 'Направление –  «поперечные»;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '«поперечные»';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Длина';
+                    $parameter->description = 'Длина ≈ 80 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '80 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
+
+                    $parameter = new Parameter();
+                    $parameter->name = 'Глубина';
+                    $parameter->description = 'Глубина ≈ 45 мм;';
+                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->value = '45 мм';
+                    $parameter->node = $event->id;
+                    $this->log($parameter->save());
             } else {
                 $this->stdout('The event tree of the part element from the reliability block is created. - - - - - - - -', Console::FG_GREEN, Console::BOLD);
             }
