@@ -318,7 +318,7 @@ class EventTreesController extends Controller
                     $parameter = new Parameter();
                     $parameter->name = 'Длина';
                     $parameter->description = 'Длина ≈ 80 мм;';
-                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->operator = Parameter::APPROXIMATELY_EQUAL_OPERATOR;
                     $parameter->value = '80 мм';
                     $parameter->node = $event->id;
                     $this->log($parameter->save());
@@ -326,7 +326,7 @@ class EventTreesController extends Controller
                     $parameter = new Parameter();
                     $parameter->name = 'Глубина';
                     $parameter->description = 'Глубина ≈ 45 мм;';
-                    $parameter->operator = Parameter::EQUALLY_OPERATOR;
+                    $parameter->operator = Parameter::APPROXIMATELY_EQUAL_OPERATOR;
                     $parameter->value = '45 мм';
                     $parameter->node = $event->id;
                     $this->log($parameter->save());

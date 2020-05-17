@@ -28,6 +28,7 @@ class Parameter extends \yii\db\ActiveRecord
     const MORE_EQUAL_OPERATOR = 3; // Оператор больше или равно
     const LESS_EQUAL_OPERATOR = 4; // Оператор меньше или равно
     const NOT_EQUAL_OPERATOR = 5; // Оператор не равно
+    const APPROXIMATELY_EQUAL_OPERATOR = 6; // Оператор приблизительно равно
 
     /**
      * @return string table name
@@ -92,6 +93,8 @@ class Parameter extends \yii\db\ActiveRecord
             self::MORE_EQUAL_OPERATOR => Yii::t('app', 'PARAMETER_MODEL_MORE_EQUAL_OPERATOR'),
             self::LESS_EQUAL_OPERATOR => Yii::t('app', 'PARAMETER_MODEL_LESS_EQUAL_OPERATOR'),
             self::NOT_EQUAL_OPERATOR => Yii::t('app', 'PARAMETER_MODEL_NOT_EQUAL_OPERATOR'),
+            self::APPROXIMATELY_EQUAL_OPERATOR => Yii::t('app', 'PARAMETER_MODEL_APPROXIMATELY_EQUAL_OPERATOR'),
+
         ];
     }
 
