@@ -203,6 +203,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var level_mas = <?php echo json_encode($level_mas); ?>;//прием массива уровней из php
     var parameter_mas = <?php echo json_encode($parameter_mas); ?>;//прием массива параметров из php
 
+    var message_label = "<?php echo Yii::t('app', 'CONNECTION_DELETE'); ?>";
 
     var mas_data_level = {};
     var q = 0;
@@ -283,19 +284,18 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             Connector:["Flowchart", {cornerRadius:5}], //стиль соединения линии ломанный с радиусом
             Endpoint:["Dot", {radius:1}], //стиль точки соединения
             EndpointStyle: { fill: '#337ab7' }, //цвет точки соединения
-            PaintStyle : { strokeWidth:3, stroke: "#337ab7", fill: "transparent"},//стиль линии
-            HoverPaintStyle: {stroke: "#d00006", strokeWidth: 4},
+            PaintStyle : { strokeWidth:3, stroke: "#337ab7", "dashstyle": "0 0", fill: "transparent"},//стиль линии
+            HoverPaintStyle: {strokeWidth: 4, stroke: "#ff3f48", "dashstyle": "4 2"},//стиль линии пунктирная из за свойства dashstyle
             Overlays:[["PlainArrow", {location:1, width:15, length:15}]], //стрелка
             ConnectionOverlays: [
                 [ "Label", {
-                    label: "",
+                    label: message_label,
                     id: "label_connector",
-                    //cssClass: "aLabel"
+                    cssClass: "aLabel"
                 }]
             ],
             Container: "visual_diagram_field"
         });
-    //, "dashstyle": "2 4"
 
         var group_name = "";
         //разбор полученного массива
@@ -513,27 +513,26 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         });
 
         // Обработка при наведении на связь показывает заголовок связи "удалить"
-        instance.bind("mouseover", function(connection) {
-            if (!guest) {
-                var target_id = connection.targetId;
-                if (target_id.search("node") >= 0) {
-                    var message_label = "<?php echo Yii::t('app', 'CONNECTION_DELETE'); ?>";
-                    connection.addOverlay(["Label", {
-                        label: message_label,
-                        location: 0.5,
-                        id: "label_connector",
-                        cssClass: "aLabel"
-                    }]);
-                }
-            }
-        });
+        //instance.bind("mouseover", function(connection) {
+        //    if (!guest) {
+        //        var target_id = connection.targetId;
+        //        if (target_id.search("node") >= 0) {
+                    //connection.addOverlay(["Label", {
+                    //    label: message_label,
+                    //    location: 0.5,
+                    //    id: "label_connector",
+                    //    cssClass: "bLabel"
+                    //}]);
+        //        }
+        //    }
+        //});
 
         // Обработка при отведении от связи скрывает заголовок
-        instance.bind("mouseout", function(connection) {
-            if (!guest) {
-                connection.removeOverlay("label_connector");
-            }
-        });
+        //instance.bind("mouseout", function(connection) {
+        //    if (!guest) {
+            //    connection.removeOverlay("label_connector");
+        //    }
+        //});
 
         // Обработка удаления связи
         instance.bind("click", function(connection) {

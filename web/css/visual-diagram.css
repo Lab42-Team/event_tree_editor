@@ -168,33 +168,35 @@ div.top > div {
     min-width: 200px;
 }
 
+/* стиль курсора при наведении на связь*/
+path { cursor:pointer; }
 
+/*стиль заголовка*/
 .aLabel {
-    background-color: red;
-    color: white;
+    /*прозрачный текст*/
+    color: #FFF;
+    mix-blend-mode: multiply;
+    text-align: center;
+    /*форма*/
     width: 65px;
     height: 25px;
-    border:2px solid red;
+    border:2px solid;
     border-radius: 5px;
-    text-align: center;
-}
 
-/*
-.style_connector:hover {
     cursor: pointer;
-}*/
-
-/*
-показывать del
-.node:hover .del{
-    display:block;
+}
+/*стиль заголовка при наведении*/
+.aLabel.jtk-hover {
+    mix-blend-mode: normal;
+    width: 65px;
+    height: 25px;
+    background-color: #ff3f48;
 }
 
-.div-level-name:hover .del{
-    display:block;
-}*/
-
-
+/* меняем стили связанных элементов при наведении на их связь*/
+.jtk-source-hover, .jtk-target-hover {
+    box-shadow: 0 0 5px 2px red;
+}
 
 
 /*кнопки*/
@@ -267,16 +269,16 @@ div.top > div {
     font-family: "Glyphicons Halflings";
 }
 /*показать скрытые кнопки*/
-.node:hover .edit-event {
+.content-event:hover .edit-event {
     display:block;
 }
-.node:hover .del-event {
+.content-event:hover .del-event {
     display:block;
 }
-.node:hover .ep-event {
+.content-event:hover .ep-event {
     display:block;
 }
-.node:hover .add-parameter {
+.content-event:hover .add-parameter {
     display:block;
 }
 
