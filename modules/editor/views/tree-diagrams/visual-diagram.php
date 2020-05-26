@@ -662,6 +662,8 @@ foreach ($initial_event_model_all as $i){
 
     // Равномерное раcпределение всех объектов в виде дерева
     $(document).ready(function() {
+        var id_node_any;
+
         var id_initial_node;
         //поиск начального
         $(".div-initial-event").each(function(i) {
@@ -686,7 +688,7 @@ foreach ($initial_event_model_all as $i){
             $(".node").each(function(i) {
 
                 var id_node = $(this).attr('id');
-
+                id_node_any = id_node;
                 //console.log("-------");
                 //console.log(id_node);
                 //console.log("-------");
@@ -789,6 +791,7 @@ foreach ($initial_event_model_all as $i){
 
                     $(".node").each(function(i) {
                         var id_node = $(this).attr('id');
+                        id_node_any = id_node;
 
                         var node = document.getElementById(id_node);
 
@@ -864,7 +867,12 @@ foreach ($initial_event_model_all as $i){
                 //});
         } while ( a != 0 );
 
-
+        // отрисовка
+        if (id_node_any != null){
+            mousemoveNode(id_node_any);
+            // Обновление формы редактора
+            instance.repaintEverything();
+        }
 
 
 
