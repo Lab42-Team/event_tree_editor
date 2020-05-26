@@ -108,6 +108,20 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 //$this->registerJsFile('/js/visual-diagram.js', ['position'=>yii\web\View::POS_HEAD]);
 ?>
 
+
+
+
+<?php
+$initial_event_mas = array();
+foreach ($initial_event_model_all as $i){
+    array_push($initial_event_mas, [$i->id]);
+}
+?>
+
+
+
+
+
 <script type="text/javascript">
 
     var guest = <?php echo json_encode(Yii::$app->user->isGuest); ?>;//переменная гость определяет пользователь гость или нет
@@ -646,7 +660,224 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     };
 
 
+    // Равномерное раcпределение всех объектов в виде дерева
+    $(document).ready(function() {
+        var id_initial_node;
+        //поиск начального
+        $(".div-initial-event").each(function(i) {
+            id_initial_node = $(this).attr('id');
+        });
+        //console.log(id_initial_node);
+
+        // ширина и высота элемента + отступ
+        var width_node = 200 + 40;
+        var height_node = 200 + 80;
+
+
+        var left = 0;
+        var top = 0;
+
+        $(".div-level-description").each(function(i) {
+            var id_level = $(this).attr('id');
+
+            left = 0;
+            top = 0;
+
+            $(".node").each(function(i) {
+
+                var id_node = $(this).attr('id');
+
+                //console.log("-------");
+                //console.log(id_node);
+                //console.log("-------");
+
+                var node = document.getElementById(id_node);
+                var n_initial_node = parseInt(id_initial_node.match(/\d+/));
+
+                //console.log(node);
+
+                var id_parent_node = node.getAttribute("parent_node");
+                //console.log(id_parent_node);
+                var parent_node = document.getElementById("node_" + id_parent_node);
+                //console.log(parent_node);
+                if (parent_node != null){
+                    var parent_node_left = parent_node.offsetLeft;
+                    var parent_node_top = parent_node.offsetTop;
+                    //console.log("left = " + parent_node_left + ":" + "top = " + parent_node_top);
+                }
+                //console.log("-------");
+
+
+                var level_parent = node.offsetParent;
+                var id_level_parent = level_parent.getAttribute('id');
+
+
+
+                // curent_ первоначальное положение элемента + 20 отступ от края
+                var current_left = 20 + $(this).position().left;
+                var current_top = 20 + $(this).position().top;
+
+                //console.log("-------");
+                //console.log(node);
+                //console.log(id_parent_node);
+
+                //console.log(id_level_parent);
+                //console.log(id_level);
+
+                if (id_level_parent == id_level){
+                    //console.log("равно");
+                    if (id_node == id_initial_node){
+                        $(this).css({
+                            left: current_left + left,
+                            top: current_top + top
+                        });
+                        left = left + width_node;
+                        top = top + height_node;
+
+                    } else if (id_parent_node == ""){
+                        $(this).css({
+                            left: current_left + left,
+                            top: current_top + top
+                        });
+
+                        console.log(node);
+
+                        left = left + width_node;
+                        //top = top + height_node;
+
+                        var classList = node.classList;
+                        classList.add('current'); // добавить класс
+
+
+                    } else if (id_parent_node == n_initial_node){
+                        $(this).css({
+                            left: parent_node_left + left,
+                            top: parent_node_top + top
+                        });
+                        left = left + width_node;
+
+                        var classList = node.classList;
+                        classList.add('current'); // добавить класс
+                    }
+                }
+
+
+            });
+
+        });
+
+        top = top + height_node;
+
+
+
+
+        do {
+            left = 0;
+            $(".current").each(function(i) {
+                var id_current = $(this).attr('id');
+                var n_current = parseInt(id_current.match(/\d+/));
+                //console.log(n_current);
+                var current = document.getElementById(id_current);
+
+
+
+                $(".div-level-description").each(function(i) {
+                    var id_level = $(this).attr('id');
+
+
+
+
+                    $(".node").each(function(i) {
+                        var id_node = $(this).attr('id');
+
+                        var node = document.getElementById(id_node);
+
+                        var id_parent_node = node.getAttribute("parent_node");
+
+                        var parent_node = document.getElementById("node_" + id_parent_node);
+                        //console.log(parent_node);
+                        if (parent_node != null){
+                            var parent_node_left = parent_node.offsetLeft;
+                            var parent_node_top = parent_node.offsetTop;
+                            //console.log("left = " + parent_node_left + ":" + "top = " + parent_node_top);
+                        }
+
+
+
+
+
+                        var level_parent = node.offsetParent;
+                        var id_level_parent = level_parent.getAttribute('id');
+
+
+                        // curent_ первоначальное положение элемента + 20 отступ от края
+                        //var current_left = 20 + $(this).position().left;
+                        //var current_top = 20 + $(this).position().top;
+
+                        if (id_level_parent == id_level) {
+                            if (id_parent_node == n_current){
+                                $(this).css({
+                                    left: parent_node_left +  left,
+                                    top: parent_node_top + top
+                                });
+                                left = left + width_node;
+
+
+
+
+
+                                // присваиваем класс у дочернему
+                                var classNode = node.classList;
+                                classNode.add('current'); // добавить класс
+                                //console.log("------------");
+                                //console.log(node);
+                                //console.log("current");
+                            }
+                            // удаляем класс у родителя
+                            var classCurrent = current.classList;
+                            classCurrent.remove('current'); // удалить класс
+                            //console.log("------------");
+                            //console.log(current);
+                            //console.log("нету");
+                        }
+
+                    });
+
+                    //var classList = node.classList;
+                    //classList.add('post'); // добавить класс
+                });
+
+
+            });
+
+
+                var a = $(".current").length;
+                //console.log("--------------------------------");
+                //console.log(a);
+
+                //$(".current").each(function(i) {
+                //    var id_current = $(this).attr('id');
+                //    var n_current = parseInt(id_current.match(/\d+/));
+                //    //console.log(n_current);
+                //    var current = document.getElementById(id_current);
+                //    console.log(current);
+                //});
+        } while ( a != 0 );
+
+
+
+
+
+    });
+
+
+
+
+
+
+
     // Равномерное размещение всех объектов на рабочей области редактора
+    /*
     $(document).ready(function() {
         var id_node_any;
         $(".div-level-description").each(function(i) {
@@ -750,6 +981,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             instance.repaintEverything();
         }
     });
+    */
 
 
     $(document).on('mousemove', '.div-event', function() {
@@ -1074,7 +1306,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <?php $event_id = $sequence_value->node; ?>
                                 <?php foreach ($event_model_all as $event_value): ?>
                                     <?php if ($event_value->id == $event_id){ ?>
-                                        <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                        <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node="<?= $event_value->parent_node ?>">
                                             <div class="content-event">
                                                 <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                 <div class="ep ep-event glyphicon-share-alt"></div>
@@ -1124,7 +1356,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <!-- Вывод механизма -->
                                         <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                             <?php if ($mechanism_value->id == $node_id){ ?>
-                                                <div id="node_<?= $mechanism_value->id ?>"
+                                                <div id="node_<?= $mechanism_value->id ?>" parent_node="<?= $mechanism_value->parent_node ?>"
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
                                                     <div class="div-mechanism-m">M</div>
                                                     <div class="ep ep-mechanism glyphicon-share-alt"></div>
@@ -1136,7 +1368,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <!-- Вывод событий -->
                                         <?php foreach ($event_model_all as $event_value): ?>
                                             <?php if ($event_value->id == $node_id){ ?>
-                                                <div id="node_<?= $event_value->id ?>" class="div-event node">
+                                                <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node = "<?= $event_value->parent_node ?>">
                                                     <div class="content-event">
                                                         <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                         <div class="ep ep-event glyphicon-share-alt"></div>

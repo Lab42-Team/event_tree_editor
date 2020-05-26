@@ -290,7 +290,7 @@ class TreeDiagramsController extends Controller
             // Определение полей модели уровня и валидация формы
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                 // Условие проверки является ли событие инициирующим
-                $i = Node::find()->where(['tree_diagram' => $id, 'type' => 0])->count();
+                $i = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->count();
                 // Если инициирующие события есть
                 if ($i > '0') {
                     // Тип присваивается константа "EVENT_TYPE" как событие
