@@ -59,11 +59,13 @@ use app\modules\editor\models\Parameter;
                             var div_edit_parameter = document.createElement('div');
                             div_edit_parameter.id = 'edit_parameter_' + data['id'];
                             div_edit_parameter.className = 'edit-parameter glyphicon-pencil';
+                            div_edit_parameter.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                             div_button_parameter.append(div_edit_parameter);
 
                             var div_del_parameter = document.createElement('div');
                             div_del_parameter.id = 'del_parameter_' + data['id'];
                             div_del_parameter.className = 'del-parameter glyphicon-trash';
+                            div_del_parameter.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                             div_button_parameter.append(div_del_parameter);
 
 

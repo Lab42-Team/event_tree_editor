@@ -61,16 +61,19 @@ use app\modules\main\models\Lang;
 
                             var div_ep = document.createElement('div');
                             div_ep.className = 'ep ep-mechanism glyphicon-share-alt' ;
+                            div_ep.title = '<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>' ;
                             div_mechanism.append(div_ep);
 
                             var div_del = document.createElement('div');
                             div_del.id = 'node_del_' + data['id'];
                             div_del.className = 'del-mechanism glyphicon-trash' ;
+                            div_del.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                             div_mechanism.append(div_del);
 
                             var div_edit = document.createElement('div');
                             div_edit.id = 'node_edit_' + data['id'];
                             div_edit.className = 'edit-mechanism glyphicon-pencil' ;
+                            div_edit.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                             div_mechanism.append(div_edit);
 
                             document.getElementById('add-mechanism-form').reset();

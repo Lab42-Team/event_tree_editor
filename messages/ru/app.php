@@ -35,11 +35,13 @@ return [
     'BUTTON_SIGN_IN' => 'Войти',
     'BUTTON_CREATE' => 'Создать',
     'BUTTON_UPDATE' => 'Обновить',
+    'BUTTON_EDIT' => 'Изменить',
     'BUTTON_DELETE' => 'Удалить',
     'BUTTON_CANCEL' => 'Отмена',
     'BUTTON_IMPORT' => 'Импортировать',
     'BUTTON_EXPORT' => 'Экспортировать',
     'BUTTON_RETURN' => 'Вернуться к',
+    'BUTTON_CONNECTION' => 'Соединение',
     'BUTTON_VISUAL_DIAGRAM' => 'Визуальная диаграмма',
 
     /* Общие сообщения об ошибках */

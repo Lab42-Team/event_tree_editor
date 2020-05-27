@@ -66,21 +66,25 @@ use app\modules\editor\models\Node;
 
                                 var div_ep = document.createElement('div');
                                 div_ep.className = 'ep ep-event glyphicon-share-alt' ;
+                                div_ep.title = '<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>' ;
                                 div_content_event.append(div_ep);
 
                                 var div_del = document.createElement('div');
                                 div_del.id = 'node_del_' + data['id'];
                                 div_del.className = 'del-event glyphicon-trash' ;
+                                div_del.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                                 div_content_event.append(div_del);
 
                                 var div_edit = document.createElement('div');
                                 div_edit.id = 'node_edit_' + data['id'];
                                 div_edit.className = 'edit-event glyphicon-pencil' ;
+                                div_edit.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                                 div_content_event.append(div_edit);
 
                                 var div_add_parameter = document.createElement('div');
                                 div_add_parameter.id = 'node_add_parameter_' + data['id'];
                                 div_add_parameter.className = 'add-parameter glyphicon-plus' ;
+                                div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>' ;
                                 div_content_event.append(div_add_parameter);
 
                             } else {
@@ -103,21 +107,25 @@ use app\modules\editor\models\Node;
 
                                 var div_ep = document.createElement('div');
                                 div_ep.className = 'ep ep-event glyphicon-share-alt' ;
+                                div_ep.title = '<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>' ;
                                 div_content_event.append(div_ep);
 
                                 var div_del = document.createElement('div');
                                 div_del.id = 'node_del_' + data['id'];
                                 div_del.className = 'del-event glyphicon-trash' ;
+                                div_del.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                                 div_content_event.append(div_del);
 
                                 var div_edit = document.createElement('div');
                                 div_edit.id = 'node_edit_' + data['id'];
                                 div_edit.className = 'edit-event glyphicon-pencil' ;
+                                div_edit.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                                 div_content_event.append(div_edit);
 
                                 var div_add_parameter = document.createElement('div');
                                 div_add_parameter.id = 'node_add_parameter_' + data['id'];
                                 div_add_parameter.className = 'add-parameter glyphicon-plus' ;
+                                div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>';
                                 div_content_event.append(div_add_parameter);
                             }
 

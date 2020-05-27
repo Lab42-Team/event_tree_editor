@@ -35,11 +35,13 @@ return [
     'BUTTON_SIGN_IN' => 'Sign in',
     'BUTTON_CREATE' => 'Create',
     'BUTTON_UPDATE' => 'Update',
+    'BUTTON_EDIT' => 'Edit',
     'BUTTON_DELETE' => 'Delete',
     'BUTTON_CANCEL' => 'Cancel',
     'BUTTON_IMPORT' => 'Import',
     'BUTTON_EXPORT' => 'Export',
     'BUTTON_RETURN' => 'Return to',
+    'BUTTON_CONNECTION' => 'Connection',
     'BUTTON_VISUAL_DIAGRAM' => 'Visual diagram',
 
     /* Общие сообщения об ошибках */
