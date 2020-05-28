@@ -820,7 +820,7 @@ foreach ($initial_event_model_all as $i){
                         //top = top + height_node;
 
                         var classList = node.classList;
-                        classList.add('current'); // добавить класс
+                        classList.add('zero'); // добавить класс
 
 
                     }
@@ -831,15 +831,19 @@ foreach ($initial_event_model_all as $i){
 
         });
 
-
+        //top = 0;
 
         top = top + height_node;
 
 
         var col = 0;
+        var sum_col = 0;
 
         do {
-            left = 0;
+
+
+            sum_col = 0;
+            var count = 0;
 
             //col = 0;
 
@@ -849,25 +853,56 @@ foreach ($initial_event_model_all as $i){
                 //console.log(n_current);
                 var current = document.getElementById(id_current);
 
+                col = 0;
+                count++;
+                left = 0;
 
-                //$(".node").each(function(i) {
-                //    var id_node = $(this).attr('id');
-                //    var node = document.getElementById(id_node);
-                //    var id_parent_node = node.getAttribute("parent_node");
-                //    var level_parent = node.offsetParent;
-                //    var id_level_parent = level_parent.getAttribute('id');
-                //    if (id_parent_node == n_current){
-                //        col = col + 1;
-                //    }
-                //});
-                //console.log(current);
-                //console.log(n_current + ": количество = " + col);
+                $(".node").each(function(i) {
+                    var id_node = $(this).attr('id');
+                    var node = document.getElementById(id_node);
+                    var id_parent_node = node.getAttribute("parent_node");
+                    var level_parent = node.offsetParent;
+                    var id_level_parent = level_parent.getAttribute('id');
+                    if (id_parent_node == n_current){
+                        col = col + 1;
+                    }
+                });
+                console.log(current);
+                console.log(n_current + ": количество = " + col);
 
+
+
+                if (count == 1){
+                    sum_col = col;
+                } else if (col == 0){
+                    sum_col = sum_col - 1;
+                }
+
+                console.log("sum_col = " + sum_col);
+                var sdvig;
+
+                if (sum_col < 1){
+                    sdvig = 0;
+                } else {
+                    sdvig = sum_col - 1;
+                }
+
+                console.log("sdvig = " + sdvig);
+
+                if (count > 1){
+                    left = left + width_node * sdvig;
+                }
+
+                if ((count > 1)&&(col > 1)){
+                    sum_col = sum_col + col - 1;
+                }
+                col = 0;
 
 
 
                 $(".div-level-description").each(function(i) {
                     var id_level = $(this).attr('id');
+
 
 
 
@@ -902,8 +937,9 @@ foreach ($initial_event_model_all as $i){
 
                         if (id_level_parent == id_level) {
                             if (id_parent_node == n_current){
+
                                 $(this).css({
-                                    left: current_left +  left,
+                                    left: parent_node_left + left,
                                     top: parent_node_top + top
                                 });
                                 left = left + width_node;
@@ -937,17 +973,17 @@ foreach ($initial_event_model_all as $i){
             });
 
 
-                var a = $(".current").length;
-                //console.log("--------------------------------");
-                //console.log(a);
+            var a = $(".current").length;
+            //console.log("--------------------------------");
+            //console.log(a);
 
-                //$(".current").each(function(i) {
-                //    var id_current = $(this).attr('id');
-                //    var n_current = parseInt(id_current.match(/\d+/));
-                //    //console.log(n_current);
-                //    var current = document.getElementById(id_current);
-                //    console.log(current);
-                //});
+            //$(".current").each(function(i) {
+            //    var id_current = $(this).attr('id');
+            //    var n_current = parseInt(id_current.match(/\d+/));
+            //    //console.log(n_current);
+            //    var current = document.getElementById(id_current);
+            //    console.log(current);
+            //});
         } while ( a != 0 );
 
         // отрисовка
