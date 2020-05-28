@@ -672,8 +672,8 @@ foreach ($initial_event_model_all as $i){
         //console.log(id_initial_node);
 
         // ширина и высота элемента + отступ
-        var width_node = 200 + 40;
-        var height_node = 200 + 80;
+        var width_node = 200 + 20;
+        var height_node = 200 + 40;
 
 
         var left = 0;
@@ -736,21 +736,6 @@ foreach ($initial_event_model_all as $i){
                         left = left + width_node;
                         top = top + height_node;
 
-                    } else if (id_parent_node == ""){
-                        $(this).css({
-                            left: current_left + left,
-                            top: current_top + top
-                        });
-
-                        console.log(node);
-
-                        left = left + width_node;
-                        //top = top + height_node;
-
-                        var classList = node.classList;
-                        classList.add('current'); // добавить класс
-
-
                     } else if (id_parent_node == n_initial_node){
                         $(this).css({
                             left: parent_node_left + left,
@@ -766,20 +751,118 @@ foreach ($initial_event_model_all as $i){
 
             });
 
+
         });
+
+
+
+        //left = 0;
+        top = 0;
+
+
+        $(".div-level-description").each(function(i) {
+            var id_level = $(this).attr('id');
+
+
+
+            $(".node").each(function(i) {
+
+                var id_node = $(this).attr('id');
+                id_node_any = id_node;
+                //console.log("-------");
+                //console.log(id_node);
+                //console.log("-------");
+
+                var node = document.getElementById(id_node);
+                var n_initial_node = parseInt(id_initial_node.match(/\d+/));
+
+                //console.log(node);
+
+                var id_parent_node = node.getAttribute("parent_node");
+                //console.log(id_parent_node);
+                var parent_node = document.getElementById("node_" + id_parent_node);
+                //console.log(parent_node);
+                if (parent_node != null){
+                    var parent_node_left = parent_node.offsetLeft;
+                    var parent_node_top = parent_node.offsetTop;
+                    //console.log("left = " + parent_node_left + ":" + "top = " + parent_node_top);
+                }
+                //console.log("-------");
+
+
+                var level_parent = node.offsetParent;
+                var id_level_parent = level_parent.getAttribute('id');
+
+
+
+                // curent_ первоначальное положение элемента + 20 отступ от края
+                var current_left = 20 + $(this).position().left;
+                var current_top = 20 + $(this).position().top;
+
+                //console.log("-------");
+                //console.log(node);
+                //console.log(id_parent_node);
+
+                //console.log(id_level_parent);
+                //console.log(id_level);
+
+                if (id_level_parent == id_level){
+                    //console.log("равно");
+                    if (id_parent_node == ""){
+                        $(this).css({
+                            left: current_left + left,
+                            top: current_top + top
+                        });
+
+                        console.log(node);
+
+                        left = left + width_node;
+                        //top = top + height_node;
+
+                        var classList = node.classList;
+                        classList.add('current'); // добавить класс
+
+
+                    }
+                }
+
+
+            });
+
+        });
+
+
 
         top = top + height_node;
 
 
-
+        var col = 0;
 
         do {
             left = 0;
+
+            //col = 0;
+
             $(".current").each(function(i) {
                 var id_current = $(this).attr('id');
                 var n_current = parseInt(id_current.match(/\d+/));
                 //console.log(n_current);
                 var current = document.getElementById(id_current);
+
+
+                //$(".node").each(function(i) {
+                //    var id_node = $(this).attr('id');
+                //    var node = document.getElementById(id_node);
+                //    var id_parent_node = node.getAttribute("parent_node");
+                //    var level_parent = node.offsetParent;
+                //    var id_level_parent = level_parent.getAttribute('id');
+                //    if (id_parent_node == n_current){
+                //        col = col + 1;
+                //    }
+                //});
+                //console.log(current);
+                //console.log(n_current + ": количество = " + col);
+
 
 
 
@@ -814,13 +897,13 @@ foreach ($initial_event_model_all as $i){
 
 
                         // curent_ первоначальное положение элемента + 20 отступ от края
-                        //var current_left = 20 + $(this).position().left;
-                        //var current_top = 20 + $(this).position().top;
+                        var current_left = width_node + 20 + $(this).position().left;
+                        var current_top = 20 + $(this).position().top;
 
                         if (id_level_parent == id_level) {
                             if (id_parent_node == n_current){
                                 $(this).css({
-                                    left: parent_node_left +  left,
+                                    left: current_left +  left,
                                     top: parent_node_top + top
                                 });
                                 left = left + width_node;
