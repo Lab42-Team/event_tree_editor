@@ -210,6 +210,9 @@ foreach ($initial_event_model_all as $i){
     var level_id_on_click = 0;
     var parameter_id_on_click = 0;
 
+    // Текущая связь между элементами
+    var current_connection;
+
     var id_target;
 
     var sequence_mas = <?php echo json_encode($sequence_mas); ?>;//прием массива последовательностей из php
@@ -289,7 +292,6 @@ foreach ($initial_event_model_all as $i){
         });
         q = q+1;
     });
-
 
 
     var instance = "";
@@ -493,7 +495,6 @@ foreach ($initial_event_model_all as $i){
             });
         });
 
-
         instance.bind("connection", function(connection) {
             if (!guest) {
                 var source_id = connection.sourceId;
@@ -526,6 +527,19 @@ foreach ($initial_event_model_all as $i){
             }
         });
 
+
+        // Обработка удаления связи
+        instance.bind("click", function(connection) {
+            if (!guest) {
+                //var source_node = connection.sourceId;
+                var target_node = connection.targetId;
+                id_target = parseInt(target_node.match(/\d+/));
+                current_connection = connection;
+                $("#deleteRelationshipModalForm").modal("show");
+            }
+        });
+
+
         // Обработка при наведении на связь показывает заголовок связи "удалить"
         //instance.bind("mouseover", function(connection) {
         //    if (!guest) {
@@ -548,16 +562,7 @@ foreach ($initial_event_model_all as $i){
         //    }
         //});
 
-        // Обработка удаления связи
-        instance.bind("click", function(connection) {
-            if (!guest) {
-                //var source_node = connection.sourceId;
-                var target_node = connection.targetId;
-                //id_source = parseInt(source_node.match(/\d+/));
-                id_target = parseInt(target_node.match(/\d+/));
-                $("#deleteRelationshipModalForm").modal("show");
-            }
-        });
+
     });
 
 

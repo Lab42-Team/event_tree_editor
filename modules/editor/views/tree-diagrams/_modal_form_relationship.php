@@ -39,7 +39,16 @@ use app\modules\main\models\Lang;
                         $("#deleteRelationshipModalForm").modal("hide");
 
                         //----------удаляем все соединения
-                        instance.deleteEveryEndpoint();
+                        //instance.deleteEveryEndpoint();
+
+                        instance.deleteConnection(current_connection);
+
+                        //deleteConnectionsForElement
+
+                        // Обновление формы редактора
+                        //instance.repaintEverything();
+
+
                         //----------восстанавливаем нужные соединения
                         $.each(mas_data_node, function (i, elem_node) {
                             //убираем удаленную связь
@@ -48,14 +57,14 @@ use app\modules\main\models\Lang;
                             }
                         });
 
-                        $.each(mas_data_node, function (j, elem_node) {
-                            if (elem_node.parent_node != null){
-                                instance.connect({
-                                    source: "node_" + elem_node.parent_node,
-                                    target: "node_" + elem_node.id,
-                                });
-                            }
-                        });
+                        //$.each(mas_data_node, function (j, elem_node) {
+                        //    if (elem_node.parent_node != null){
+                        //        instance.connect({
+                        //            source: "node_" + elem_node.parent_node,
+                        //            target: "node_" + elem_node.id,
+                        //        });
+                        //    }
+                        //});
                         //-----------------------------
 
                         //console.log("Массив после удаления связи где тарджет = " + data['id']);

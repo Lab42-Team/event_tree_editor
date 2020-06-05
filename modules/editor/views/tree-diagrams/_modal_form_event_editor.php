@@ -279,9 +279,8 @@ use app\modules\editor\models\Node;
                             var div_level_layer = document.getElementById('level_description_'+ data['id_level']);
                             instance.removeFromGroup(div_event);
 
-                            instance.deleteConnectionsForElement(div_event);//визуально убираем соединения
-
-                            div_event.remove(); // удаляем старый node
+                            // удаляем старый node
+                            instance.remove(div_event);
 
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
 
@@ -320,9 +319,7 @@ use app\modules\editor\models\Node;
                                 maxConnections: -1,
                             });
 
-                            //----------удаляем все соединения
-                            instance.deleteEveryEndpoint();
-                            //----------восстанавливаем нужные соединения
+                            //редактируем массив mas_data_node (чистим от удаляемого элемента)
                             $.each(mas_data_node, function (i, elem_node) {
                                 //убираем входящие
                                 if (data['id'] == elem_node.id){
@@ -333,20 +330,6 @@ use app\modules\editor\models\Node;
                                     mas_data_node[i].parent_node = null;
                                 }
                             });
-
-                            $.each(mas_data_node, function (j, elem_node) {
-                                if (elem_node.parent_node != null){
-                                    instance.connect({
-                                        source: "node_" + elem_node.parent_node,
-                                        target: "node_" + elem_node.id,
-                                    });
-                                }
-                            });
-                            //-----------------------------
-
-                            //console.log("Массив после изменения события = " + data['id']);
-                            //console.log(mas_data_node);
-                            //console.log("--------------------");
 
                             //заносим изменения в массив sequence_mas
                             var level = parseInt(data['id_level'], 10);
@@ -447,15 +430,11 @@ use app\modules\editor\models\Node;
                     if (data['success']) {
                         // Скрывание модального окна
                         $("#deleteEventModalForm").modal("hide");
-
                         var div_del_event = document.getElementById('node_' + node_id_on_click);
                         instance.removeFromGroup(div_del_event);//удаляем из группы
-                        instance.deleteConnectionsForElement(div_del_event);//визуально убираем соединения
-                        div_del_event.remove(); // удаляем старый node
+                        instance.remove(div_del_event);// удаляем node
 
-                        //----------удаляем все соединения
-                        instance.deleteEveryEndpoint();
-                        //----------восстанавливаем нужные соединения
+                        //редактируем массив mas_data_node (чистим от удаляемого элемента)
                         //убираем соединения от удаляемого элемента
                         var temporary_mas_data_node = {};
                         var q = 0;
@@ -483,20 +462,6 @@ use app\modules\editor\models\Node;
                             }
                         });
                         mas_data_node = temporary_mas_data_node;
-                        //-----------------------------
-                        $.each(mas_data_node, function (j, elem_node) {
-                            if (elem_node.parent_node != null){
-                                instance.connect({
-                                    source: "node_" + elem_node.parent_node,
-                                    target: "node_" + elem_node.id,
-                                });
-                            }
-                        });
-                        //-----------------------------
-
-                        //console.log("Массив после удаления события = " + data['id']);
-                        //console.log(mas_data_node);
-                        //console.log("--------------------");
 
                         //заносим изменения в массив sequence_mas
                         var pos_i = 0;

@@ -400,13 +400,10 @@ use app\modules\main\models\Lang;
                                 //удаляем их
                                 $.each(mas_mechanism, function (i, elem) {
                                     var id_mechanism = parseInt(elem.getAttribute('id').match(/\d+/));
-                                    //var div_del_mechanism = document.getElementById('node_' + id_mechanism);
-                                    //div_del_mechanism.remove(); // удаляем старый node
                                     del_mechanism_node[q] = {
                                         "mechanism":id_mechanism,
                                     };
                                     q = q+1;
-
                                 });
                             }
                         }
@@ -414,7 +411,8 @@ use app\modules\main\models\Lang;
                         //удаляем механизмы
                         $.each(del_mechanism_node, function (i, elem) {
                             var div_del_mechanism = document.getElementById('node_' + elem.mechanism);
-                            div_del_mechanism.remove(); // удаляем node
+                            instance.removeFromGroup(div_del_mechanism);//удаляем из группы
+                            instance.remove(div_del_mechanism);// удаляем node
                         });
 
                         var div_level = document.getElementById('level_' + level_id_on_click);
@@ -424,27 +422,8 @@ use app\modules\main\models\Lang;
                             //если группа существует то
                             instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
                         }
-                        div_level.remove(); // удаляем визуально уровень
+                        instance.remove(div_level);// удаляем визуально уровень
 
-                        //----------удаляем все соединения
-                        instance.deleteEveryEndpoint();
-                        //----------строим соединения заного
-                        $.each(mas_data_node, function (j, elem_node) {
-                            if (elem_node.parent_node != null){
-                                instance.connect({
-                                    source: "node_" + elem_node.parent_node,
-                                    target: "node_" + elem_node.id,
-                                });
-                            }
-                        });
-                        //-----------------------------
-
-                        //console.log("mas_data_level---------");
-                        //console.log(mas_data_level);
-                        //console.log("mas_data_node---------");
-                        //console.log(mas_data_node);
-                        //console.log("sequence_mas---------");
-                        //console.log(sequence_mas);
                         document.getElementById("pjax-event-editor-button").click();
                     }
                 },
