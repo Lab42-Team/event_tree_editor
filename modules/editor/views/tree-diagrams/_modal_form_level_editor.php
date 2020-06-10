@@ -94,12 +94,11 @@ use app\modules\main\models\Lang;
                             var removed = level_mas.push([id, parent_level, name, description]);
 
 
-                            //console.log(mas_data_level);
                             var j = 0;
                             $.each(mas_data_level, function (i, elem) {
                                 j = j + 1;
                             });
-                            //console.log(j);
+
                             mas_data_level[j] = {id_level:id, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
@@ -284,7 +283,6 @@ use app\modules\main\models\Lang;
                         mas_data_level = temporary_mas_data_level;
                         //--------- убираем из массива элементы на удаляемом уровне и их связи
                         var div_level_layer = document.getElementById('level_description_'+ level_id_on_click);
-                        //console.log(div_level_layer);
                         var mas_node = div_level_layer.getElementsByClassName("node");
 
                         $.each(mas_node, function (i, elem) {
@@ -334,10 +332,10 @@ use app\modules\main\models\Lang;
                         //-------------
 
                         if (data['id_level_descendent'] != null){
-                            //console.log("следующий уровень есть");
+                            //если следующий уровень есть то
                             var div_level_descendent_layer = document.getElementById('level_description_'+ data['id_level_descendent']);//определяем следущий уровень
                             if (data['initial']) {
-                                //console.log("начальный уровень");
+                                //если начальный уровень есть то
                                 var mas_mechanism = div_level_descendent_layer.getElementsByClassName("div-mechanism");//находим механизмы на следующем уровне
 
                                 $.each(mas_mechanism, function (i, elem) {
@@ -392,7 +390,7 @@ use app\modules\main\models\Lang;
                         var del_mechanism_node = {};
                         var q = 0;
                         if (data['id_level_descendent'] != null) {
-                            //console.log("следующий уровень есть");
+                            // если следующий уровень есть то
                             var div_level_descendent_layer = document.getElementById('level_description_' + data['id_level_descendent']);//определяем следущий уровень
                             if (data['initial']) {
                                 //находим механизмы на следующем уровне

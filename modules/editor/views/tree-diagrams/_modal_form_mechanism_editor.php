@@ -1,7 +1,6 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use yii\bootstrap\Alert;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
@@ -130,11 +129,6 @@ use app\modules\main\models\Lang;
                                 j = j + 1;
                             });
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
-
-                            //console.log("Массив после добавления механизма = " + data['id']);
-                            //console.log(mas_data_node);
-                            //console.log("--------------------");
-
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-mechanism-form", data);

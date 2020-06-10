@@ -1,7 +1,6 @@
 <?php
 
 use yii\widgets\ActiveForm;
-use yii\bootstrap\Alert;
 use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
@@ -19,7 +18,7 @@ use app\modules\editor\models\Node;
     });
 </script>
 
-<!-- Модальное окно добавления нового уровня -->
+<!-- Модальное окно добавления нового события -->
 <?php Modal::begin([
     'id' => 'addEventModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_ADD_NEW_EVENT') . '</h3>',
@@ -179,11 +178,6 @@ use app\modules\editor\models\Node;
                                 j = j + 1;
                             });
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
-
-                            //console.log("Массив после добавления события = " + data['id']);
-                            //console.log(mas_data_node);
-                            //console.log("--------------------");
-
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
