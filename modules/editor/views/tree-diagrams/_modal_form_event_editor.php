@@ -203,7 +203,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'label_level']); ?>
+<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
@@ -367,7 +367,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'label_level']); ?>
+<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'edit_label_level']); ?>
 
 <div id="alert_event_level_id" style="display:none;" class="alert-warning alert">
     <?php echo Yii::t('app', 'ALERT_CHANGE_LEVEL'); ?>

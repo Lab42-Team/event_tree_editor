@@ -186,10 +186,10 @@ foreach ($initial_event_model_all as $i){
                 if (initial_event.length == 0){
                     //блокировка изменения левела
                     document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
-                    document.getElementById('label_level').style.display = "none";
+                    document.getElementById('add_label_level').style.display = "none";
                 } else {
                     document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
-                    document.getElementById('label_level').style.display = "";
+                    document.getElementById('add_label_level').style.display = "";
                 }
             });
         } else {
@@ -1078,7 +1078,7 @@ foreach ($initial_event_model_all as $i){
                         //блокировка изменения левела
                         document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "none";
 
-                        document.getElementById('label_level').style.display = "none";
+                        document.getElementById('edit_label_level').style.display = "none";
 
                         $("#editEventModalForm").modal("show");
                     }
@@ -1093,7 +1093,7 @@ foreach ($initial_event_model_all as $i){
                         //разблокировка изменения левела
                         document.forms["edit-event-form"].elements["Node[level_id]"].style.display = "";
 
-                        document.getElementById('label_level').style.display = "";
+                        document.getElementById('edit_label_level').style.display = "";
 
                         $("#editEventModalForm").modal("show");
                     }
