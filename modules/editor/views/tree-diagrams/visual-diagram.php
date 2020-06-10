@@ -203,6 +203,16 @@ foreach ($initial_event_model_all as $i){
             $.each(del_node, function (i, node) {
                 node.style = "display:none;";
             });
+
+            var edit_node = document.getElementsByClassName("edit");
+            $.each(edit_node, function (i, node) {
+                node.style = "display:none;";
+            });
+
+            var param_node = document.getElementsByClassName("param");
+            $.each(param_node, function (i, node) {
+                node.style = "display:none;";
+            });
         }
     });
 
@@ -1307,8 +1317,8 @@ foreach ($initial_event_model_all as $i){
                 <div id="level_<?= $value->id ?>" class="div-level">
                     <div id="level_name_<?= $value->id ?>" class="div-level-name">
                         <div id="level_title_<?= $value->id ?>" class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
-                        <div id="level_del_<?= $value->id ?>" class="del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                        <div id="level_edit_<?= $value->id ?>" class="edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                        <div id="level_del_<?= $value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                        <div id="level_edit_<?= $value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                     </div>
                     <div id="level_description_<?= $value->id ?>" class="div-level-description">
                         <!--?= $level_value->description ?>-->
@@ -1318,9 +1328,9 @@ foreach ($initial_event_model_all as $i){
                                 <div class="content-event">
                                     <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
                                     <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
-                                    <div id="node_del_<?= $initial_event_value->id ?>" class="del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                                    <div id="node_edit_<?= $initial_event_value->id ?>" class="edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                    <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                    <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                    <div id="node_edit_<?= $initial_event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                    <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
                                 </div>
 
                                 <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1328,8 +1338,8 @@ foreach ($initial_event_model_all as $i){
                                         <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
                                             <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                             <div class="button-parameter">
-                                                <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                                <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                             </div>
                                         </div>
                                     <?php } ?>
@@ -1347,9 +1357,9 @@ foreach ($initial_event_model_all as $i){
                                             <div class="content-event">
                                                 <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                 <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
-                                                <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                                                <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                                <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
                                             </div>
 
                                             <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1357,8 +1367,8 @@ foreach ($initial_event_model_all as $i){
                                                     <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
                                                         <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                                         <div class="button-parameter">
-                                                            <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                                            <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash"  title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                            <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                            <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash"  title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                         </div>
                                                     </div>
                                                 <?php } ?>
@@ -1382,8 +1392,8 @@ foreach ($initial_event_model_all as $i){
                         <div id="level_<?= $level_value->id ?>" class="div-level">
                             <div id="level_name_<?= $level_value->id ?>" class="div-level-name">
                                 <div id="level_title_<?= $level_value->id ?>" class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
-                                <div id="level_del_<?= $level_value->id ?>" class="del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                                <div id="level_edit_<?= $level_value->id ?>" class="edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                <div id="level_del_<?= $level_value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                <div id="level_edit_<?= $level_value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                             </div>
                             <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->
@@ -1397,8 +1407,8 @@ foreach ($initial_event_model_all as $i){
                                                     class="div-mechanism node" title="<?= $mechanism_value->name ?>">
                                                     <div class="div-mechanism-m">M</div>
                                                     <div class="ep ep-mechanism glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
-                                                    <div id="node_del_<?= $mechanism_value->id ?>" class="del-mechanism glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                                                    <div id="node_edit_<?= $mechanism_value->id ?>" class="edit-mechanism glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                    <div id="node_del_<?= $mechanism_value->id ?>" class="del del-mechanism glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                    <div id="node_edit_<?= $mechanism_value->id ?>" class="edit edit-mechanism glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                 </div>
                                             <?php } ?>
                                         <?php endforeach; ?>
@@ -1409,9 +1419,9 @@ foreach ($initial_event_model_all as $i){
                                                     <div class="content-event">
                                                         <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
                                                         <div class="ep ep-event glyphicon-share-alt"  title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
-                                                        <div id="node_del_<?= $event_value->id ?>" class="del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
-                                                        <div id="node_edit_<?= $event_value->id ?>" class="edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                                        <div id="node_add_parameter_<?= $event_value->id ?>" class="add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                        <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                        <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                        <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
                                                     </div>
 
                                                     <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1419,8 +1429,8 @@ foreach ($initial_event_model_all as $i){
                                                             <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
                                                                 <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
                                                                 <div class="button-parameter">
-                                                                    <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                                                    <div id="del_parameter_<?= $parameter_value->id ?>" class="del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                                    <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                                    <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                                 </div>
                                                             </div>
                                                         <?php } ?>

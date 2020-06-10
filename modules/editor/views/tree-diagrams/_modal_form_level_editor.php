@@ -57,13 +57,13 @@ use app\modules\main\models\Lang;
 
                             var div_del = document.createElement('div');
                             div_del.id = 'level_del_' + data['id'];
-                            div_del.className = 'del-level glyphicon-trash';
+                            div_del.className = 'del del-level glyphicon-trash';
                             div_del.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                             div_level_name.append(div_del);
 
                             var div_edit = document.createElement('div');
                             div_edit.id = 'level_edit_' + data['id'];
-                            div_edit.className = 'edit-level glyphicon-pencil';
+                            div_edit.className = 'edit edit-level glyphicon-pencil';
                             div_edit.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                             div_level_name.append(div_edit);
 
