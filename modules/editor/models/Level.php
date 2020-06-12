@@ -89,12 +89,12 @@ class Level extends \yii\db\ActiveRecord
 
     public static function getLevelsArray($id)
     {
-        return ArrayHelper::map(self::find()->where(['tree_diagram' => $id])->all(), 'id', 'name');
+        return ArrayHelper::map(self::find()->where(['tree_diagram' => $id])->orderBy('id')->all(), 'id', 'name');
     }
 
     public static function getWithoutInitialLevelsArray($id)
     {
         return ArrayHelper::map(self::find()->where(['tree_diagram' => $id])
-            ->andWhere(['not', ['parent_level' => null]])->all(), 'id', 'name');
+            ->andWhere(['not', ['parent_level' => null]])->orderBy('id')->all(), 'id', 'name');
     }
 }
