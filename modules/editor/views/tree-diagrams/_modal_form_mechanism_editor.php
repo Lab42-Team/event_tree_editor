@@ -29,6 +29,7 @@ use app\modules\main\models\Lang;
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
             $("#add-mechanism-button").click(function(e) {
+                e.preventDefault();
                 var form = $("#add-mechanism-form");
                 // Ajax-запрос
                 $.ajax({
@@ -144,7 +145,6 @@ use app\modules\main\models\Lang;
 
 <?php $form = ActiveForm::begin([
     'id' => 'add-mechanism-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 
@@ -193,6 +193,7 @@ use app\modules\main\models\Lang;
     $(document).ready(function() {
         // Обработка нажатия кнопки сохранения
         $("#edit-mechanism-button").click(function(e) {
+            e.preventDefault();
             var form = $("#edit-mechanism-form");
             // Ajax-запрос
             $.ajax({
@@ -311,7 +312,6 @@ use app\modules\main\models\Lang;
 
 <?php $form = ActiveForm::begin([
     'id' => 'edit-mechanism-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 

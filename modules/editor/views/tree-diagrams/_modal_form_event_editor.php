@@ -30,6 +30,7 @@ use app\modules\editor\models\Node;
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
             $("#add-event-button").click(function(e) {
+                e.preventDefault();
                 var form = $("#add-event-form");
                 // Ajax-запрос
                 $.ajax({
@@ -193,7 +194,6 @@ use app\modules\editor\models\Node;
 
 <?php $form = ActiveForm::begin([
     'id' => 'add-event-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 
@@ -242,6 +242,7 @@ use app\modules\editor\models\Node;
     $(document).ready(function() {
         // Обработка нажатия кнопки сохранения
         $("#edit-event-button").click(function(e) {
+            e.preventDefault();
             var form = $("#edit-event-form");
             // Ajax-запрос
             $.ajax({
@@ -357,7 +358,6 @@ use app\modules\editor\models\Node;
 
 <?php $form = ActiveForm::begin([
     'id' => 'edit-event-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 

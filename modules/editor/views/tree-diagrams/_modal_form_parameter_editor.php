@@ -23,6 +23,7 @@ use app\modules\editor\models\Parameter;
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
             $("#add-parameter-button").click(function(e) {
+                e.preventDefault();
                 var form = $("#add-parameter-form");
                 // Ajax-запрос
                 $.ajax({
@@ -102,7 +103,6 @@ use app\modules\editor\models\Parameter;
 
 <?php $form = ActiveForm::begin([
     'id' => 'add-parameter-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 
@@ -155,6 +155,7 @@ use app\modules\editor\models\Parameter;
     $(document).ready(function() {
         // Обработка нажатия кнопки сохранения
         $("#edit-parameter-button").click(function(e) {
+            e.preventDefault();
             var form = $("#edit-parameter-form");
             // Ajax-запрос
             $.ajax({
@@ -198,7 +199,6 @@ use app\modules\editor\models\Parameter;
 
 <?php $form = ActiveForm::begin([
     'id' => 'edit-parameter-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 

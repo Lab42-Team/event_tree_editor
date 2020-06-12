@@ -20,6 +20,7 @@ use app\modules\main\models\Lang;
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
             $("#add-level-button").click(function(e) {
+                e.preventDefault();
                 var form = $("#add-level-form");
                 // Ajax-запрос
                 $.ajax({
@@ -115,7 +116,6 @@ use app\modules\main\models\Lang;
 
     <?php $form = ActiveForm::begin([
         'id' => 'add-level-form',
-        'enableAjaxValidation' => true,
         'enableClientValidation' => true,
     ]); ?>
 
@@ -161,6 +161,7 @@ use app\modules\main\models\Lang;
     $(document).ready(function() {
         // Обработка нажатия кнопки сохранения
         $("#edit-level-button").click(function(e) {
+            e.preventDefault();
             var form = $("#edit-level-form");
             // Ajax-запрос
             $.ajax({
@@ -205,7 +206,6 @@ use app\modules\main\models\Lang;
 
 <?php $form = ActiveForm::begin([
     'id' => 'edit-level-form',
-    'enableAjaxValidation' => true,
     'enableClientValidation' => true,
 ]); ?>
 
