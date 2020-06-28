@@ -19,6 +19,9 @@ return [
     'NAV_ADD_EVENT' => 'Событие',
     'NAV_ADD_MECHANISM' => 'Механизм',
 
+    'NAV_EXPORT' => 'Экспортировать',
+    'NAV_EXPORT_EETD' => 'Экспортировать EETD',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Возможные действия',
 

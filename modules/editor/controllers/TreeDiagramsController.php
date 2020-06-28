@@ -15,6 +15,7 @@ use app\modules\editor\models\Parameter;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
 use yii\filters\AccessControl;
+use app\components\EventTreeXMLGenerator;
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
@@ -187,6 +188,11 @@ class TreeDiagramsController extends Controller
 
         $array_levels = Level::getLevelsArray($id);
         $array_levels_initial_without = Level::getWithoutInitialLevelsArray($id);
+
+        if (Yii::$app->request->isPost) {
+            $code_generator = new EventTreeXMLGenerator();
+            $code_generator->generateEETDXMLCode($id);
+        }
 
         return $this->render('visual-diagram', [
             'model' => $this->findModel($id),

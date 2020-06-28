@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use app\modules\main\models\Lang;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -24,7 +25,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'TREE_DIAGRAMS_PAGE_T
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
-$this->params['menu'] = [
+$this->params['menu_add'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
         'options' => ['id'=>'nav_add_level', 'class' => 'enabled',
             'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
@@ -35,6 +36,15 @@ $this->params['menu'] = [
         'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled',
             'data-toggle'=>'modal', 'data-target'=>'']],
 ];
+
+$this->params['menu_export'] = [
+    '<li>'
+    . Html::beginForm(['/editor/tree-diagrams/visual-diagram', 'id' => $model->id], 'post')
+    . Html::submitButton(Yii::t('app', 'NAV_EXPORT_EETD'),['class' => 'btn'])
+    . Html::endForm()
+    . '</li>',
+];
+
 ?>
 
 
@@ -59,6 +69,11 @@ foreach ($level_model_all as $l){
 $parameter_mas = array();
 foreach ($parameter_model_all as $p){
     array_push($parameter_mas, [$p->id, $p->name, $p->description, $p->operator, $p->value]);
+}
+
+$initial_event_mas = array();
+foreach ($initial_event_model_all as $i){
+    array_push($initial_event_mas, [$i->id]);
 }
 ?>
 
@@ -105,21 +120,7 @@ $this->registerJsFile('/js/modal-form.js', ['position' => yii\web\View::POS_HEAD
 $this->registerCssFile('/css/visual-diagram.css', ['position'=>yii\web\View::POS_HEAD]);
 
 $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  // jsPlumb 2.12.9
-//$this->registerJsFile('/js/visual-diagram.js', ['position'=>yii\web\View::POS_HEAD]);
 ?>
-
-
-
-
-<?php
-$initial_event_mas = array();
-foreach ($initial_event_model_all as $i){
-    array_push($initial_event_mas, [$i->id]);
-}
-?>
-
-
-
 
 
 <script type="text/javascript">
@@ -548,31 +549,6 @@ foreach ($initial_event_model_all as $i){
                 $("#deleteRelationshipModalForm").modal("show");
             }
         });
-
-
-        // Обработка при наведении на связь показывает заголовок связи "удалить"
-        //instance.bind("mouseover", function(connection) {
-        //    if (!guest) {
-        //        var target_id = connection.targetId;
-        //        if (target_id.search("node") >= 0) {
-                    //connection.addOverlay(["Label", {
-                    //    label: message_label,
-                    //    location: 0.5,
-                    //    id: "label_connector",
-                    //    cssClass: "bLabel"
-                    //}]);
-        //        }
-        //    }
-        //});
-
-        // Обработка при отведении от связи скрывает заголовок
-        //instance.bind("mouseout", function(connection) {
-        //    if (!guest) {
-            //    connection.removeOverlay("label_connector");
-        //    }
-        //});
-
-
     });
 
 
@@ -1171,39 +1147,6 @@ foreach ($initial_event_model_all as $i){
             document.getElementById("level_edit_" + level_id_on_click).click();
         }
     });
-
-    //
-    //$(document).on('contextmenu', '.node', function() {
-    //    node = $(this).attr('id');
-    //    console.log(node);
-    //    console.log("------------");
-    //    console.log("текущее значение массива");
-    //    console.log(mas_data_node);
-    //    console.log("--------------------");
-    //});
-
-
-
-    //$(document).on('contextmenu', '.div-level', function() {
-    //    id_level = parseInt($(this).attr('id').match(/\d+/));
-    //    console.log("уровень----" + id_level);
-    //    var div_level_layer = document.getElementById('level_description_'+ id_level);
-    //    //console.log(div_level_layer);
-    //    mas_node = div_level_layer.getElementsByClassName("node");
-    //
-    //    $.each(mas_node, function (i, elem) {
-    //        id_node = parseInt(elem.getAttribute('id').match(/\d+/));
-    //        console.log(id_node);
-    //    });
-    //    console.log("mas_data_level----первоначальное----");
-    //    console.log(mas_data_level);
-    //    console.log("mas_data_node----первоначальное----");
-    //    console.log(mas_data_node);
-    //    console.log("sequence_mas----первоначальное----");
-    //    console.log(sequence_mas);
-    //});
-
-
 
 
     // удаление события

@@ -19,6 +19,9 @@ return [
     'NAV_ADD_EVENT' => 'Event',
     'NAV_ADD_MECHANISM' => 'Mechanism',
 
+    'NAV_EXPORT' => 'Export',
+    'NAV_EXPORT_EETD' => 'Export EETD',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Possible actions',
 

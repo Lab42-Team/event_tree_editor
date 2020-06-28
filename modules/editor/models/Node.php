@@ -3,6 +3,7 @@
 namespace app\modules\editor\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
 
 /**

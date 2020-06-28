@@ -49,9 +49,20 @@ AppAsset::register($this);
                          //и тогда выводить кнопку меню на экран
                         ['label' => '<span class="glyphicon glyphicon-plus"></span> ' .
                             Yii::t('app', 'NAV_ADD'),
-                            'items' => $this->params['menu']                    ]
+                            'items' => $this->params['menu_add']]
                     ):("")
                 ):(""),
+
+                !Yii::$app->user->isGuest ? (
+                    // условие проверки есть ли visual-diagram в URL
+                    (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
+                        //и тогда выводить кнопку меню на экран
+                        ['label' => '<span class="glyphicon glyphicon-export"></span> ' .
+                            Yii::t('app', 'NAV_EXPORT'),
+                            'items' => $this->params['menu_export']]
+                    ):("")
+                ):(""),
+
                 ['label' => '<span class="glyphicon glyphicon-tree-deciduous"></span> ' .
                     Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
                 ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
