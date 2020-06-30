@@ -34,22 +34,75 @@ class EventTreeXMLGenerator
     //}
 
 
+    public  $node_element;
+
+
+
+    public static function drawingParameter($xml, $id_event, $xml_element)
+    {
+        //подбор всех Parameter
+        $parameter_elements = Parameter::find()->where(['node' => $id_event])->all();
+        if ($parameter_elements != null){
+            foreach ($parameter_elements as $p_elem){
+                //отрисовка "Parameter"
+                $parameter_element = $xml->createElement('Parameter');
+                $parameter_element->setAttribute('id', $p_elem->id);
+                $parameter_element->setAttribute('name', $p_elem->name);
+                $parameter_element->setAttribute('value', $p_elem->value);
+                $parameter_element->setAttribute('description', $p_elem->description);
+                $xml_element->appendChild($parameter_element);
+            }
+        }
+
+    }
+
+
+
+    public static function drawingEvent($xml, $event, $xml_element, $id_level)
+    {
+
+        //Проверка на том ли уровне событие
+        $sequence_parent_node = Sequence::find()->where(['node' => $event->id])->one();
+        if (($sequence_parent_node!= null) && ($sequence_parent_node->level == $id_level)){
+
+            // добавление "Event"
+            $node_element = $xml->createElement('Event');
+            $node_element->setAttribute('id', $event->id);
+            if ($event->parent_node != null){
+                $node_element->setAttribute('parent_node', $event->parent_node);
+            }
+            $node_element->setAttribute('type', $event->getTypeName());
+            $node_element->setAttribute('name', $event->name);
+            $node_element->setAttribute('description', $event->description);
+            $xml_element->appendChild($node_element);
+
+            //отрисовка "Parameter"
+            //self::drawingParameter($xml, $event->id, $node_element);
+
+            //добавление дочки "Event"
+            $node_elements = Node::find()->where(['parent_node' => $event->id])->all();
+            foreach ($node_elements as $n_elem) {
+                self::drawingEvent($xml, $n_elem, $node_element, $id_level);
+            }
+
+
+        }
+
+    }
 
 
     public function generateEETDXMLCode($id)
     {
-
-
-
         // Определение наименования файла
         $file = 'eetd_file.xml';
         if (!file_exists($file))
             fopen($file, 'w');
 
 
+
+
         // Создание документа DOM с кодировкой UTF8
-        //$xml = new DomDocument('1.0', 'UTF-8');
-        $xml = new DomDocument('1.0', 'windows-1251');
+        $xml = new DomDocument('1.0', 'UTF-8');
         $diagram = TreeDiagram::find()->where(['id' => $id])->one();
         // Создание корневого узла Diagram
         $diagram_element = $xml->createElement('Diagram');
@@ -59,13 +112,6 @@ class EventTreeXMLGenerator
         $diagram_element->setAttribute('description', $diagram->description);
         // Добавление корневого узла Diagram в XML-документ
         $xml->appendChild($diagram_element);
-
-        //iconv("Windows-1251", "UTF-8//IGNORE", $diagram->name)
-
-
-
-
-
 
 
         //подбор всех Level
@@ -85,101 +131,16 @@ class EventTreeXMLGenerator
                 $sequence_elements = Sequence::find()->where(['level' => $l_elem->id])->all();
                 foreach ($sequence_elements as $s_elem) {
 
-                    //количество дочерних элементов
-                    $count_child_elements = 0;
+                    $event = Node::find()->where(['id' => $s_elem->node])->one();
 
-                    $p_n_element = Node::find()->where(['id' => $s_elem->node])->one();
-                    if ($p_n_element != null) {
+                    //$id_parent_node = $event->id;
+                    $sequence_parent_node = Sequence::find()->where(['node' => $event->parent_node])->one();
 
-                        $id_parent_node = $p_n_element->id;
-                        $sequence_parent_node = Sequence::find()->where(['node' => $p_n_element->parent_node])->one();
-
-                        if (($p_n_element->parent_node == null)||(($sequence_parent_node!= null) && ($sequence_parent_node->level != $l_elem->id))){
-                            // Создание "Event"
-                            $parent_node_element = $xml->createElement('Event');
-                            $parent_node_element->setAttribute('id', $p_n_element->id);
-                            if (($sequence_parent_node!= null) && ($sequence_parent_node->level != $l_elem->id)){
-                                $parent_node_element->setAttribute('event-id', $p_n_element->parent_node);
-                            }
-                            $parent_node_element->setAttribute('type', $p_n_element->getTypeName());
-                            $parent_node_element->setAttribute('name', $p_n_element->name);
-                            $parent_node_element->setAttribute('description', $p_n_element->description);
-                            $level_element->appendChild($parent_node_element);
-
-
-                            //определение количества дочерних элементов
-                            foreach ($sequence_elements as $s_n_elem) {
-                                $p_n_element = Node::find()->where(['id' => $s_n_elem->node, 'parent_node' => $id_parent_node])->one();
-                                if ($p_n_element != null){
-                                    $count_child_elements = $count_child_elements + 1;
-                                }
-                            }
-
-                            if ($count_child_elements >= 2){
-                                // Создание "Operator"
-                                $operator_element = $xml->createElement('Operator');
-                                $operator_element->setAttribute('id', "logop-" . $id_parent_node);
-                                $operator_element->setAttribute('name', "AND");
-                                $parent_node_element->appendChild($operator_element);
-
-                                $node_elements = Node::find()->where(['parent_node' => $id_parent_node])->all();
-                                foreach ($node_elements as $n_elem) {
-                                    // Создание дочерних "Event"
-                                    $node_element = $xml->createElement('Event');
-                                    $node_element->setAttribute('id', $n_elem->id);
-                                    $node_element->setAttribute('type', $n_elem->getTypeName());
-                                    $node_element->setAttribute('name', $n_elem->name);
-                                    $node_element->setAttribute('description', $n_elem->description);
-                                    $operator_element->appendChild($node_element);
-
-                                    //подбор всех Parameter
-                                    $parameter_elements = Parameter::find()->where(['node' => $n_elem->id])->all();
-                                    if ($parameter_elements != null){
-                                        foreach ($parameter_elements as $p_elem){
-                                            // Создание "parameter"
-                                            $parameter_element = $xml->createElement('Parameter');
-                                            $parameter_element->setAttribute('id', $p_elem->id);
-                                            $parameter_element->setAttribute('name', $p_elem->name);
-                                            $parameter_element->setAttribute('value', $p_elem->value);
-                                            $parameter_element->setAttribute('description', $p_elem->description);
-                                            $node_element->appendChild($parameter_element);
-                                        }
-                                    }
-                                }
-                            } elseif ( $count_child_elements == 1){
-                                $n_elem = Node::find()->where(['parent_node' => $id_parent_node])->one();
-                                // Создание дочерних "Event"
-                                $node_element = $xml->createElement('Event');
-                                $node_element->setAttribute('id', $n_elem->id);
-                                $node_element->setAttribute('type', $n_elem->getTypeName());
-                                $node_element->setAttribute('name', $n_elem->name);
-                                $node_element->setAttribute('description', $n_elem->description);
-                                $parent_node_element->appendChild($node_element);
-
-                                //подбор всех Parameter
-                                $parameter_elements = Parameter::find()->where(['node' => $n_elem->id])->all();
-                                if ($parameter_elements != null){
-                                    foreach ($parameter_elements as $p_elem){
-                                        // Создание "parameter"
-                                        $parameter_element = $xml->createElement('Parameter');
-                                        $parameter_element->setAttribute('id', $p_elem->id);
-                                        $parameter_element->setAttribute('name', $p_elem->name);
-                                        $parameter_element->setAttribute('value', $p_elem->value);
-                                        $parameter_element->setAttribute('description', $p_elem->description);
-                                        $node_element->appendChild($parameter_element);
-                                    }
-                                }
-
-                            }
-                        }
-
-
-
-
-
-
-
+                    if (($event->parent_node == null)||(($sequence_parent_node!= null) && ($sequence_parent_node->level != $l_elem->id))){
+                        self::drawingEvent($xml, $event, $level_element, $l_elem->id);
                     }
+
+
 
 
                 }
