@@ -15,28 +15,8 @@ use app\modules\editor\models\Sequence;
 
 class EventTreeXMLGenerator
 {
-
-    //public function generateEETDXMLCode($id)
-    //{
-        // Определение наименования файла
-    //    $file = 'exported_file.eetd';
-        // Создание и открытие данного файла на запись, если он не существует
-    //    if (!file_exists($file))
-    //        fopen($file, 'w');
-        // Начальное описание файла базы знаний
-    //    $content = ";***************************************\r\n";
-    //    $content .= "id = " . $id;
-        // Выдача CLP-файла пользователю для скачивания
-    //    header("Content-type: application/octet-stream");
-    //    header('Content-Disposition: filename="'.$file.'"');
-    //    echo $content;
-    //    exit;
-    //}
-
-
     public  $node_element;
-
-
+    public  $count_child;
 
     public static function drawingParameter($xml, $id_event, $xml_element)
     {
@@ -57,10 +37,9 @@ class EventTreeXMLGenerator
     }
 
 
-
     public static function drawingEvent($xml, $event, $xml_element, $id_level)
     {
-
+        $count_child = 0;
         //Проверка на том ли уровне событие
         $sequence_parent_node = Sequence::find()->where(['node' => $event->id])->one();
         if (($sequence_parent_node!= null) && ($sequence_parent_node->level == $id_level)){
@@ -77,17 +56,38 @@ class EventTreeXMLGenerator
             $xml_element->appendChild($node_element);
 
             //отрисовка "Parameter"
-            //self::drawingParameter($xml, $event->id, $node_element);
+            self::drawingParameter($xml, $event->id, $node_element);
 
-            //добавление дочки "Event"
-            $node_elements = Node::find()->where(['parent_node' => $event->id])->all();
-            foreach ($node_elements as $n_elem) {
-                self::drawingEvent($xml, $n_elem, $node_element, $id_level);
+            //определение сколько дочек элемента $event->id на уровне $id_level
+            $nodes = Node::find()->where(['parent_node' => $event->id])->all();
+            foreach ($nodes as $n) {
+                $sequence = Sequence::find()->where(['node' => $n->id, 'level' => $id_level])->one();
+                if ($sequence != null){
+                    $count_child = $count_child + 1;
+                }
             }
 
+            if ($count_child >= 2){
+                // Создание "Operator"
+                $operator_element = $xml->createElement('Operator');
+                $operator_element->setAttribute('id', "logop-" . $event->id);
+                $operator_element->setAttribute('name', "AND");
+                $node_element->appendChild($operator_element);
 
+                //добавление дочки "Event"
+                $node_elements = Node::find()->where(['parent_node' => $event->id])->all();
+                foreach ($node_elements as $n_elem) {
+                    self::drawingEvent($xml, $n_elem, $operator_element, $id_level);
+                }
+
+            } else {
+                //добавление дочки "Event"
+                $node_elements = Node::find()->where(['parent_node' => $event->id])->all();
+                foreach ($node_elements as $n_elem) {
+                    self::drawingEvent($xml, $n_elem, $node_element, $id_level);
+                }
+            }
         }
-
     }
 
 
@@ -97,8 +97,6 @@ class EventTreeXMLGenerator
         $file = 'eetd_file.xml';
         if (!file_exists($file))
             fopen($file, 'w');
-
-
 
 
         // Создание документа DOM с кодировкой UTF8
@@ -113,7 +111,6 @@ class EventTreeXMLGenerator
         // Добавление корневого узла Diagram в XML-документ
         $xml->appendChild($diagram_element);
 
-
         //подбор всех Level
         $level_elements = Level::find()->where(['tree_diagram' => $id])->all();
         if ($level_elements != null) {
@@ -127,49 +124,77 @@ class EventTreeXMLGenerator
                 $diagram_element->appendChild($level_element);
 
 
-                // Поиск "Node" принадлежащих "Level" через "Sequence"
-                $sequence_elements = Sequence::find()->where(['level' => $l_elem->id])->all();
-                foreach ($sequence_elements as $s_elem) {
-
-                    $event = Node::find()->where(['id' => $s_elem->node])->one();
-
-                    //$id_parent_node = $event->id;
-                    $sequence_parent_node = Sequence::find()->where(['node' => $event->parent_node])->one();
-
-                    if (($event->parent_node == null)||(($sequence_parent_node!= null) && ($sequence_parent_node->level != $l_elem->id))){
+                //выводим event сначало с пустым 'parent_node'
+                $event_elements = Node::find()->where(['tree_diagram' => $id, 'parent_node' => null])->all();
+                foreach ($event_elements as $e_elem) {
+                    $sequence_element = Sequence::find()->where(['node' => $e_elem->id, 'level' => $l_elem->id])->one();
+                    if ($sequence_element!= null){
+                        $event = Node::find()->where(['id' => $e_elem->id])->one();
                         self::drawingEvent($xml, $event, $level_element, $l_elem->id);
                     }
-
-
-
-
                 }
 
 
+                $mas = array(); //массив $mas со значениями 'parent_node' уровня
+
+                //заполнение массива $mas значениями 'parent_node' если родитель на другом уровне
+                $event_elements = Node::find()->where(['tree_diagram' => $id])->andWhere(['not', ['parent_node' => null]])->all();
+                foreach ($event_elements as $e_elem) {
+                    $sequence_element = Sequence::find()->where(['node' => $e_elem->id, 'level' => $l_elem->id])->one();
+
+                    if ($sequence_element!= null) {
+                        $event = Node::find()->where(['id' => $e_elem->id])->one();
+                        $sequence_parent_node = Sequence::find()->where(['node' => $event->parent_node])->one();
+
+                        if (($sequence_parent_node!= null) && ($sequence_parent_node->level != $l_elem->id)){
+                            $i = false;
+                            foreach ($mas as $m) {
+                                if ($m == $event->parent_node){
+                                    $i = true;
+                                }
+                            }
+                            if ($i == false){
+                                array_push($mas, $event->parent_node);
+                            }
+                        }
+                    }
+                }
+
+
+                // просмотр каждого элемента 'parent_node' из $mas и определение их количества на рабочем уровне
+                foreach ($mas as $m) {
+                    $count = 0;
+                    $event_elements = Node::find()->where(['parent_node' => $m])->all();
+                    foreach ($event_elements as $e_elem) {
+                        $sequence_element = Sequence::find()->where(['node' => $e_elem->id, 'level' => $l_elem->id])->one();
+                        if ($sequence_element!= null){
+                            $count = $count + 1;
+                        }
+                    }
+
+                    if ($count >= 2){
+                        // Создание "Operator"
+                        $operator_element = $xml->createElement('Operator');
+                        $operator_element->setAttribute('id', "logop-" . $m);
+                        $operator_element->setAttribute('name', "AND");
+                        $level_element->appendChild($operator_element);
+
+                        //добавление "Event"
+                        $node_elements = Node::find()->where(['parent_node' => $m])->all();
+                        foreach ($node_elements as $n_elem) {
+                            self::drawingEvent($xml, $n_elem, $operator_element, $l_elem->id);
+                        }
+
+                    } else {
+                        //добавление "Event"
+                        $node_elements = Node::find()->where(['parent_node' => $m])->all();
+                        foreach ($node_elements as $n_elem) {
+                            self::drawingEvent($xml, $n_elem, $level_element, $l_elem->id);
+                        }
+                    }
+                }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         // Сохранение RDF-файла
         $xml->formatOutput = true;
@@ -177,61 +202,8 @@ class EventTreeXMLGenerator
         header('Content-Disposition: filename="'.$file.'"');
         echo $xml->saveXML();
         exit;
-
     }
 
-
-
-/**
-    public function generateRDFXMLCode()
-    {
-        // Создание документа DOM с кодировкой UTF8
-        $xml = new DomDocument('1.0', 'UTF-8');
-        // Создание корневого узла RDF с определением пространства имен
-        $rdf_element = $xml->createElement('rdf:RDF');
-        $rdf_element->setAttribute('xmlns:rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-        $rdf_element->setAttribute('xmlns:dbo', self::DBPEDIA_ONTOLOGY_SECTION);
-        $rdf_element->setAttribute('xmlns:db', self::DBPEDIA_RESOURCE_SECTION);
-        $rdf_element->setAttribute('xmlns:dbp', self::DBPEDIA_PROPERTY_SECTION);
-        // Добавление корневого узла в XML-документ
-        $xml->appendChild($rdf_element);
-        // Создание узла триплета "Number"
-        $number_element = $xml->createElement('rdf:Description');
-        $number_element->setAttribute('rdf:about', 'http://dbpedia.org/resource/Number');
-        $number_flag = false;
-        // Создание узла триплета "Date"
-        $date_element = $xml->createElement('rdf:Description');
-        $date_element->setAttribute('rdf:about', 'http://dbpedia.org/resource/Date');
-        $date_flag = false;
-        // Цикл по всем найденным кандидатам для столбца DATA
-        foreach($this->data_entities as $key => $value) {
-            if ($value == 'http://dbpedia.org/resource/Number') {
-                // Добавление узла триплета "Number" в корневой узел RDF, если он не добавлен
-                if (!$number_flag) {
-                    $rdf_element->appendChild($number_element);
-                    $number_flag = true;
-                }
-                // Добавление объектов для триплета "Number"
-                $node_element = $xml->createElement('dbp:titleNumber', $key);
-                $number_element->appendChild($node_element);
-            }
-            if ($value == 'http://dbpedia.org/resource/Date') {
-                // Добавление узла триплета "Date" в корневой узел RDF, если он не добавлен
-                if (!$date_flag) {
-                    $rdf_element->appendChild($date_element);
-                    $date_flag = true;
-                }
-                // Добавление объектов для триплета "Date"
-                $node_element = $xml->createElement('dbp:title', $key);
-                $date_element->appendChild($node_element);
-            }
-        }
-        // Сохранение RDF-файла
-        $xml->formatOutput = true;
-        $xml->save('example.rdf');
-    }
-
- */
 }
 
 
