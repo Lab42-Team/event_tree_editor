@@ -45,7 +45,7 @@ return [
     'BUTTON_EXPORT' => 'Export',
     'BUTTON_RETURN' => 'Return to',
     'BUTTON_CONNECTION' => 'Connection',
-    'BUTTON_VISUAL_DIAGRAM' => 'Visual diagram',
+    'BUTTON_OPEN_DIAGRAM' => 'Open diagram',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',

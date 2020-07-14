@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\modules\main\models\User;
 use app\modules\editor\models\TreeDiagram;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\editor\models\TreeDiagramSearch */
@@ -61,12 +60,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['class' => 'action-column'],
                 'template' => Yii::$app->user->isGuest ? ('{visual-diagram} {view}'):
-                    ('{visual-diagram} {view} {update} {delete}'),
+                    ('{visual-diagram} {view} {update} {delete} {export}'),
                 'buttons' => [
                     'visual-diagram' => function ($model){
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-tree-deciduous"]);
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-blackboard"]);
                         $url = $model;
-                        return Html::a($icon, $url);
+                        return Html::a($icon, $url,[
+                            'title' => Yii::t('app', 'BUTTON_OPEN_DIAGRAM'),
+                            'aria-label' => Yii::t('app', 'BUTTON_OPEN_DIAGRAM')
+                        ]);
+                    },
+                    'export' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-export"></span>',
+                            ['visual-diagram', 'id' => $model->id], ['data' => ['method' => 'post'],
+                                'title' => Yii::t('app', 'BUTTON_EXPORT'),
+                                'aria-label' => Yii::t('app', 'BUTTON_EXPORT')
+                            ]
+                        );
                     },
                 ],
             ],
@@ -93,12 +103,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['class' => 'action-column'],
                 'template' => Yii::$app->user->isGuest ? ('{visual-diagram} {view}'):
-                    ('{visual-diagram} {view} {update} {delete}'),
+                    ('{visual-diagram} {view} {update} {delete} {export}'),
                 'buttons' => [
                     'visual-diagram' => function ($model){
-                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-tree-deciduous"]);
+                        $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-blackboard"]);
                         $url = $model;
-                        return Html::a($icon, $url);
+                        return Html::a($icon, $url,[
+                            'title' => Yii::t('app', 'BUTTON_OPEN_DIAGRAM'),
+                            'aria-label' => Yii::t('app', 'BUTTON_OPEN_DIAGRAM')
+                        ]);
+                    },
+                    'export' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-export"></span>',
+                            ['visual-diagram', 'id' => $model->id], ['data' => ['method' => 'post'],
+                                'title' => Yii::t('app', 'BUTTON_EXPORT'),
+                                'aria-label' => Yii::t('app', 'BUTTON_EXPORT')
+                            ]
+                        );
                     },
                 ],
 

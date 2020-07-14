@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'eeteditor',
-    'name' => 'EventTreeEditor',
+    'name' => 'Extended Event Tree Editor',
     'defaultRoute' => 'main/default/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],

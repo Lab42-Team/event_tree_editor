@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use app\modules\main\models\Lang;
-use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -35,14 +34,6 @@ $this->params['menu_add'] = [
     ['label' => Yii::t('app', 'NAV_ADD_MECHANISM'), 'url' => '#',
         'options' => ['id'=>'nav_add_mechanism', 'class' => 'disabled',
             'data-toggle'=>'modal', 'data-target'=>'']],
-];
-
-$this->params['menu_export'] = [
-    '<li>'
-    . Html::beginForm(['/editor/tree-diagrams/visual-diagram', 'id' => $model->id], 'post')
-    . Html::submitButton(Yii::t('app', 'NAV_EXPORT_EETD'),['class' => 'btn'])
-    . Html::endForm()
-    . '</li>',
 ];
 
 ?>
