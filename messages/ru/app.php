@@ -1,6 +1,14 @@
 <?php
 
 return [
+    /* Текст главного меню */
+    'WELCOME_TO' => 'Добро пожаловать в Extended Event Tree Editor!',
+    'YOU_CAN_SEE_THE_CREATED' => 'Вы можете посмотреть созданные ',
+    'DIAGRAMS' => 'диаграммы',
+    'TO_CREATE_DIAGRAM' => 'Для создания диаграммы ',
+    'SIGN_IN' => 'войдите в систему',
+    'YOU_CAN_CREATE' => 'Вы можете создать ',
+    'DIAGRAM' => 'диаграмму',
     /* Пункты главного меню */
     'NAV_HOME' => 'Главная',
     'NAV_ACCOUNT' => 'Учётная запись',
