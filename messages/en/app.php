@@ -1,14 +1,20 @@
 <?php
 
 return [
-    /* Текст главного меню */
-    'WELCOME_TO' => 'Welcome to Extended Event Tree Editor!',
+    /* Текст на главной странице */
+    'WELCOME_TO_EETE' => 'Welcome to Extended Event Tree Editor!',
+    'EETE_NAME' => 'Extended Event Tree Editor (EETE)',
+    'EETE_DEFINITION' => 'is a web-based tool for building advanced Event Tree diagrams.',
+    'EVENT_TREE_DEFINITION' => 'Event tree is an algorithm for considering events originating from the main event (emergency). Event tree is used to determine and analyze the sequence (options) of accident development including complex interactions between technical safety systems. Crisp logic is used in its construction. In the general case, this method can also be used to analyze failures, accidents and emergencies, where the initial state is considered as the main event, i.e. the state of technical object at the time of the start of its operation.',
+    'ADVANCED_EVENT_TREE_DEFINITION' => 'We have proposed to expand the existing model of event trees and the visual notation of their presentation in order to obtain more complete information about the investigated processes of development of failures and accidents. In particular, based on the results of the system analysis of the problem of studying the dynamics of the technical state of a mechanical system, the stages of development of the indicated processes (submicrolevel, microlevel, mesolevel, macrolevel) and the elements of their description (mechanism and kinetics) are identified. In turn, kinetics, considered as a sequence of events, should be detailed by describing the parameters (characteristics) of events. As a result, a tree template was obtained in a generalized form that describes the stages, the sequence of events (kinetics) and the mechanisms of their occurrence.',
     'YOU_CAN_SEE_THE_CREATED' => 'You can see the created ',
     'DIAGRAMS' => 'diagrams',
+    'WARNING_FOR_DIAGRAM_CREATION' => 'Building diagrams is available only to authorized users!',
     'TO_CREATE_DIAGRAM' => 'To create a diagram ',
     'SIGN_IN' => 'sign in',
     'YOU_CAN_CREATE' => 'You can create ',
     'DIAGRAM' => 'diagram',
+
     /* Пункты главного меню */
     'NAV_HOME' => 'Home',
     'NAV_ACCOUNT' => 'Account',
