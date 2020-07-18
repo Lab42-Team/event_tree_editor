@@ -1,43 +1,36 @@
 <p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Extended Event Tree Editor (EETD)</h1>
-    <br>
+    <h1 align="center">Extended Event Tree Editor</h1>
+    <br />
 </p>
 
-Extended Event Tree Editor is designed to build an Extended Event Tree Diagram (EETD)
+Extended Event Tree Editor (EETE) is a web-based tool for building Extended Event Tree Diagrams (EETD).
 
-Extended Event Tree Editor is based on [Yii 2](http://www.yiiframework.com/) Basic Project Template.
+EETE is based on PHP 7 and [Yii 2 Framework](http://www.yiiframework.com/).
 
-Extended Event Tree Editor uses jsPlumb 2.12.9
+Editor uses [jsPlumb Toolkit](https://jsplumbtoolkit.com/), version 2.12.9 for EETD visualization.
 
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
 [![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-basic.svg)](https://packagist.org/packages/yiisoft/yii2-app-basic)
 [![Build Status](https://travis-ci.org/yiisoft/yii2-app-basic.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-app-basic)
 
+
 DIRECTORY STRUCTURE
 -------------------
 
       assets/             contains assets definition
-      commands/           contains console commands (controllers)
+      commands/           contains console commands (controllers) for creation lang, user and EETDs by default
       config/             contains application configurations
-      controllers/        contains Web controller classes
-      mail/               contains view files for e-mails
-      models/             contains model classes
-      runtime/            contains files generated during runtime
-      tests/              contains various tests for the basic application
-      vendor/             contains dependent 3rd-party packages
-      views/              contains view files for the Web application
+      modules/            contains two modules:
+          editor/         contains main controllers, models and views for EETE
+          main/           contains views for representation main index, contact and error views:
       web/                contains the entry script and Web resources
-
 
 
 REQUIREMENTS
 ------------
 
-The minimum requirement by this project template that your Web server supports PHP 5.4.0.
+The minimum requirement by this project template that your Web server supports PHP 7.0, jsPlumb 2.12, PostgreSQL 9.0.
 
 
 INSTALLATION
@@ -48,17 +41,10 @@ INSTALLATION
 If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
 at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 
-You can then install this project template using the following command:
+You can then install this editor using the following command:
 
 ~~~
-composer create-project --prefer-dist yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/basic/web/
+composer nikita-dorodnykh/eeteditor
 ~~~
 
 
@@ -87,6 +73,5 @@ return [
 ```
 
 **NOTES:**
-- Yii won't create the database for you, this has to be done manually before you can access it.
+- EETE won't create the database for you, this has to be done manually before you can access it.
 - Check and edit the other files in the `config/` directory to customize your application as required.
-- Refer to the README in the `tests` directory for information specific to basic application tests.
