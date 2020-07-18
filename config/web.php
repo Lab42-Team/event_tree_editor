@@ -5,7 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'eeteditor',
-    'name' => 'EventTreeEditor',
+    'name' => 'Extended Event Tree Editor',
     'defaultRoute' => 'main/default/index',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -18,7 +18,10 @@ $config = [
     'modules' => [
         'main' => [
             'class' => 'app\modules\main\Module',
-        ]
+        ],
+        'editor'=> [
+            'class' => 'app\modules\editor\Module',
+        ],
     ],
 
     'components' => [
@@ -38,6 +41,10 @@ $config = [
                 '/' => 'main/default/index',
                 'contact' => 'main/default/contact',
                 'sing-in' => 'main/default/sing-in',
+                '/tree-diagrams/<_ev:(index|create|edit-level|edit-event|edit-mechanism|delete-level|delete-event|delete-mechanism|add-relationship|delete-relationship|add-parameter|edit-parameter|delete-parameter)>' =>
+                    'editor/tree-diagrams/<_ev>',
+                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level|add-event|add-mechanism)>/<id:\d+>' =>
+                    'editor/tree-diagrams/<_ev>',
             ],
         ],
         'cache' => [
@@ -46,6 +53,7 @@ $config = [
         'user' => [
             'identityClass' => 'app\modules\main\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['main/default/sing-in'],
         ],
         'errorHandler' => [
             'errorAction' => 'main/default/error',

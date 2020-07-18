@@ -28,9 +28,9 @@ class m191115_115223_node extends Migration
         $this->createIndex('idx_node_name', '{{%node}}', 'name');
 
         $this->addForeignKey("node_parent_node_fk", "{{%node}}", "parent_node",
-            "{{%node}}", "id", 'RESTRICT');
+            "{{%node}}", "id", 'CASCADE');
         $this->addForeignKey("node_tree_diagram_fk", "{{%node}}", "tree_diagram",
-            "{{%tree_diagram}}", "id", 'RESTRICT');
+            "{{%tree_diagram}}", "id", 'CASCADE');
     }
 
     public function down()

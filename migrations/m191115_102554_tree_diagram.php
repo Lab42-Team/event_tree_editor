@@ -28,7 +28,7 @@ class m191115_102554_tree_diagram extends Migration
         $this->createIndex('idx_tree_diagram_type', '{{%tree_diagram}}', 'type');
         $this->createIndex('idx_tree_diagram_status', '{{%tree_diagram}}', 'status');
 
-        $this->addForeignKey("tree_diagram_user_fk", "{{%tree_diagram}}", "author", "{{%user}}", "id", 'RESTRICT');
+        $this->addForeignKey("tree_diagram_user_fk", "{{%tree_diagram}}", "author", "{{%user}}", "id", 'CASCADE');
     }
 
     public function down()

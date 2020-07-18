@@ -1,0 +1,352 @@
+.visual-diagram {
+    height:700px;
+    border:1px solid #b9def0;
+    background-color:white;
+    /* Вкл Прокрутку*/
+    overflow: auto !important;
+    cursor:default;
+}
+
+.visual-diagram-top-layer {
+    position:relative;
+    margin-left: -19px;
+    margin-right: -15px;
+}
+
+/* -Выравнивание ширины всех уровней по самой большой ширины уровня- */
+div.top {
+    width: max-content;
+    min-width: 100%;
+}
+div.top > div {
+    width: 100%;
+}
+/* ------------ */
+
+/* -Стили для уровней- */
+.div-level {
+    min-height: 200px;
+    width: max-content;
+    border-bottom:2px dashed #337ab7;
+    background-color: white;
+    /* div в строку*/
+    display: flex;
+}
+
+.div-level-name {
+    position: relative;
+    min-width: 100px;
+    border:0px solid #337ab7;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.div-level-name > .div-title-name {
+    width: 150px;
+    transform: rotate(-90deg);
+    margin-left: -30px;
+    margin-top: 100px;
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}
+
+.div-level-description {
+    /* div в строку*/
+    width: 100%;
+    position:relative;
+    display: flex;
+}
+
+/* -Стили для событий- */
+.div-event {
+    /* форма*/
+    min-width: 200px;
+    min-height: 80px;
+    border:2px solid #337ab7;
+    background-color:#f5f5f5;
+    border-radius: 5px;
+    /* текст по центру для дочернего блока div-event-name*/
+    position: absolute;
+
+    overflow:hidden
+}
+
+.div-event:hover {
+    border:2px solid #337ab7;
+    background-color: #b9def0;
+    opacity:0.9;
+    cursor: pointer;
+}
+
+.div-event:active {
+    cursor: move;
+}
+
+.div-event-name {
+    /* текст по центру*/
+    position: relative;
+    top: 30px;
+    width: 200px;
+
+    text-align: center;
+
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}
+
+.div-event:hover .div-event-name{
+    width: auto;
+    min-width: 200px;
+}
+
+/* -Стили для механизмов- */
+.div-mechanism {
+    width:69px;
+    height:80px;
+    background-image:url(/web/images/triangle.png);
+    /* текст по центру для дочерних блоков div-mechanism-m*/
+    position: absolute;
+}
+
+.div-mechanism-m {
+    /* текст по центру*/
+    font-weight:bold;
+    position: absolute;
+    margin: 0;
+    top: 50%;
+    left: 40%;
+    margin-right: -60%;
+    transform: translate(-50%, -50%);
+}
+
+.div-mechanism:hover {
+    width:69px;
+    height:80px;
+    background-image:url(/web/images/triangle_activ.png);
+    cursor: pointer;
+}
+
+.div-mechanism:active {
+    cursor: move;
+}
+
+.div-parameter {
+    position: relative;
+    height:25px;
+
+    min-width: 200px;
+    border-top:2px dashed #337ab7;
+    text-indent: 5px;
+}
+
+.div-parameter-name {
+    display: inline-block;
+    position: relative;
+    height: 25px;
+    line-height: 25px;
+    width: 150px;
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}
+
+.div-event:hover .div-parameter-name{
+    width: auto;
+    min-width: 150px;
+}
+
+.button-parameter{
+    display: inline-block;
+    height: 25px;
+    width: 50px;
+}
+
+.content-event{
+    height:80px;
+    min-width: 200px;
+}
+
+/* стиль курсора при наведении на связь*/
+path { cursor:pointer; }
+
+/*стиль заголовка*/
+.aLabel {
+    /*прозрачный текст*/
+    color: #FFF;
+    mix-blend-mode: multiply;
+    text-align: center;
+    /*форма*/
+    width: 65px;
+    height: 25px;
+    border:2px solid;
+    border-radius: 5px;
+
+    cursor: pointer;
+}
+/*стиль заголовка при наведении*/
+.aLabel.jtk-hover {
+    mix-blend-mode: normal;
+    width: 65px;
+    height: 25px;
+    background-color: #ff3f48;
+}
+
+/* меняем стили связанных элементов при наведении на их связь*/
+.jtk-source-hover, .jtk-target-hover {
+    box-shadow: 0 0 5px 2px red;
+}
+
+
+/*кнопки*/
+/*кнопки уровней*/
+.edit-level {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-level {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.div-level-name:hover .edit-level {
+    display:block;
+}
+.div-level-name:hover .del-level {
+    display:block;
+}
+
+/*кнопки событий*/
+.edit-event {
+    position: absolute;
+    right: 30px;
+    top: 5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-event {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.ep-event {
+    position: absolute;
+    top: 5px;
+    right: 50px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.add-parameter {
+    position: absolute;
+    top: 5px;
+    right: 70px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.content-event:hover .edit-event {
+    display:block;
+}
+.content-event:hover .del-event {
+    display:block;
+}
+.content-event:hover .ep-event {
+    display:block;
+}
+.content-event:hover .add-parameter {
+    display:block;
+}
+
+/*кнопки механизмов*/
+.edit-mechanism {
+    position: absolute;
+    right: 20px;
+    top: -5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-mechanism {
+    position: absolute;
+    right: 0px;
+    top: -5px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.ep-mechanism {
+    position: absolute;
+    top: -5px;
+    right: 40px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.node:hover .edit-mechanism {
+    display:block;
+}
+.node:hover .del-mechanism {
+    display:block;
+}
+.node:hover .ep-mechanism {
+    display:block;
+}
+
+/*кнопки параметров*/
+.edit-parameter {
+    position: absolute;
+    right: 30px;
+    top: 2px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-parameter {
+    position: absolute;
+    right: 10px;
+    top: 2px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+/*показать скрытые кнопки*/
+.div-parameter:hover .edit-parameter {
+    display:block;
+}
+.div-parameter:hover .del-parameter {
+    display:block;
+}
