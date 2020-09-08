@@ -51,8 +51,13 @@ use app\modules\main\models\Lang;
                             var div_mechanism = document.createElement('div');
                             div_mechanism.id = 'node_' + data['id'];
                             div_mechanism.className = 'div-mechanism node';
-                            div_mechanism.title = data['name'];
+                            div_mechanism.title = data['description'];
                             div_level_layer.append(div_mechanism);
+
+                            var div_mechanism_name = document.createElement('div');
+                            div_mechanism_name.className = 'div-mechanism-name' ;
+                            div_mechanism_name.innerHTML = data['name'];
+                            div_mechanism.append(div_mechanism_name);
 
                             var div_mechanism_m = document.createElement('div');
                             div_mechanism_m.className = 'div-mechanism-m' ;
@@ -218,7 +223,10 @@ use app\modules\main\models\Lang;
 
                         if (level_id_on_click == data['id_level']){
                             var div_mechanism = document.getElementById('node_' + data['id']);
-                            div_mechanism.title = data['name'];
+                            div_mechanism.title = data['description'];
+
+                            var div_mechanism_name = document.getElementById('node_name_' + data['id']);
+                            div_mechanism_name.innerHTML = data['name'];
                         } else {
                             var div_mechanism = document.getElementById('node_' + data['id']);
                             var new_div_mechanism = div_mechanism.cloneNode(true); // клонировать сообщение
@@ -230,7 +238,10 @@ use app\modules\main\models\Lang;
 
                             div_level_layer.append(new_div_mechanism); // разместить клонированный элемент в новый уровень
 
-                            new_div_mechanism.title = data['name'];
+                            new_div_mechanism.title = data['description'];
+
+                            var div_mechanism_name = document.getElementById('node_name_' + data['id']);
+                            div_mechanism_name.innerHTML = data['name'];
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_mechanism);

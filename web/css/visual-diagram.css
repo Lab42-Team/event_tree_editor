@@ -121,6 +121,15 @@ div.top > div {
     transform: translate(-50%, -50%);
 }
 
+.div-mechanism-name {
+    position: absolute;
+    right: -15px;
+    text-align: right;
+    width: 180px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .div-mechanism:hover {
     width:69px;
     height:80px;
