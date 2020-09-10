@@ -1338,7 +1338,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                             <?php if ($mechanism_value->id == $node_id){ ?>
                                                 <div id="node_<?= $mechanism_value->id ?>" parent_node="<?= $mechanism_value->parent_node ?>"
-                                                    class="div-mechanism node" title="<?= $mechanism_value->name ?>">
+                                                    class="div-mechanism node" title="<?= $mechanism_value->description ?>">
+                                                    <div id="node_name_<?= $mechanism_value->id ?>" class="div-mechanism-name"><?= $mechanism_value->name ?></div>
                                                     <div class="div-mechanism-m">M</div>
                                                     <div class="ep ep-mechanism glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                     <div id="node_del_<?= $mechanism_value->id ?>" class="del del-mechanism glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>

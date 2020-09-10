@@ -86,19 +86,10 @@ div.top > div {
 .div-event-name {
     /* текст по центру*/
     position: relative;
-    top: 30px;
-    width: 200px;
-
+    width: 180px;
     text-align: center;
-
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: hidden; /* Обрезаем все, что не помещается в область */
-    text-overflow: ellipsis; /* Добавляем многоточие */
-}
-
-.div-event:hover .div-event-name{
-    width: auto;
-    min-width: 200px;
+    margin-left: 10px;
+    word-wrap: break-word; /* перенос строк */
 }
 
 /* -Стили для механизмов- */
@@ -121,6 +112,15 @@ div.top > div {
     transform: translate(-50%, -50%);
 }
 
+.div-mechanism-name {
+    position: absolute;
+    right: -15px;
+    text-align: right;
+    width: 180px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .div-mechanism:hover {
     width:69px;
     height:80px;
@@ -134,8 +134,7 @@ div.top > div {
 
 .div-parameter {
     position: relative;
-    height:25px;
-
+    min-height:20px;
     min-width: 200px;
     border-top:2px dashed #337ab7;
     text-indent: 5px;
@@ -144,17 +143,8 @@ div.top > div {
 .div-parameter-name {
     display: inline-block;
     position: relative;
-    height: 25px;
-    line-height: 25px;
     width: 150px;
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: hidden; /* Обрезаем все, что не помещается в область */
-    text-overflow: ellipsis; /* Добавляем многоточие */
-}
-
-.div-event:hover .div-parameter-name{
-    width: auto;
-    min-width: 150px;
+    word-wrap: break-word; /* перенос строк */
 }
 
 .button-parameter{
@@ -164,7 +154,10 @@ div.top > div {
 }
 
 .content-event{
-    height:80px;
+    position: relative;
+    padding-top: 20px;
+    min-height: 80px;
+    padding-bottom: 20px;
     min-width: 200px;
 }
 
@@ -261,8 +254,8 @@ path { cursor:pointer; }
 
 .add-parameter {
     position: absolute;
-    top: 5px;
-    right: 70px;
+    bottom: 5px;
+    right: 10px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -327,7 +320,7 @@ path { cursor:pointer; }
 .edit-parameter {
     position: absolute;
     right: 30px;
-    top: 2px;
+    top: 3px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -337,7 +330,7 @@ path { cursor:pointer; }
 .del-parameter {
     position: absolute;
     right: 10px;
-    top: 2px;
+    top: 3px;
     display:none;
     color: #337ab7;
     font-size: 13px;
