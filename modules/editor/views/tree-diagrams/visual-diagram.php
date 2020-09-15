@@ -642,6 +642,49 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     };
 
 
+    var increaseLevel = function() {
+        //построение одномерного массива по порядку следования уровней
+        var mas_level_order = {};
+        var q = 0;
+        var id_l = "";
+        var id_p_l = "";
+        $.each(level_mas, function (i, mas) {
+            $.each(mas, function (j, elem) {
+                //первый элемент это id уровня
+                if (j == 0) {id_l = elem;}//записываем id уровня
+                //второй элемент это id родительского уровня
+                if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
+                mas_level_order[q] = {
+                    "id_l":id_l,
+                    "id_p_l":id_p_l,
+                }
+            });
+            q = q+1;
+        });
+        var last_level = null;//id последнего уровня
+        for (var i = 0; i < q; i++) {
+            $.each(mas_level_order, function (i, elem) {
+                if (elem.id_p_l == last_level){
+                    last_level = elem.id_l;
+                }
+            });
+        }
+        var div_level = document.getElementById('level_'+ last_level);
+        var height_div_level = div_level.clientHeight;
+
+        var visual_diagram = document.getElementById('visual-diagram');
+        var h_visual_diagram = visual_diagram.clientHeight;
+
+        var top_layer = document.getElementById('top_layer');
+        var h_top_layer = top_layer.clientHeight;
+
+        var div_level_description = document.getElementById('level_description_'+ last_level);
+        if (h_top_layer < h_visual_diagram){
+            div_level_description.style.height = height_div_level + h_visual_diagram - h_top_layer + 'px';
+        }
+    }
+
+
     // Равномерное раcпределение всех объектов в виде дерева
     $(document).ready(function() {
         var id_node_any; //любой id узла для выравнивания в конце
@@ -991,6 +1034,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         // отрисовка
         if (id_node_any != null){
             mousemoveNode(id_node_any);
+            increaseLevel();//расширение последнего уровня
             // Обновление формы редактора
             instance.repaintEverything();
         }
@@ -1001,6 +1045,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
@@ -1009,6 +1054,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
@@ -1241,7 +1287,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
-<div class="visual-diagram col-md-12">
+<div id="visual-diagram" class="visual-diagram col-md-12">
 <div id="visual_diagram_field" class="visual-diagram-top-layer">
     <div id="top_layer" class="top">
             <!-- Вывод уровней -->
