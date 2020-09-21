@@ -169,6 +169,7 @@ return [
     'NODE_MODEL_CREATED_AT' => 'Created at',
     'NODE_MODEL_UPDATED_AT' => 'Updated at',
     'NODE_MODEL_NAME' => 'Name',
+    'NODE_MODEL_CERTAINTY_FACTOR' => 'Certainty factor',
     'NODE_MODEL_DESCRIPTION' => 'Description',
     'NODE_MODEL_OPERATOR' => 'Operator',
     'NODE_MODEL_TYPE' => 'Type',
@@ -255,4 +256,6 @@ return [
     'DELETE_PARAMETER_TEXT' => 'Are you sure you want to delete the parameter?',
 
     'CONNECTION_DELETE' => 'Delete',
+
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Probability is allowed only up to hundredths',
 ];

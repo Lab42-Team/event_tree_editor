@@ -49,7 +49,7 @@ foreach ($sequence_model_all as $s){
 // создаем массив из соотношения id и parent_node для передачи в jsplumb
 $node_mas = array();
 foreach ($node_model_all as $n){
-    array_push($node_mas, [$n->id, $n->parent_node, $n->name, $n->description]);
+    array_push($node_mas, [$n->id, $n->parent_node, $n->name, $n->description, $n->certainty_factor]);
 }
 
 $level_mas = array();
@@ -249,6 +249,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var id_parent_node = "";
     var name_node = "";
     var description_node = "";
+    var certainty_factor = "";
     $.each(node_mas, function (i, mas) {
         $.each(mas, function (j, elem) {
             //первый элемент это id уровня
@@ -257,11 +258,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             if (j == 1) {id_parent_node = elem;}//записываем id узла события node или механизма mechanism
             if (j == 2) {name_node = elem;}
             if (j == 3) {description_node = elem;}
+            if (j == 4) {certainty_factor = elem;}
             mas_data_node[q] = {
                 "id":id_node,
                 "parent_node":id_parent_node,
                 "name":name_node,
                 "description":description_node,
+                "certainty_factor":certainty_factor,
             }
         });
         q = q+1;
@@ -1086,6 +1089,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (elem.id == node_id_on_click) {
                         document.forms["edit-event-form"].reset();
                         document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[certainty_factor]"].value = elem.certainty_factor;
                         document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
                         document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                         //блокировка изменения левела
@@ -1101,6 +1105,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (elem.id == node_id_on_click) {
                         document.forms["edit-event-form"].reset();
                         document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[certainty_factor]"].value = elem.certainty_factor;
                         document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
                         document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                         //разблокировка изменения левела
@@ -1306,7 +1311,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="content-event">
-                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
+                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?> (<?= $initial_event_value->certainty_factor ?>)</div>
                                     <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                     <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                     <div id="node_edit_<?= $initial_event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
@@ -1335,7 +1340,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node="<?= $event_value->parent_node ?>">
                                             <div class="content-event">
-                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?> (<?= $event_value->certainty_factor ?>)</div>
                                                 <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                 <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                 <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
@@ -1398,7 +1403,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node = "<?= $event_value->parent_node ?>">
                                                     <div class="content-event">
-                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?> (<?= $event_value->certainty_factor ?>)</div>
                                                         <div class="ep ep-event glyphicon-share-alt"  title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                         <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                         <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>

@@ -314,6 +314,7 @@ class TreeDiagramsController extends Controller
                 // Формирование данных о новом уровне
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
+                $data["certainty_factor"] = $model->certainty_factor;
                 $data["description"] = $model->description;
                 $data["parent_node"] = $model->parent_node;
                 $data["type"] = $model->type;
@@ -493,6 +494,7 @@ class TreeDiagramsController extends Controller
                 // Формирование данных об измененном событии
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
+                $data["certainty_factor"] = $model->certainty_factor;
                 $data["description"] = $model->description;
                 $data["type"] = $model->type;
                 $data["id_level"] = $model->level_id;

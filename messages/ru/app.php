@@ -169,6 +169,7 @@ return [
     'NODE_MODEL_CREATED_AT' => 'Создан',
     'NODE_MODEL_UPDATED_AT' => 'Обновлен',
     'NODE_MODEL_NAME' => 'Название',
+    'NODE_MODEL_CERTAINTY_FACTOR' => 'Коэффициент уверенности',
     'NODE_MODEL_DESCRIPTION' => 'Описание',
     'NODE_MODEL_OPERATOR' => 'Оператор',
     'NODE_MODEL_TYPE' => 'Тип',
@@ -255,4 +256,6 @@ return [
     'DELETE_PARAMETER_TEXT' => 'Вы действительно хотите удалить параметр?',
 
     'CONNECTION_DELETE' => 'Удалить',
+
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Вероятность допускается только до сотых',
 ];
