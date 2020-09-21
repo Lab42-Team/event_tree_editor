@@ -257,5 +257,5 @@ return [
 
     'CONNECTION_DELETE' => 'Удалить',
 
-    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Вероятность допускается только до сотых',
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Допускается ввод числа от 0 до 1, и только до сотых',
 ];

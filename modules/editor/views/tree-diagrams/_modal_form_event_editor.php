@@ -202,9 +202,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
 
-
 <?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
-
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
@@ -371,10 +369,7 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
 
-
 <?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
-
-
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 

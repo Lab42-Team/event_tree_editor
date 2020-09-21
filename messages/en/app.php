@@ -257,5 +257,5 @@ return [
 
     'CONNECTION_DELETE' => 'Delete',
 
-    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Probability is allowed only up to hundredths',
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'You can enter a number from 0 to 1, and only up to hundredths',
 ];
