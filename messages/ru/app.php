@@ -157,12 +157,16 @@ return [
     'TREE_DIAGRAM_MODEL_TYPE' => 'Тип',
     'TREE_DIAGRAM_MODEL_STATUS' => 'Статус',
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Автор',
+    'TREE_DIAGRAM_MODEL_MODE' => 'Режим',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Дерево событий',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Дерево отказов',
     /* Значения полей статусов*/
     'TREE_DIAGRAM_MODEL_PUBLIC_STATUS' => 'Публичный',
     'TREE_DIAGRAM_MODEL_PRIVATE_STATUS' => 'Частный',
+    /* Значения режимов деревьев диаграмм*/
+    'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE' => 'Расширенное дерево',
+    'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE' => 'Классическое дерево',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',

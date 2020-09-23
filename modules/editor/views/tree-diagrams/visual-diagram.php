@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 use app\modules\main\models\Lang;
+use app\modules\editor\models\TreeDiagram;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
@@ -127,7 +128,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 nav_add_event.className = 'enabled';
                 nav_add_event.setAttribute("data-target", "#addEventModalForm");
             }
-            if ('<?php echo $level_model_count; ?>' > 1){
+            if (('<?php echo $level_model_count; ?>' > 1) && (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>)){
                 nav_add_mechanism.className = 'enabled';
                 nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
             }
@@ -435,7 +436,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     return false;
                 } else {
                     // запрет на соединение c элементами кроме механизмов на нижестоящем уровне
-                    if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1)){
+                    if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1) && (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>)){
                         var message = "<?php echo Yii::t('app', 'LEVEL_MUST_BEGIN_WITH_MECHANISM'); ?>";
                         document.getElementById("message-text").lastChild.nodeValue = message;
                         $("#viewMessageModalForm").modal("show");

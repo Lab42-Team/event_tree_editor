@@ -58,6 +58,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>TreeDiagram::getStatusesArray(),
             ],
             [
+                'attribute'=>'mode',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getModesName();
+                },
+                'filter'=>TreeDiagram::getModesArray(),
+            ],
+            [
                 'attribute'=>'author',
                 'value' => $model->user->username,
             ],

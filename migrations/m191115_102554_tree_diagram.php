@@ -21,6 +21,9 @@ class m191115_102554_tree_diagram extends Migration
             'description' => $this->string(),
             'type' => $this->smallInteger()->notNull()->defaultValue(0),
             'status' => $this->smallInteger()->notNull()->defaultValue(0),
+            'mode' => $this->smallInteger()->notNull()->defaultValue(0),
+            //'correctness' => $this->smallInteger()->notNull()->defaultValue(0),
+            //'tree_view' => $this->smallInteger()->notNull()->defaultValue(0),
             'author' => $this->integer()->notNull(),
         ], $tableOptions);
 
