@@ -61,7 +61,7 @@ use app\modules\editor\models\Node;
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.id = 'node_name_' + data['id'];
                                 div_initial_event_name.className = 'div-event-name' ;
-                                div_initial_event_name.innerHTML = data['name'];
+                                div_initial_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
                                 div_content_event.append(div_initial_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -102,7 +102,7 @@ use app\modules\editor\models\Node;
                                 var div_event_name = document.createElement('div');
                                 div_event_name.id = 'node_name_' + data['id'];
                                 div_event_name.className = 'div-event-name' ;
-                                div_event_name.innerHTML = data['name'];
+                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
                                 div_content_event.append(div_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -172,13 +172,14 @@ use app\modules\editor\models\Node;
                             var name = data['name'];
                             var parent_node = data['parent_node'];
                             var description = data['description'];
+                            var certainty_factor = data['certainty_factor'];
                             var removed = sequence_mas.push([level, node]);
 
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
+                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description, certainty_factor:certainty_factor,};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
@@ -200,6 +201,8 @@ use app\modules\editor\models\Node;
 <?= $form->errorSummary($node_model); ?>
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
@@ -262,12 +265,13 @@ use app\modules\editor\models\Node;
                             if (elem.id == data['id']){
                                 mas_data_node[i].name = data['name'];
                                 mas_data_node[i].description = data['description'];
+                                mas_data_node[i].certainty_factor = data['certainty_factor'];
                             }
                         });
 
                         if (level_id_on_click == data['id_level']){
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'];
+                            div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
                         } else {
                             var div_event = document.getElementById('node_' + data['id']);
                             var new_div_event = div_event.cloneNode(true); // клонировать сообщение
@@ -280,7 +284,7 @@ use app\modules\editor\models\Node;
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
 
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'];
+                            div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_event);
@@ -365,6 +369,8 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
 
+<?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
+
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
 <?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'edit_label_level']); ?>
@@ -442,6 +448,7 @@ use app\modules\editor\models\Node;
                                         "parent_node":null,
                                         "name":elem_node.name,
                                         "description":elem_node.description,
+                                        "certainty_factor":elem_node.certainty_factor,
                                     };
                                     q = q+1;
                                 } else {
@@ -450,6 +457,7 @@ use app\modules\editor\models\Node;
                                         "parent_node":elem_node.parent_node,
                                         "name":elem_node.name,
                                         "description":elem_node.description,
+                                        "certainty_factor":elem_node.certainty_factor,
                                     };
                                     q = q+1;
                                 }

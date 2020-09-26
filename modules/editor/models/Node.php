@@ -58,6 +58,9 @@ class Node extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
+            [['certainty_factor'],  'number', 'max' => 1, 'min' => 0, 'numberPattern' => '/^[0-9]{1}(\.[0-9]{0,2})?$/',
+                'message' => Yii::t('app', 'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS')],
+
             [['parent_node'], 'exist', 'skipOnError' => true, 'targetClass' => Node::className(),
                 'targetAttribute' => ['parent_node' => 'id']],
             [['tree_diagram'], 'exist', 'skipOnError' => true, 'targetClass' => TreeDiagram::className(),
@@ -75,6 +78,7 @@ class Node extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'NODE_MODEL_CREATED_AT'),
             'updated_at' => Yii::t('app', 'NODE_MODEL_UPDATED_AT'),
             'name' => Yii::t('app', 'NODE_MODEL_NAME'),
+            'certainty_factor' => Yii::t('app', 'NODE_MODEL_CERTAINTY_FACTOR'),
             'description' => Yii::t('app', 'NODE_MODEL_DESCRIPTION'),
             'operator' => Yii::t('app', 'NODE_MODEL_OPERATOR'),
             'type' => Yii::t('app', 'NODE_MODEL_TYPE'),

@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>TreeDiagram::getTypesArray(),
             ],
             [
-
                 'attribute'=>'status',
                 'format' => 'raw',
                 'value' => function($data) {
@@ -46,7 +45,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'filter'=>Yii::$app->user->isGuest ? (''):
                     (TreeDiagram::getStatusesArray()),
-
+            ],
+            [
+                'attribute'=>'mode',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getModesName();
+                },
+                'filter'=>Yii::$app->user->isGuest ? (''):
+                    (TreeDiagram::getModesArray()),
             ],
             [
                 'attribute'=>'author',

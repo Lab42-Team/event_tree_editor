@@ -157,18 +157,23 @@ return [
     'TREE_DIAGRAM_MODEL_TYPE' => 'Type',
     'TREE_DIAGRAM_MODEL_STATUS' => 'Status',
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Author',
+    'TREE_DIAGRAM_MODEL_MODE' => 'Mode',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
     /* Значения полей статусов*/
     'TREE_DIAGRAM_MODEL_PUBLIC_STATUS' => 'Public',
     'TREE_DIAGRAM_MODEL_PRIVATE_STATUS' => 'Private',
+    /* Значения режимов деревьев диаграмм*/
+    'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE' => 'Extended tree',
+    'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE' => 'Classic tree',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',
     'NODE_MODEL_CREATED_AT' => 'Created at',
     'NODE_MODEL_UPDATED_AT' => 'Updated at',
     'NODE_MODEL_NAME' => 'Name',
+    'NODE_MODEL_CERTAINTY_FACTOR' => 'Certainty factor',
     'NODE_MODEL_DESCRIPTION' => 'Description',
     'NODE_MODEL_OPERATOR' => 'Operator',
     'NODE_MODEL_TYPE' => 'Type',
@@ -255,4 +260,6 @@ return [
     'DELETE_PARAMETER_TEXT' => 'Are you sure you want to delete the parameter?',
 
     'CONNECTION_DELETE' => 'Delete',
+
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'You can enter a number from 0 to 1, and only up to hundredths',
 ];

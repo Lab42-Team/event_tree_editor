@@ -18,6 +18,7 @@ class m191115_115223_node extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
+            'certainty_factor' => $this->double(),
             'description' => $this->string(),
             'operator' => $this->smallInteger()->notNull()->defaultValue(0),
             'type' => $this->smallInteger()->notNull()->defaultValue(0),

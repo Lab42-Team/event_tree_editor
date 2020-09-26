@@ -32,6 +32,8 @@ class TreeDiagram extends \yii\db\ActiveRecord
     const PUBLIC_STATUS = 0;   // Публичный статус
     const PRIVATE_STATUS = 1;  // Приватный статус
 
+    const EXTENDED_TREE_MODE = 0; // Расширенное дерево
+    const CLASSIC_TREE_MODE = 1;  // Классическое дерево
     /**
      * @return string table name
      */
@@ -47,8 +49,10 @@ class TreeDiagram extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'author'], 'required'],
-            [['type', 'status', 'author'], 'default', 'value' => null],
-            [['type', 'status', 'author'], 'integer'],
+            [['type', 'status', 'author', 'mode'], 'default', 'value' => null],
+            //[['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'default', 'value' => null],
+            [['type', 'status', 'author', 'mode'], 'integer'],
+            //[['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
@@ -73,6 +77,7 @@ class TreeDiagram extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'TREE_DIAGRAM_MODEL_TYPE'),
             'status' => Yii::t('app', 'TREE_DIAGRAM_MODEL_STATUS'),
             'author' => Yii::t('app', 'TREE_DIAGRAM_MODEL_AUTHOR'),
+            'mode' => Yii::t('app', 'TREE_DIAGRAM_MODEL_MODE'),
         ];
     }
 
@@ -127,6 +132,29 @@ class TreeDiagram extends \yii\db\ActiveRecord
     public function getStatusName()
     {
         return ArrayHelper::getValue(self::getStatusesArray(), $this->type);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм.
+     *
+     * @return array - массив всех возможных статусов
+     */
+    public static function getModesArray()
+    {
+        return [
+            self::EXTENDED_TREE_MODE => Yii::t('app', 'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE'),
+            self::CLASSIC_TREE_MODE => Yii::t('app', 'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     *
+     * @return mixed
+     */
+    public function getModesName()
+    {
+        return ArrayHelper::getValue(self::getModesArray(), $this->type);
     }
 
     /**
