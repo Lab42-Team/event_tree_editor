@@ -63,6 +63,16 @@ AppAsset::register($this);
                     ):false
                 ):false,
 
+                !Yii::$app->user->isGuest ? (
+                    // условие проверки есть ли visual-diagram в URL
+                    (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
+                        //и тогда выводить кнопку меню на экран
+                        ['label' => '<span class="glyphicon glyphicon-check"></span> ' .
+                            Yii::t('app', 'NAV_CORRECTNESS'),
+                            'options' => ['id'=>'nav_correctness']]
+                    ):false
+                ):false,
+
                 ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
                     Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
                 ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .

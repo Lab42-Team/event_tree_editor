@@ -98,6 +98,7 @@ class TreeDiagramsController extends Controller
     {
         $model = new TreeDiagram();
         $model->author = Yii::$app->user->identity->getId();
+        $model->correctness = TreeDiagram::NOT_CHECKED_CORRECT;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->getSession()->setFlash('success',
                 Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
@@ -798,6 +799,90 @@ class TreeDiagramsController extends Controller
             $model -> delete();
 
             $data["success"] = true;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+    public function actionCorrectness($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = TreeDiagram::find()->where(['id' => $id])->one();
+
+            //поиск несвязанных элементов
+            $not_connected = Node::find()->where(['tree_diagram' => $id, 'parent_node' => null])->andwhere(['!=', 'type', Node::INITIAL_EVENT_TYPE])->all();
+
+            //поиск пустых уровней
+            $level = Level::find()->where(['tree_diagram' => $id])->all();
+            $sequence = Sequence::find()->where(['tree_diagram' => $id])->all();
+            $empty_level = array();//массив пустых уровней
+            foreach ($level as $l){
+                $del = false;
+                foreach ($sequence as $s){
+                    if ($s->level == $l->id){
+                        $del = true;
+                    }
+                }
+                if ($del == false){
+                    array_push($empty_level, $l);
+                }
+            }
+
+            //поиск уровней где нет механизмов
+            $del = false;
+            $level_without_mechanism = array();//массив уровней где нет механизмов
+            if ($model->mode == TreeDiagram::EXTENDED_TREE_MODE){
+
+                foreach ($level as $l) {
+                    $with = false;
+                    foreach ($empty_level as $e) {
+                        if ($l->id == $e->id) {
+                            $with = true;
+                        }
+                    }
+
+                    if (($l->parent_level != null) &&($with == false)) {
+                        $del = true;
+                        foreach ($sequence as $s) {
+                            if ($s->level == $l->id) {
+                                $node = Node::find()->where(['id' => $s->node])->one();
+                                if ($node->type == Node::MECHANISM_TYPE) {
+                                    $del = false;
+                                }
+                            }
+                        }
+                    }
+
+                    if (($del == true) && ($with == false)) {
+                        array_push($level_without_mechanism, $l);
+                    }
+                }
+            }
+
+            $data["success"] = true;
+            $data["not_connected"] = $not_connected;
+            $data["empty_level"] = $empty_level;
+            $data["level_without_mechanism"] = $level_without_mechanism;
+
+
+            //изменение
+            if (($not_connected != null) || ($empty_level != null) || ($level_without_mechanism != null)){
+                $model->correctness = TreeDiagram::INCORRECTLY_CORRECT;
+                $model->save();
+            } else {
+                $model->correctness = TreeDiagram::CORRECTLY_CORRECT;
+                $model->save();
+            }
 
             // Возвращение данных
             $response->data = $data;

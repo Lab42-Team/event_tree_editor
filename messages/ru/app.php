@@ -36,6 +36,8 @@ return [
     'NAV_EXPORT' => 'Экспортировать',
     'NAV_EXPORT_EETD' => 'Экспортировать EETD',
 
+    'NAV_CORRECTNESS' => 'Коррект',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Возможные действия',
 
@@ -158,6 +160,7 @@ return [
     'TREE_DIAGRAM_MODEL_STATUS' => 'Статус',
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Автор',
     'TREE_DIAGRAM_MODEL_MODE' => 'Режим',
+    'TREE_DIAGRAM_MODEL_CORRECTNESS' => 'Корректность',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Дерево событий',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Дерево отказов',
@@ -167,6 +170,10 @@ return [
     /* Значения режимов деревьев диаграмм*/
     'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE' => 'Расширенное дерево',
     'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE' => 'Классическое дерево',
+    /* Значения корректности диаграммы*/
+    'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT' => 'Не проверялась ',
+    'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT' => 'Корректно',
+    'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT' => 'Некорректно',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',
@@ -240,6 +247,7 @@ return [
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'MECHANISM_DELETE_MECHANISM' => 'Удаление механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
+    'VERIFICATION_ERRORS' => 'Ошибки при проверке',
     'DELETE_RELATIONSHIP' => 'Удаление связи',
 
     /* Cообщения */
@@ -262,4 +270,13 @@ return [
     'CONNECTION_DELETE' => 'Удалить',
 
     'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'Допускается ввод числа от 0 до 1, и только до сотых',
+
+    /* Текст */
+    'TEXT_NODE' => 'Узел ',
+    'TEXT_IS_NOT_LINKED_TO_ANY_OTHER_NODES' => ' не связан с другими узлами.',
+    'TEXT_LEVEL' => 'Уровень ',
+    'TEXT_DOES_NOT_CONTAIN_ANY_ITEMS' => ' не содержит ни одного элемента.',
+    'TEXT_DOES_NOT_CONTAIN_ANY_MECHANISM' => ' не содержит ни одного механизма.',
+    'TEXT_WHEN_CHECKING_THE_CORRECTNESS' => 'При поверке корректности данной диаграммы выявлены следующие ошибки:',
+    'NO_ERRORS_WERE_FOUND' => 'При поверке корректности данной диаграммы ошибки не выявлены.',
 ];
