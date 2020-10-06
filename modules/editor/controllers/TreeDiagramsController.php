@@ -103,6 +103,16 @@ class TreeDiagramsController extends Controller
             Yii::$app->getSession()->setFlash('success',
                 Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
 
+                if ($model->mode == TreeDiagram::CLASSIC_TREE_MODE){
+                    // Создание пустого уровня
+                    $level = new Level();
+                    $level->tree_diagram = $model->id;
+                    $level->name = "Only";
+                    $level->description = "";
+                    $level->parent_level = null;
+                    $level->save();
+                }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
