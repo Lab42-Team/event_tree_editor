@@ -26,17 +26,20 @@ return [
     'NAV_SIGN_IN' => 'Вход',
     'NAV_SIGN_OUT' => 'Выход',
     'NAV_TREE_DIAGRAMS' => 'Диаграммы',
+    'NAV_TREE_DIAGRAM' => 'Диаграмма',
+    'NAV_BACK_LIST' => 'Вернуться к списку',
 
     'NAV_ADD' => 'Добавить',
     'NAV_ADD_LEVEL' => 'Уровень',
-    'NAV_ADD_INITIAL_EVENT' => 'Инициирующее событие',
     'NAV_ADD_EVENT' => 'Событие',
     'NAV_ADD_MECHANISM' => 'Механизм',
 
+    'NAV_IMPORT' => 'Импортировать',
     'NAV_EXPORT' => 'Экспортировать',
-    'NAV_EXPORT_EETD' => 'Экспортировать EETD',
 
-    'NAV_CORRECTNESS' => 'Коррект',
+    'NAV_VERIFY' => 'Проверить',
+
+    'NAV_ACCOUNT' => 'Аккаунт',
 
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Возможные действия',
@@ -247,7 +250,7 @@ return [
     'MECHANISM_EDIT_MECHANISM' => 'Изменение механизма',
     'MECHANISM_DELETE_MECHANISM' => 'Удаление механизма',
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
-    'VERIFICATION_ERRORS' => 'Ошибки при проверке',
+    'VALIDATION' => 'Проверка корректности',
     'DELETE_RELATIONSHIP' => 'Удаление связи',
 
     /* Cообщения */

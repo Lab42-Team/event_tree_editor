@@ -53,45 +53,40 @@ AppAsset::register($this);
                     ):false
                 ):false,
 
-                !Yii::$app->user->isGuest ? (
-                    // условие проверки есть ли visual-diagram в URL
-                    (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
-                        [
-                            'label' => '<span class="glyphicon glyphicon-export"></span> ' . Yii::t('app', 'NAV_EXPORT'),
-                            'linkOptions' => ['data-method' => 'post']
-                        ]
-                    ):false
+                // условие проверки нет ли visual-diagram в URL
+                (preg_match("/visual-diagram/", Url::current([], false)) != 1) ? (
+                    //и тогда выводить кнопку меню на экран
+                    ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
+                        Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']]
                 ):false,
 
                 !Yii::$app->user->isGuest ? (
                     // условие проверки есть ли visual-diagram в URL
                     (preg_match("/visual-diagram/", Url::current([], false)) == 1) ? (
                         //и тогда выводить кнопку меню на экран
-                        ['label' => '<span class="glyphicon glyphicon-check"></span> ' .
-                            Yii::t('app', 'NAV_CORRECTNESS'),
-                            'options' => ['id'=>'nav_correctness']]
+                        ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
+                            Yii::t('app', 'NAV_TREE_DIAGRAM'),
+                            'items' => $this->params['menu_diagram']
+                        ]
                     ):false
                 ):false,
 
-                ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
-                    Yii::t('app', 'NAV_TREE_DIAGRAMS'), 'url' => ['/editor/tree-diagrams/index']],
-                ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
-                    Yii::t('app', 'NAV_CONTACT_US'), 'url' => ['/main/default/contact']],
+                ['label' => '<span class="glyphicon glyphicon-user"></span> ' .
+                    Yii::t('app', 'NAV_ACCOUNT'), 'url' => ['#'],
+                    'items' => array_filter([
+                        ['label' => '<span class="glyphicon glyphicon-envelope"></span> ' .
+                            Yii::t('app', 'NAV_CONTACT_US'), 'url' => ['/main/default/contact']],
 
-                Yii::$app->user->isGuest ? (
-                ['label' => '<span class="glyphicon glyphicon-log-in"></span> ' . Yii::t('app', 'NAV_SIGN_IN'),
-                    'url' => ['/main/default/sing-in']]
-                ) : (
-                    '<li>'
-                    . Html::beginForm(['/main/default/sing-out'], 'post')
-                    . Html::submitButton(
-                        '<span class="glyphicon glyphicon-log-out"></span> ' . Yii::t('app', 'NAV_SIGN_OUT') .
-                        ' (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-                )
+                        Yii::$app->user->isGuest ? (
+                        ['label' => '<span class="glyphicon glyphicon-log-in"></span> ' .
+                            Yii::t('app', 'NAV_SIGN_IN'), 'url' => ['/main/default/sing-in']]
+                        ) : (
+                            ['label' => '<span class="glyphicon glyphicon-log-out"></span> ' .
+                                Yii::t('app', 'NAV_SIGN_OUT'). ' (' . Yii::$app->user->identity->username . ')',
+                                 'url' => ['/main/default/sing-out'], 'linkOptions' => ['data-method' => 'post']]
+                        )
+                    ])
+                ],
             ])
         ]);
 
