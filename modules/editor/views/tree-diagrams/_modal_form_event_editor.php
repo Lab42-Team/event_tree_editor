@@ -61,7 +61,11 @@ use app\modules\editor\models\Node;
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.id = 'node_name_' + data['id'];
                                 div_initial_event_name.className = 'div-event-name' ;
-                                div_initial_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                    div_initial_event_name.innerHTML = data['name'];
+                                } else {
+                                    div_initial_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                }
                                 div_content_event.append(div_initial_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -102,7 +106,11 @@ use app\modules\editor\models\Node;
                                 var div_event_name = document.createElement('div');
                                 div_event_name.id = 'node_name_' + data['id'];
                                 div_event_name.className = 'div-event-name' ;
-                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                    div_event_name.innerHTML = data['name'];
+                                } else {
+                                    div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                }
                                 div_content_event.append(div_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -271,7 +279,11 @@ use app\modules\editor\models\Node;
 
                         if (level_id_on_click == data['id_level']){
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                div_event_name.innerHTML = data['name'];
+                            } else {
+                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            }
                         } else {
                             var div_event = document.getElementById('node_' + data['id']);
                             var new_div_event = div_event.cloneNode(true); // клонировать сообщение
@@ -284,7 +296,11 @@ use app\modules\editor\models\Node;
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
 
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                div_event_name.innerHTML = data['name'];
+                            } else {
+                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            }
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_event);

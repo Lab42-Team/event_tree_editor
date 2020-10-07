@@ -64,6 +64,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter'=>User::getAllUsersArray(),
             ],
             [
+                'attribute'=>'correctness',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getСorrectnessName();
+                },
+                'filter'=>Yii::$app->user->isGuest ? (''):
+                    (TreeDiagram::getСorrectnessArray()),
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'headerOptions' => ['class' => 'action-column'],
                 'template' => Yii::$app->user->isGuest ? ('{visual-diagram} {view}'):

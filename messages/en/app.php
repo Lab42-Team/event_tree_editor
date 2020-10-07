@@ -36,6 +36,8 @@ return [
     'NAV_EXPORT' => 'Export',
     'NAV_EXPORT_EETD' => 'Export EETD',
 
+    'NAV_CORRECTNESS' => 'Correct',
+
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Possible actions',
 
@@ -158,6 +160,7 @@ return [
     'TREE_DIAGRAM_MODEL_STATUS' => 'Status',
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Author',
     'TREE_DIAGRAM_MODEL_MODE' => 'Mode',
+    'TREE_DIAGRAM_MODEL_CORRECTNESS' => 'Correctness',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
@@ -167,6 +170,10 @@ return [
     /* Значения режимов деревьев диаграмм*/
     'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE' => 'Extended tree',
     'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE' => 'Classic tree',
+    /* Значения корректности диаграммы*/
+    'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT' => 'Not checked',
+    'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT' => 'Correctly',
+    'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT' => 'Incorrectly',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',
@@ -240,6 +247,7 @@ return [
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'MECHANISM_DELETE_MECHANISM' => 'Delete mechanism',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
+    'VERIFICATION_ERRORS' => 'Verification errors',
     'DELETE_RELATIONSHIP' => 'Deleting connection',
 
     /* Cообщения */
@@ -262,4 +270,13 @@ return [
     'CONNECTION_DELETE' => 'Delete',
 
     'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'You can enter a number from 0 to 1, and only up to hundredths',
+
+    /* Текст */
+    'TEXT_NODE' => 'The node ',
+    'TEXT_IS_NOT_LINKED_TO_ANY_OTHER_NODES' => ' is not linked to any other nodes.',
+    'TEXT_LEVEL' => 'Level ',
+    'TEXT_DOES_NOT_CONTAIN_ANY_ITEMS' => ' does not contain any items.',
+    'TEXT_DOES_NOT_CONTAIN_ANY_MECHANISM' => ' does not contain any mechanism.',
+    'TEXT_WHEN_CHECKING_THE_CORRECTNESS' => 'When checking the correctness of this diagram, the following errors were revealed:',
+    'NO_ERRORS_WERE_FOUND' => 'When checking the correctness of this diagram, no errors were found.',
 ];

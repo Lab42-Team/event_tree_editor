@@ -27,8 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menu_add'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
-        'options' => ['id'=>'nav_add_level', 'class' => 'enabled',
-            'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
+        'options' => ['id'=>'nav_add_level', 'class' => 'disabled',
+            'data-toggle'=>'modal', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
         'options' => ['id'=>'nav_add_event', 'class' => 'disabled',
             'data-toggle'=>'modal', 'data-target'=>'']],
@@ -120,17 +120,37 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var guest = <?php echo json_encode(Yii::$app->user->isGuest); ?>;//переменная гость определяет пользователь гость или нет
 
     $(document).ready(function() {
+
+        //скрывание наименование уровня при классическом режиме построения деревьев событий
+        if (<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>){
+            var div_level = document.getElementsByClassName("div-level-name");
+            $.each(div_level, function (i, level) {
+                level.hidden = true;
+            });
+        }
+
         if (!guest){
-            // Включение переходов на модальные окна
+            var nav_add_level = document.getElementById('nav_add_level');
             var nav_add_event = document.getElementById('nav_add_event');
             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
-            if ('<?php echo $level_model_count; ?>' > 0){
+
+            if (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>){
+                // Включение переходов на модальные окна
+                nav_add_level.className = 'enabled';
+                nav_add_level.setAttribute("data-target", "#addLevelModalForm");
+                if ('<?php echo $level_model_count; ?>' > 0){
+                    nav_add_event.className = 'enabled';
+                    nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                }
+                if ('<?php echo $level_model_count; ?>' > 1){
+                    nav_add_mechanism.className = 'enabled';
+                    nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+                }
+            } else {
+                nav_add_level.className = 'disabled';
                 nav_add_event.className = 'enabled';
                 nav_add_event.setAttribute("data-target", "#addEventModalForm");
-            }
-            if (('<?php echo $level_model_count; ?>' > 1) && (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>)){
-                nav_add_mechanism.className = 'enabled';
-                nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+                nav_add_mechanism.className = 'disabled';
             }
 
             // Обработка закрытия модального окна добавления нового уровня
@@ -176,7 +196,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $("#addEventModalForm").on("show.bs.modal", function() {
                 //если начальное событие есть тогда
                 var initial_event = document.getElementsByClassName("div-initial-event");
-                if (initial_event.length == 0){
+                if ((initial_event.length == 0)||(<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)){
                     //блокировка изменения левела
                     document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
                     document.getElementById('add_label_level').style.display = "none";
@@ -425,27 +445,27 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 && (source_node.getAttribute("class").search("mechanism") != -1)){
                 var message = "<?php echo Yii::t('app', 'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED'); ?>";
                 document.getElementById("message-text").lastChild.nodeValue = message;
-                $("#viewMessageModalForm").modal("show");
+                $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                 return false;
             } else {
                 // запрет на соединение c элементами на вышестоящем уровне
                 if (n_source > n_target){
                     var message = "<?php echo Yii::t('app', 'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL'); ?>";
                     document.getElementById("message-text").lastChild.nodeValue = message;
-                    $("#viewMessageModalForm").modal("show");
+                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                     return false;
                 } else {
                     // запрет на соединение c элементами кроме механизмов на нижестоящем уровне
-                    if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1) && (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>)){
+                    if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1)){
                         var message = "<?php echo Yii::t('app', 'LEVEL_MUST_BEGIN_WITH_MECHANISM'); ?>";
                         document.getElementById("message-text").lastChild.nodeValue = message;
-                        $("#viewMessageModalForm").modal("show");
+                        $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                         return false;
                     } else {
                         if(target_node.getAttribute("class").search("div-initial-event") >= 0){
                             var message = "<?php echo Yii::t('app', 'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS'); ?>";
                             document.getElementById("message-text").lastChild.nodeValue = message;
-                            $("#viewMessageModalForm").modal("show");
+                            $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                             return false;
                         } else {
                             return true;
@@ -485,7 +505,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     onMaxConnections: function (info, e) {
                         var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
                         document.getElementById("message-text").lastChild.nodeValue = message;
-                        $("#viewMessageModalForm").modal("show");
+                        $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                     }
                 });
             }
@@ -1069,7 +1089,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         instance.repaintEverything();
     });
 
-
     // редактирование события
     $(document).on('click', '.edit-event', function() {
         if (!guest) {
@@ -1085,7 +1104,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             alert.style = style = "display:none;";
 
             //если событие инициирующее
-            if (div_node.getAttribute("class").search("div-initial-event") >= 0) {
+            if ((div_node.getAttribute("class").search("div-initial-event") >= 0) || (<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)) {
                 $.each(mas_data_node, function (i, elem) {
                     if (elem.id == node_id_on_click) {
                         document.forms["edit-event-form"].reset();
@@ -1286,6 +1305,59 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
+    $('#nav_correctness').on('click', function() {
+        $.ajax({
+            //переход на экшен левел
+            url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+            '/tree-diagrams/correctness/' . $model->id ?>",
+            type: "post",
+            data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>",
+            dataType: "json",
+            success: function (data) {
+                if (data['success']) {
+                    var not_connected = data['not_connected'];
+                    var empty_level = data['empty_level'];
+                    var level_without_mechanism = data['level_without_mechanism'];
+
+                    var message = "";
+
+                    $.each(not_connected, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_NODE'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_IS_NOT_LINKED_TO_ANY_OTHER_NODES'); ?>" + '</p>';
+                    });
+
+                    $.each(empty_level, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_LEVEL'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_DOES_NOT_CONTAIN_ANY_ITEMS'); ?>" + '</p>';
+                    });
+
+                    $.each(level_without_mechanism, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_LEVEL'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_DOES_NOT_CONTAIN_ANY_MECHANISM'); ?>" + '</p>';
+                    });
+
+                    if (message == ""){
+                        var result = '<h4>' + "<?php echo Yii::t('app', 'NO_ERRORS_WERE_FOUND'); ?>" + '</h4>';;
+                    } else {
+                        var result = '<h4>' + "<?php echo Yii::t('app', 'TEXT_WHEN_CHECKING_THE_CORRECTNESS'); ?>" + '</h4>';
+                    }
+
+                    var div = document.getElementById('message-verification-text');
+                    div.innerHTML = result + message;
+                    $("#viewMessageErrorsWhenCheckingTheChartModalForm").modal("show");
+                }
+            },
+            error: function () {
+                alert('Error!');
+            }
+        });
+    });
+
+
 </script>
 
 
@@ -1312,7 +1384,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="content-event">
-                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?> (<?= $initial_event_value->certainty_factor ?>)</div>
+                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?>
+                                        <?php if ($initial_event_value->certainty_factor != null){ ?>
+                                            (<?= $initial_event_value->certainty_factor ?>)
+                                        <?php } ?>
+                                    </div>
                                     <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                     <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                     <div id="node_edit_<?= $initial_event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
@@ -1341,7 +1417,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node="<?= $event_value->parent_node ?>">
                                             <div class="content-event">
-                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?> (<?= $event_value->certainty_factor ?>)</div>
+                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?>
+                                                    <?php if ($event_value->certainty_factor != null){ ?>
+                                                        (<?= $event_value->certainty_factor ?>)
+                                                    <?php } ?>
+                                                </div>
                                                 <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                 <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                 <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
@@ -1404,7 +1484,11 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node = "<?= $event_value->parent_node ?>">
                                                     <div class="content-event">
-                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?> (<?= $event_value->certainty_factor ?>)</div>
+                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?>
+                                                            <?php if ($event_value->certainty_factor != null){ ?>
+                                                                (<?= $event_value->certainty_factor ?>)
+                                                            <?php } ?>
+                                                        </div>
                                                         <div class="ep ep-event glyphicon-share-alt"  title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                         <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                         <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>

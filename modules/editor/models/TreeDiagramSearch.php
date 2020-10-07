@@ -16,7 +16,7 @@ class TreeDiagramSearch extends TreeDiagram
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at', 'type', 'status', 'author', 'mode'], 'integer'],
+            [['id', 'created_at', 'updated_at', 'type', 'status', 'author', 'mode', 'correctness'], 'integer'],
             [['name', 'description'], 'safe'],
         ];
     }
@@ -62,6 +62,7 @@ class TreeDiagramSearch extends TreeDiagram
             'status' => $this->status,
             'mode' => $this->mode,
             'author' => $this->author,
+            'correctness' => $this->correctness,
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])
@@ -96,6 +97,7 @@ class TreeDiagramSearch extends TreeDiagram
             'status' => TreeDiagram::PUBLIC_STATUS,
             'mode' => TreeDiagram::EXTENDED_TREE_MODE,
             'author' => $this->author,
+            'correctness' => $this->correctness,
         ]);
 
         $query->andFilterWhere(['ilike', 'name', $this->name])

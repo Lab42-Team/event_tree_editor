@@ -8,9 +8,9 @@ use yii\bootstrap\Button;
 
 ?>
 
-<!-- Модальное окно для вывода сообщения -->
+<!-- Модальное окно для вывода сообщений об ошибках при связывании элементов -->
 <?php Modal::begin([
-    'id' => 'viewMessageModalForm',
+    'id' => 'viewMessageErrorLinkingItemsModalForm',
     'header' => '<h3>' . Yii::t('app', 'ERROR_LINKING_ITEMS') . '</h3>',
 ]); ?>
 
@@ -20,7 +20,37 @@ use yii\bootstrap\Button;
 </div>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'view-message-model-form',
+    'id' => 'view-message-modal-form',
+]); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_OK'),
+    'options' => [
+        'class' => 'btn-success',
+        'style' => 'margin:5px',
+        'data-dismiss'=>'modal'
+    ]
+]); ?>
+
+<?php ActiveForm::end(); ?>
+
+<?php Modal::end(); ?>
+
+
+
+<!-- Модальное окно для вывода сообщений об ошибках при проверке диаграммы -->
+<?php Modal::begin([
+    'id' => 'viewMessageErrorsWhenCheckingTheChartModalForm',
+    'header' => '<h3>' . Yii::t('app', 'VERIFICATION_ERRORS') . '</h3>',
+]); ?>
+
+<div class="modal-body">
+    <div id="message-verification-text">
+    </div>
+</div>
+
+<?php $form = ActiveForm::begin([
+    'id' => 'view-message-modal-form',
 ]); ?>
 
 <?= Button::widget([
