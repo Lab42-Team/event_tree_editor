@@ -37,6 +37,20 @@ $this->params['menu_add'] = [
             'data-toggle'=>'modal', 'data-target'=>'']],
 ];
 
+$this->params['menu_diagram'] = [
+    ['label' => '<span class="glyphicon glyphicon-import"></span> ' . Yii::t('app', 'NAV_IMPORT'),
+        'url' => '#'],
+
+    ['label' => '<span class="glyphicon glyphicon-export"></span> ' . Yii::t('app', 'NAV_EXPORT'),
+        'url' => '#', 'linkOptions' => ['data-method' => 'post']],
+
+    ['label' => '<span class="glyphicon glyphicon-check"></span> ' . Yii::t('app', 'NAV_VERIFY'),
+        'url' => '#', 'options' => ['id'=>'nav_correctness']],
+
+    ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
+        Yii::t('app', 'NAV_BACK_LIST'), 'url' => ['/editor/tree-diagrams/index']],
+];
+
 ?>
 
 
@@ -147,10 +161,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
                 }
             } else {
-                nav_add_level.className = 'disabled';
                 nav_add_event.className = 'enabled';
                 nav_add_event.setAttribute("data-target", "#addEventModalForm");
-                nav_add_mechanism.className = 'disabled';
+                nav_add_level.hidden = true;
+                nav_add_mechanism.hidden = true;
             }
 
             // Обработка закрытия модального окна добавления нового уровня

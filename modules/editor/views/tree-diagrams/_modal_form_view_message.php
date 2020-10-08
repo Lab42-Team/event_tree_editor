@@ -41,7 +41,7 @@ use yii\bootstrap\Button;
 <!-- Модальное окно для вывода сообщений об ошибках при проверке диаграммы -->
 <?php Modal::begin([
     'id' => 'viewMessageErrorsWhenCheckingTheChartModalForm',
-    'header' => '<h3>' . Yii::t('app', 'VERIFICATION_ERRORS') . '</h3>',
+    'header' => '<h3>' . Yii::t('app', 'VALIDATION') . '</h3>',
 ]); ?>
 
 <div class="modal-body">
