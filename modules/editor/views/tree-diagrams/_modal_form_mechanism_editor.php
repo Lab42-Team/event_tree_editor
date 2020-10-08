@@ -55,6 +55,7 @@ use app\modules\main\models\Lang;
                             div_level_layer.append(div_mechanism);
 
                             var div_mechanism_name = document.createElement('div');
+                            div_mechanism_name.id = 'node_name_' + data['id'];
                             div_mechanism_name.className = 'div-mechanism-name' ;
                             div_mechanism_name.innerHTML = data['name'];
                             div_mechanism.append(div_mechanism_name);
@@ -239,7 +240,6 @@ use app\modules\main\models\Lang;
                             div_level_layer.append(new_div_mechanism); // разместить клонированный элемент в новый уровень
 
                             new_div_mechanism.title = data['description'];
-
                             var div_mechanism_name = document.getElementById('node_name_' + data['id']);
                             div_mechanism_name.innerHTML = data['name'];
 
