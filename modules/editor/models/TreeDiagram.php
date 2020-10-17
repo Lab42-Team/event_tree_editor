@@ -39,6 +39,9 @@ class TreeDiagram extends \yii\db\ActiveRecord
     const CORRECTLY_CORRECT = 1;  // Корректно
     const INCORRECTLY_CORRECT = 2;  // Некорректно
 
+    const ORDINARY_TREE_VIEW = 0; // обычное дерево
+    const TEMPLATE_TREE_VIEW = 1;  // шаблонное дерево
+
     /**
      * @return string table name
      */
@@ -54,17 +57,14 @@ class TreeDiagram extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'author'], 'required'],
-            [['type', 'status', 'author', 'mode', 'correctness'], 'default', 'value' => null],
-            //[['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'default', 'value' => null],
-            [['type', 'status', 'author', 'mode', 'correctness'], 'integer'],
-            //[['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'integer'],
+            [['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'default', 'value' => null],
+            [['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(),
                 'targetAttribute' => ['author' => 'id']],
-
         ];
     }
 
@@ -84,6 +84,7 @@ class TreeDiagram extends \yii\db\ActiveRecord
             'author' => Yii::t('app', 'TREE_DIAGRAM_MODEL_AUTHOR'),
             'mode' => Yii::t('app', 'TREE_DIAGRAM_MODEL_MODE'),
             'correctness' => Yii::t('app', 'TREE_DIAGRAM_MODEL_CORRECTNESS'),
+            'tree_view' => Yii::t('app', 'TREE_DIAGRAM_MODEL_TREE_VIEW'),
         ];
     }
 
@@ -185,6 +186,29 @@ class TreeDiagram extends \yii\db\ActiveRecord
     public function getСorrectnessName()
     {
         return ArrayHelper::getValue(self::getСorrectnessArray(), $this->correctness);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм.
+     *
+     * @return array - массив всех возможных статусов
+     */
+    public static function getTreeViewArray()
+    {
+        return [
+            self::ORDINARY_TREE_VIEW => Yii::t('app', 'TREE_DIAGRAM_MODEL_ORDINARY_TREE_VIEW'),
+            self::TEMPLATE_TREE_VIEW => Yii::t('app', 'TREE_DIAGRAM_MODEL_TEMPLATE_TREE_VIEW'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     *
+     * @return mixed
+     */
+    public function getTreeViewName()
+    {
+        return ArrayHelper::getValue(self::getTreeViewArray(), $this->tree_view);
     }
 
     /**

@@ -89,11 +89,15 @@ return [
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Изменить диаграмму',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Удалить диаграмму',
     'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Визуальная диаграмма',
+    'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Создать диаграмму по шаблону',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данную диаграмму?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'Вы успешно обновили данную диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'Вы успешно удалили диаграмму.',
+    /* Имя диаграммы созданной из шаблона */
+    'TREE_DIAGRAMS_CREATED_FROM' => 'Диаграмма созданная из ',
+    'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Шаблоны диаграмм не найдены',
 
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'Вышеупомянутая ошибка произошла при обработке веб-сервером вашего запроса.',
@@ -164,6 +168,7 @@ return [
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Автор',
     'TREE_DIAGRAM_MODEL_MODE' => 'Режим',
     'TREE_DIAGRAM_MODEL_CORRECTNESS' => 'Корректность',
+    'TREE_DIAGRAM_MODEL_TREE_VIEW' => 'Вид дерева',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Дерево событий',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Дерево отказов',
@@ -177,6 +182,9 @@ return [
     'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT' => 'Не проверялась ',
     'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT' => 'Корректно',
     'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT' => 'Некорректно',
+    /* Значения вида дерева диаграмм*/
+    'TREE_DIAGRAM_MODEL_ORDINARY_TREE_VIEW' => 'Обычное дерево',
+    'TREE_DIAGRAM_MODEL_TEMPLATE_TREE_VIEW' => 'Шаблонное дерево',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',
