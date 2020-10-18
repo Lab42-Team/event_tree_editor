@@ -278,8 +278,8 @@ path { cursor:pointer; }
 /*кнопки механизмов*/
 .edit-mechanism {
     position: absolute;
-    right: 20px;
-    top: -5px;
+    right: 10px;
+    top: -4px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -288,8 +288,8 @@ path { cursor:pointer; }
 
 .del-mechanism {
     position: absolute;
-    right: 0px;
-    top: -5px;
+    right: -10px;
+    top: -4px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -298,8 +298,8 @@ path { cursor:pointer; }
 
 .ep-mechanism {
     position: absolute;
-    top: -5px;
-    right: 40px;
+    top: 20px;
+    right: -10px;
     display:none;
     color: #337ab7;
     font-size: 13px;

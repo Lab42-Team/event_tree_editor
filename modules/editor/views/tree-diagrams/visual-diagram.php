@@ -498,8 +498,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 var anchor_bottom = "";
                 var max_con = 1;
                 if (cl == "div-mechanism node jtk-managed jtk-draggable") {
-                    anchor_top = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
-                    anchor_bottom = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
+                    anchor_top = [ 0.5, 0, 0, -1, 0, 20 ];
+                    anchor_bottom = [ 0.5, 1, 0, 1, 0, -20 ];
                 } else {
                     anchor_top = "Top";
                     anchor_bottom = "Bottom";

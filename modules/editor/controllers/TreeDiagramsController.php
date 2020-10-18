@@ -33,13 +33,15 @@ class TreeDiagramsController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
                     'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
-                    'add-relationship', 'delete-relationship'],
+                    'add-relationship', 'delete-relationship', 'add-parameter', 'edit-parameter', 'delete-parameter',
+                    'correctness', 'creation-template'],
                 'rules' => [
                     [
                         'allow' => true,
                         'actions' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
                             'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
-                            'add-relationship', 'delete-relationship'],
+                            'add-relationship', 'delete-relationship', 'add-parameter', 'edit-parameter', 'delete-parameter',
+                            'correctness', 'creation-template'],
                         'roles' => ['@'],
                     ],
                 ],
