@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use app\modules\main\models\User;
 use app\modules\editor\models\TreeDiagram;
+use yii\bootstrap\ButtonDropdown;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\editor\models\TreeDiagramSearch */
@@ -19,8 +20,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php if (!Yii::$app->user->isGuest): ?>
-        <p><?= Html::a('<span class="glyphicon glyphicon-edit"></span> ' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM'),
-                ['create'], ['class' => 'btn btn-success']) ?></p>
+        <div>
+            <?= Html::a('<span class="glyphicon glyphicon-edit"></span> ' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM'),
+                ['create'], ['class' => 'btn btn-success']) ?>
+
+            <?= ButtonDropdown::widget([
+                'label' => '<span class="glyphicon glyphicon-share"></span> ' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE'),
+                'encodeLabel' => false,
+                'options' => [
+                    'class' => 'btn btn-primary',
+                ],
+                'dropdown' => [
+                    'items' => $array_template,
+                ],
+            ]); ?>
+        </div>
+
     <?php endif; ?>
 
     <?= GridView::widget([
@@ -62,6 +77,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->user->username;
                 },
                 'filter'=>User::getAllUsersArray(),
+            ],
+            [
+                'attribute'=>'tree_view',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getTreeViewName();
+                },
+                'filter'=>Yii::$app->user->isGuest ? (''):
+                    (TreeDiagram::getTreeViewArray()),
             ],
             [
                 'attribute'=>'correctness',

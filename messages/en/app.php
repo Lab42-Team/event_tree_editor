@@ -89,11 +89,15 @@ return [
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Update diagram',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Delete diagram',
     'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Visual diagram',
+    'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Create a chart from a template',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Are you sure that you want to delete this diagram?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'You have successfully created a new diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'You have successfully updated diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'You have successfully deleted diagram.',
+    /* Имя диаграммы созданной из шаблона */
+    'TREE_DIAGRAMS_CREATED_FROM' => 'Chart created from ',
+    'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Templates diagrams not found',
 
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'The above error occurred while the Web server was processing your request.',
@@ -164,6 +168,7 @@ return [
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Author',
     'TREE_DIAGRAM_MODEL_MODE' => 'Mode',
     'TREE_DIAGRAM_MODEL_CORRECTNESS' => 'Correctness',
+    'TREE_DIAGRAM_MODEL_TREE_VIEW' => 'Tree view',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
@@ -177,6 +182,9 @@ return [
     'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT' => 'Not checked',
     'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT' => 'Correctly',
     'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT' => 'Incorrectly',
+    /* Значения вида дерева диаграмм*/
+    'TREE_DIAGRAM_MODEL_ORDINARY_TREE_VIEW' => 'Ordinary tree',
+    'TREE_DIAGRAM_MODEL_TEMPLATE_TREE_VIEW' => 'Tree template',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',

@@ -33,13 +33,15 @@ class TreeDiagramsController extends Controller
                 'class' => AccessControl::className(),
                 'only' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
                     'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
-                    'add-relationship', 'delete-relationship'],
+                    'add-relationship', 'delete-relationship', 'add-parameter', 'edit-parameter', 'delete-parameter',
+                    'correctness', 'creation-template'],
                 'rules' => [
                     [
                         'allow' => true,
                         'actions' => ['create', 'update', 'delete', 'create', 'add-level', 'add-event', 'add-mechanism',
                             'edit-level', 'edit-event', 'edit-mechanism', 'delete-level', 'delete-event', 'delete-mechanism',
-                            'add-relationship', 'delete-relationship'],
+                            'add-relationship', 'delete-relationship', 'add-parameter', 'edit-parameter', 'delete-parameter',
+                            'correctness', 'creation-template'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -63,14 +65,30 @@ class TreeDiagramsController extends Controller
         if (!Yii::$app->user->isGuest) {
             $searchModel = new TreeDiagramSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $templates = TreeDiagram::find()->where(['tree_view' => TreeDiagram::TEMPLATE_TREE_VIEW])->all();
+
+            $array_template = array();
+            $i = 0;
+            if ($templates != null){
+                foreach ($templates as $elem){
+                    $array_template[$i]['label'] = $elem->name;
+                    $array_template[$i]['url'] = 'creation-template/' . $elem->id;
+                    $i = $i + 1;
+                }
+            } else {
+                $array_template[0]['label'] = Yii::t('app', 'TEMPLATES_DIAGRAMS_NOT_FOUND');
+                $array_template[0]['url'] = '';
+            }
         } else {
             $searchModel = new TreeDiagramSearch();
             $dataProvider = $searchModel->searchPublic(Yii::$app->request->queryParams);
+            $array_template = array();
         }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'array_template' => $array_template,
         ]);
     }
 
@@ -899,5 +917,107 @@ class TreeDiagramsController extends Controller
             return $response;
         }
         return false;
+    }
+
+
+    public function actionCreationTemplate($id)
+    {
+        //поиск TreeDiagram шаблона
+        $template_treediagram = TreeDiagram::find()->where(['id' => $id])->one();
+
+        //создание новой tree diagram из шаблона
+        $model = new TreeDiagram();
+        $model->author = Yii::$app->user->identity->getId();
+        $model->correctness = TreeDiagram::NOT_CHECKED_CORRECT;
+        $model->name =  Yii::t('app', 'TREE_DIAGRAMS_CREATED_FROM') . $template_treediagram->name;
+        $model->description = $template_treediagram->description;
+        $model->type = $template_treediagram->type;
+        $model->status = $template_treediagram->status;
+        $model->mode = $template_treediagram->mode;
+        $model->tree_view = TreeDiagram::ORDINARY_TREE_VIEW;
+        $model->save();
+
+        //массив node (для копирования связей)
+        $array_nodes = array();
+        $j = 0;
+
+
+        $template_level_count = Level::find()->where(['tree_diagram' => $id])->count();
+        $template_parent_level = null;
+        $parent_level = null;
+        for ($i = 1; $i <= $template_level_count; $i++) {
+            $template_level = Level::find()->where(['parent_level' => $template_parent_level, 'tree_diagram' => $id])->one();
+
+            //создание нового level из шаблона
+            $level = new Level();
+            $level->name = $template_level->name;
+            $level->description = $template_level->description;
+            $level->parent_level = $parent_level;
+            $level->tree_diagram = $model->id;
+            $level->save();
+
+            $template_parent_level = $template_level->id;
+            $parent_level = $level->id;
+
+            $template_sequences = Sequence::find()->where(['level' => $template_parent_level, 'tree_diagram' => $id])->all();
+            foreach ($template_sequences as $s){
+
+                $template_node = Node::find()->where(['id' => $s->node])->one();
+                //создание нового node из шаблона
+                $node = new Node();
+                $node->name = $template_node->name;
+                $node->certainty_factor = $template_node->certainty_factor;
+                $node->description = $template_node->description;
+                $node->operator = $template_node->operator;
+                $node->type = $template_node->type;
+                $node->parent_node = $template_node->parent_node;
+                $node->tree_diagram = $model->id;
+                $node->level_id = $parent_level;
+                $node->save();
+
+
+                $array_nodes[$j]['node_template'] = $template_node->id;
+                $array_nodes[$j]['node'] = $node->id;
+                $j = $j+1;
+
+
+                //поиск всех parameter из шаблона по id node
+                $template_parameters = Parameter::find()->where(['node' => $template_node->id])->all();
+                foreach ($template_parameters as $p){
+                    //создание нового parameter из шаблона
+                    $parameter = new Parameter();
+                    $parameter->name = $p->name;
+                    $parameter->description = $p->description;
+                    $parameter->operator = $p->operator;
+                    $parameter->value = $p->value;
+                    $parameter->node = $node->id;
+                    $parameter->save();
+                }
+
+                //создание нового sequence из шаблона
+                $sequence = new Sequence();
+                $sequence->tree_diagram = $model->id;
+                $sequence->level = $parent_level;
+                $sequence->node = $node->id;
+                $sequence_model_count = Sequence::find()->where(['tree_diagram' => $model->id])->count();
+                $sequence->priority = $sequence_model_count;
+                $sequence->save();
+            }
+        }
+
+        $nodes = Node::find()->where(['tree_diagram' => $model->id])->all();
+        foreach ($nodes as $n){
+            for ($i = 0; $i < $j; $i++) {
+                if ($n->parent_node == $array_nodes[$i]['node_template']){
+                    $n->parent_node = $array_nodes[$i]['node'];
+                    $n->updateAttributes(['parent_node']);
+                }
+            }
+        }
+
+        Yii::$app->getSession()->setFlash('success',
+                Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
+
+        return $this->redirect(['view', 'id' => $model->id]);
     }
 }

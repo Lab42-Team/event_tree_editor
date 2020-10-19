@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'data-toggle'=>'modal',
             'data-target'=>'#removeTreeDiagramModalForm'
         ]) ?>
-
     </p>
 
     <?= DetailView::widget([
@@ -64,6 +63,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->getModesName();
                 },
                 'filter'=>TreeDiagram::getModesArray(),
+            ],
+            [
+                'attribute'=>'tree_view',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getTreeViewName();
+                },
+                'filter'=>TreeDiagram::getTreeViewArray(),
+            ],
+            [
+                'attribute'=>'correctness',
+                'format' => 'raw',
+                'value' => function($data) {
+                    return $data->getСorrectnessName();
+                },
+                'filter'=>TreeDiagram::getСorrectnessArray(),
             ],
             [
                 'attribute'=>'author',
