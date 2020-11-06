@@ -89,12 +89,14 @@ return [
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Изменить диаграмму',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Удалить диаграмму',
     'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Визуальная диаграмма',
+    'TREE_DIAGRAMS_PAGE_IMPORT_TREE_DIAGRAM' => 'Импортирование визуальной диаграммы',
     'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Создать диаграмму по шаблону',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данную диаграмму?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'Вы успешно обновили данную диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'Вы успешно удалили диаграмму.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_IMPORT_TREE_DIAGRAM' => 'Вы успешно импортировали диаграмму.',
     /* Имя диаграммы созданной из шаблона */
     'TREE_DIAGRAMS_CREATED_FROM' => 'Диаграмма созданная из ',
     'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Шаблоны диаграмм не найдены',
@@ -244,6 +246,11 @@ return [
     'SEQUENCE_MODEL_NODE' => 'Узел',
     'SEQUENCE_MODEL_PRIORITY' => 'Приоритет',
 
+    /* ImportFile */
+    'IMPORT_FORM_FILE_NAME' => 'Имя файла',
+    'MESSAGE_CLEANING' => 'При импорте все элементы диаграммы будут удалены',
+    'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Режим импортируемого файла не совпадает с режимом диаграммы',
+
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
@@ -260,6 +267,7 @@ return [
     'ERROR_LINKING_ITEMS' => 'Ошибка при связывании элементов',
     'VALIDATION' => 'Проверка корректности',
     'DELETE_RELATIONSHIP' => 'Удаление связи',
+    'IMPORT_FORM' => 'Импортирование',
 
     /* Cообщения */
     'MAXIMUM_CONNECTIONS' => 'Максимальное количество соединений ',

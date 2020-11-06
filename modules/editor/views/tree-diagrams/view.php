@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ['visual-diagram', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('<span class="glyphicon glyphicon-pencil"></span> ' . Yii::t('app', 'BUTTON_UPDATE'),
             ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('<span class="glyphicon glyphicon-import"></span> ' . Yii::t('app', 'BUTTON_IMPORT'),
+            ['import', 'id' => $model->id], ['class' => 'btn btn-primary']
+        ) ?>
         <?= Html::a('<span class="glyphicon glyphicon-export"></span> ' . Yii::t('app', 'BUTTON_EXPORT'),
             ['visual-diagram', 'id' => $model->id], ['data' => ['method' => 'post'], 'class' => 'btn btn-primary']
         ) ?>
