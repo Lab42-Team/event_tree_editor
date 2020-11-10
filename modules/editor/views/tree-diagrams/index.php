@@ -15,12 +15,16 @@ $this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<?php
+$this->registerCssFile('/css/index.css', ['position'=>yii\web\View::POS_HEAD]);
+?>
+
 <div class="tree-diagram-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php if (!Yii::$app->user->isGuest): ?>
-        <div>
+        <div class="buttons">
             <?= Html::a('<span class="glyphicon glyphicon-edit"></span> ' . Yii::t('app', 'TREE_DIAGRAMS_PAGE_CREATE_TREE_DIAGRAM'),
                 ['create'], ['class' => 'btn btn-success']) ?>
 

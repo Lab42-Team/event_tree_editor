@@ -89,12 +89,14 @@ return [
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Update diagram',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Delete diagram',
     'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Visual diagram',
+    'TREE_DIAGRAMS_PAGE_IMPORT_TREE_DIAGRAM' => 'Import visual diagram',
     'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Create a chart from a template',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Are you sure that you want to delete this diagram?',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'You have successfully created a new diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'You have successfully updated diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'You have successfully deleted diagram.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_IMPORT_TREE_DIAGRAM' => 'You have successfully imported diagram.',
     /* Имя диаграммы созданной из шаблона */
     'TREE_DIAGRAMS_CREATED_FROM' => 'Chart created from ',
     'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Templates diagrams not found',
@@ -244,6 +246,11 @@ return [
     'SEQUENCE_MODEL_NODE' => 'Node',
     'SEQUENCE_MODEL_PRIORITY' => 'Priority',
 
+    /* ImportFile */
+    'IMPORT_FORM_FILE_NAME' => 'File name',
+    'MESSAGE_CLEANING' => 'When importing all chart elements are removed',
+    'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Imported file mode does not match chart mode',
+
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'LEVEL_EDIT_LEVEL' => 'Level change',
@@ -260,6 +267,7 @@ return [
     'ERROR_LINKING_ITEMS' => 'Error linking items',
     'VALIDATION' => 'Validation',
     'DELETE_RELATIONSHIP' => 'Deleting connection',
+    'IMPORT_FORM' => 'Import',
 
     /* Cообщения */
     'MAXIMUM_CONNECTIONS' => 'Maximum connections ',
@@ -281,6 +289,7 @@ return [
     'CONNECTION_DELETE' => 'Delete',
 
     'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'You can enter a number from 0 to 1, and only up to hundredths',
+    'MESSAGE_ELEMENT_NAME_ALREADY_ON_DIAGRAM' => 'An element with this name is already on the diagram',
 
     /* Текст */
     'TEXT_NODE' => 'The node ',

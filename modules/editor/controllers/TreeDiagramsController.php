@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Response;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use yii\bootstrap\ActiveForm;
 use app\modules\editor\models\Level;
@@ -14,8 +15,10 @@ use app\modules\editor\models\Sequence;
 use app\modules\editor\models\Parameter;
 use app\modules\editor\models\TreeDiagram;
 use app\modules\editor\models\TreeDiagramSearch;
+use app\modules\editor\models\Import;
 use yii\filters\AccessControl;
 use app\components\EventTreeXMLGenerator;
+use app\components\EventTreeXMLImport;
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
@@ -214,6 +217,7 @@ class TreeDiagramsController extends Controller
         $level_model = new Level();
         $node_model = new Node();
         $parameter_model = new Parameter();
+        $import_model = new Import();
 
         $array_levels = Level::getLevelsArray($id);
         $array_levels_initial_without = Level::getWithoutInitialLevelsArray($id);
@@ -228,6 +232,7 @@ class TreeDiagramsController extends Controller
             'level_model' => $level_model,
             'node_model' => $node_model,
             'parameter_model' => $parameter_model,
+            'import_model' => $import_model,
             'level_model_all' => $level_model_all,
             'level_model_count' => $level_model_count,
             'initial_event_model_all' =>$initial_event_model_all,
@@ -589,7 +594,7 @@ class TreeDiagramsController extends Controller
                     $sequence->level = $model->level_id;
                     $sequence->updateAttributes(['level']);
 
-                    //очистить связи в бд-----------------
+                    //очистить связи в бд
                     //очистить входящие связи
                     $node = Node::find()->where(['id' => $data["id"]])->one();
                     $node->parent_node = null;
@@ -669,8 +674,6 @@ class TreeDiagramsController extends Controller
             $level -> delete();
 
             $data["success"] = true;
-
-
 
             // Возвращение данных
             $response->data = $data;
@@ -902,7 +905,6 @@ class TreeDiagramsController extends Controller
             $data["empty_level"] = $empty_level;
             $data["level_without_mechanism"] = $level_without_mechanism;
 
-
             //изменение
             if (($not_connected != null) || ($empty_level != null) || ($level_without_mechanism != null)){
                 $model->correctness = TreeDiagram::INCORRECTLY_CORRECT;
@@ -975,11 +977,9 @@ class TreeDiagramsController extends Controller
                 $node->level_id = $parent_level;
                 $node->save();
 
-
                 $array_nodes[$j]['node_template'] = $template_node->id;
                 $array_nodes[$j]['node'] = $node->id;
                 $j = $j+1;
-
 
                 //поиск всех parameter из шаблона по id node
                 $template_parameters = Parameter::find()->where(['node' => $template_node->id])->all();
@@ -1019,5 +1019,125 @@ class TreeDiagramsController extends Controller
                 Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM'));
 
         return $this->redirect(['view', 'id' => $model->id]);
+    }
+
+
+
+    public function actionImport($id)
+    {
+        $model = $this->findModel($id);
+        $import_model = new Import();
+
+        //вывод сообщения об очистки если диаграмма не пуста
+        $tree_diagram = TreeDiagram::find()->where(['id' => $id])->one();
+        if ($tree_diagram->mode == TreeDiagram::EXTENDED_TREE_MODE){
+            $count = Level::find()->where(['tree_diagram' => $id])->count();
+            if ($count > 0){
+                Yii::$app->getSession()->setFlash('danger',
+                    Yii::t('app', 'MESSAGE_CLEANING'));
+            }
+        }
+        if ($tree_diagram->mode == TreeDiagram::CLASSIC_TREE_MODE){
+            $count = Node::find()->where(['tree_diagram' => $id])->count();
+            if ($count > 0){
+                Yii::$app->getSession()->setFlash('danger',
+                    Yii::t('app', 'MESSAGE_CLEANING'));
+            }
+        }
+
+
+        if (Yii::$app->request->isPost) {
+            $import_model->file_name = UploadedFile::getInstance($import_model, 'file_name');
+
+            if ($import_model->upload()) {
+
+                $file = simplexml_load_file('uploads/temp.xml');
+
+                //выявление расширенного или классического дерева
+                if (((string) $file["mode"] == "Расширенное дерево") or ((string) $file["mode"] == "Extended tree")){
+                    $mode = TreeDiagram::EXTENDED_TREE_MODE;
+                }
+                if (((string) $file["mode"] == "Классическое дерево") or ((string) $file["mode"] == "Classic tree")){
+                    $mode = TreeDiagram::CLASSIC_TREE_MODE;
+                }
+
+                if ($tree_diagram->mode == $mode){
+                    //импорт xml файла
+                    $generator = new EventTreeXMLImport();
+                    $generator->importCodeXML($id, $file);
+
+                    //удаление файла
+                    unlink('uploads/temp.xml');
+
+                    Yii::$app->getSession()->setFlash('success',
+                        Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_IMPORT_TREE_DIAGRAM'));
+
+                    return $this->render('view', [
+                        'model' => $this->findModel($id),
+                    ]);
+                } else {
+                    Yii::$app->getSession()->setFlash('error',
+                        Yii::t('app', 'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE'));
+
+                    return $this->render('import', [
+                        'model' => $model,
+                        'import_model' => $import_model,
+                    ]);
+                }
+            }
+        }
+
+        return $this->render('import', [
+            'model' => $model,
+            'import_model' => $import_model,
+        ]);
+    }
+
+
+
+
+
+    //Через модальное окно сменить наименование
+    public function actionImportModal($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = new Import();
+            //if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            //    $file = UploadedFile::getInstance($model, 'file_name');
+            //    if ($file && $file->tempName) {
+            //        $model->file_name = $file;
+
+            //        $data["tempName"] = "sdfsdf";
+            //        $data["success"] = true;
+            //    }
+            //} else
+            //    $data = ActiveForm::validate($model);
+
+
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $file = UploadedFile::getInstance($model, 'file_name');
+                $model->file_name = $file;
+                if ($model->validate(['file_name ']))
+                    if ($file && $file->tempName) {
+                        $data["tempName"] = "sdfsdf";
+                        $data["success"] = true;
+                    }
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+
+            return $response;
+        }
+
+        return false;
     }
 }

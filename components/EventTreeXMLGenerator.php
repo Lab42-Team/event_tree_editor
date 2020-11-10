@@ -28,8 +28,9 @@ class EventTreeXMLGenerator
                 $parameter_element = $xml->createElement('Parameter');
                 $parameter_element->setAttribute('id', $p_elem->id);
                 $parameter_element->setAttribute('name', $p_elem->name);
-                $parameter_element->setAttribute('value', $p_elem->value);
                 $parameter_element->setAttribute('description', $p_elem->description);
+                $parameter_element->setAttribute('operator', $p_elem->getOperatorName());
+                $parameter_element->setAttribute('value', $p_elem->value);
                 $xml_element->appendChild($parameter_element);
             }
         }
@@ -53,6 +54,7 @@ class EventTreeXMLGenerator
             $node_element->setAttribute('type', $event->getTypeName());
             $node_element->setAttribute('name', $event->name);
             $node_element->setAttribute('description', $event->description);
+            $node_element->setAttribute('certainty_factor', $event->certainty_factor);
             $xml_element->appendChild($node_element);
 
             //отрисовка "Parameter"
@@ -108,6 +110,7 @@ class EventTreeXMLGenerator
         $diagram_element->setAttribute('type', $diagram->getTypeName());
         $diagram_element->setAttribute('name', $diagram->name);
         $diagram_element->setAttribute('description', $diagram->description);
+        $diagram_element->setAttribute('mode', $diagram->getModesName()); // Расширенное дерево // Классическое дерево
         // Добавление корневого узла Diagram в XML-документ
         $xml->appendChild($diagram_element);
 
