@@ -782,7 +782,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 left: current_left + left,
                                 top: current_top + top
                             });
-                            left = left + width_node;
                             top = top + height_node;
 
                         //если это потомки начального события
