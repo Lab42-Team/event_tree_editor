@@ -39,7 +39,7 @@ $this->params['menu_add'] = [
 
 $this->params['menu_diagram'] = [
     ['label' => '<span class="glyphicon glyphicon-import"></span> ' . Yii::t('app', 'NAV_IMPORT'),
-        'url' => '#', 'options' => ['id'=>'nav_import', 'data-toggle'=>'modal', 'data-target'=>'#importModalForm']],
+        'url' => Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .'/tree-diagrams/import/'. $model->id],
 
     ['label' => '<span class="glyphicon glyphicon-export"></span> ' . Yii::t('app', 'NAV_EXPORT'),
         'url' => '#', 'linkOptions' => ['data-method' => 'post']],
@@ -95,11 +95,6 @@ foreach ($initial_event_model_all as $i){
 
 <?= $this->render('_modal_form_parameter_editor', [
     'parameter_model' => $parameter_model,
-]) ?>
-
-<?= $this->render('_import', [
-    'model' => $model,
-    'import_model' => $import_model,
 ]) ?>
 
 

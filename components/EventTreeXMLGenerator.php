@@ -115,7 +115,7 @@ class EventTreeXMLGenerator
         $xml->appendChild($diagram_element);
 
         //подбор всех Level
-        $level_elements = Level::find()->where(['tree_diagram' => $id])->all();
+        $level_elements = Level::find()->where(['tree_diagram' => $id])->orderBy(['id' => SORT_ASC])->all();
         if ($level_elements != null) {
             foreach ($level_elements as $l_elem) {
 

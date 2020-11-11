@@ -18,15 +18,7 @@ class Import extends Model
     public function rules()
     {
         return [
-            //[['file_name'], 'required'],
             [['file_name'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xml'],
-
-            //последнее что предложил Никитос
-            //[['file_name'], 'required'],
-            //[['file_name'], 'file', 'extensions' => 'xml', 'checkExtensionByMimeType' => true],
-
-            //[['file_name'], 'required'],
-            //[['file_name'], 'file', 'extensions' => 'xml', 'checkExtensionByMimeType' => false],
         ];
     }
 
@@ -59,25 +51,4 @@ class Import extends Model
         ];
     }
 
-
-
-
-
-    /**
-     * Sends an email to the specified email address using the information collected by this model.
-     * @param  string  $email the target email address
-     * @return boolean whether the model passes validation
-     */
-    //public function contact($file_name)
-    //{
-    //    if ($this->validate()) {
-    //        Yii::$app->mailer->compose()
-    //            ->setTo($file_name)
-    //            ->setFrom([$this->file_name])
-    //            ->send();
-
-    //        return true;
-    //    }
-    //    return false;
-    //}
 }
