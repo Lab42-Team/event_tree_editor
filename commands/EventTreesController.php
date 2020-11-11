@@ -38,8 +38,10 @@ class EventTreesController extends Controller
                 $tree_diagram->type = TreeDiagram::EVENT_TREE_TYPE;
                 $tree_diagram->status = TreeDiagram::PUBLIC_STATUS;
                 $tree_diagram->author = $user->id;
+                $tree_diagram->mode = TreeDiagram::CLASSIC_TREE_MODE;
+                $tree_diagram->correctness = TreeDiagram::NOT_CHECKED_CORRECT;
+                $tree_diagram->tree_view = TreeDiagram::ORDINARY_TREE_VIEW;
                 $this->log($tree_diagram->save());
-
 
                 //первый уровень
                 $level = new Level();
@@ -52,6 +54,7 @@ class EventTreesController extends Controller
 
                 $initial_event = new Node();
                 $initial_event->name = 'Исходное техническое состояние объекта';
+                $initial_event->certainty_factor = 0;
                 $initial_event->description = 'Материал – низколегированная сталь; Остаточные макронапряжения; Нагрузка – 
                                             растягивающие механические и термические напряжения; Среда – активная';
                 $initial_event->operator = Node::AND_OPERATOR;
@@ -102,6 +105,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Субмикротрещины';
+                $event->certainty_factor = 0;
                 $event->description = 'Местоположение – «на поверхности»; длина < 100 нм';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -135,6 +139,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Питтинги';
+                $event->certainty_factor = 0;
                 $event->description = 'Местоположение – «на поверхности»; диаметр – 1-2 мм; глубина - 1-2 мм';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -176,6 +181,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Язвы';
+                $event->certainty_factor = 0;
                 $event->description = 'Местоположение – «на поверхности»; диаметр – 3-5 мм; глубина - 1-3 мм';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -217,6 +223,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Микротрещины';
+                $event->certainty_factor = 0;
                 $event->description = 'Длина < 500 мкм; источник – «питтинги»';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -250,6 +257,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Макротрещины';
+                $event->certainty_factor = 0;
                 $event->description = 'Направление –  «поперечные»; длина < 7 мм; глубина < 4 мм';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -292,6 +300,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Сквозная трещина';
+                $event->certainty_factor = 0;
                 $event->description = 'Направление – «поперечная»; длина ≈ 80 мм; глубина ≈ 45 мм';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -344,6 +353,9 @@ class EventTreesController extends Controller
                 $tree_diagram->type = TreeDiagram::EVENT_TREE_TYPE;
                 $tree_diagram->status = TreeDiagram::PUBLIC_STATUS;
                 $tree_diagram->author = $user->id;
+                $tree_diagram->mode = TreeDiagram::EXTENDED_TREE_MODE;
+                $tree_diagram->correctness = TreeDiagram::NOT_CHECKED_CORRECT;
+                $tree_diagram->tree_view = TreeDiagram::ORDINARY_TREE_VIEW;
                 $this->log($tree_diagram->save());
 
 
@@ -358,6 +370,7 @@ class EventTreesController extends Controller
 
                 $initial_event = new Node();
                 $initial_event->name = 'Отказ детали «емкость 16/1»';
+                $initial_event->certainty_factor = null;
                 $initial_event->description = 'Отказ детали «емкость 16/1»';
                 $initial_event->operator = Node::AND_OPERATOR;
                 $initial_event->type = Node::INITIAL_EVENT_TYPE;;
@@ -385,6 +398,7 @@ class EventTreesController extends Controller
 
                 $mechanism = new Node();
                 $mechanism->name = 'Mechanism 1';
+                $mechanism->certainty_factor = null;
                 $mechanism->description = 'Test-tree-diagram-mechanism';
                 $mechanism->operator = Node::AND_OPERATOR;
                 $mechanism->type = Node::MECHANISM_TYPE;
@@ -403,6 +417,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Разлив «СДЯВ»';
+                $event->certainty_factor = null;
                 $event->description = 'Количество выброшенного вещества - Q; Площадь разлива в поддон/обваловку - S;';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -422,6 +437,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Образование первичного облака';
+                $event->certainty_factor = null;
                 $event->description = 'Эквивалентное количество вещества - Q ; Глубина заражения первичным облаком - Г ; Площадь возможного заражения для первичного облака - S ';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -450,6 +466,7 @@ class EventTreesController extends Controller
 
                 $mechanism = new Node();
                 $mechanism->name = 'Mechanism 2';
+                $mechanism->certainty_factor = null;
                 $mechanism->description = 'Test-tree-diagram-mechanism';
                 $mechanism->operator = Node::AND_OPERATOR;
                 $mechanism->type = Node::MECHANISM_TYPE;
@@ -468,6 +485,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Образование вторичного облака';
+                $event->certainty_factor = null;
                 $event->description = 'Эквивалентное количество вещества - Q; Глубина заражения вторичным облаком - Г;';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -487,6 +505,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Заражение территории';
+                $event->certainty_factor = null;
                 $event->description = 'Полная глубина заражения - Г; Предельно возможная глубина переноса воздушных масс - Гп; 
                                     Глубина заражения - ; Площадь зоны фактического заражения - Sф;';
                 $event->operator = Node::AND_OPERATOR;
@@ -516,6 +535,7 @@ class EventTreesController extends Controller
 
                 $mechanism = new Node();
                 $mechanism->name = 'Mechanism 3';
+                $mechanism->certainty_factor = null;
                 $mechanism->description = 'Test-tree-diagram-mechanism';
                 $mechanism->operator = Node::AND_OPERATOR;
                 $mechanism->type = Node::MECHANISM_TYPE;
@@ -534,6 +554,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Воздействие на персонал';
+                $event->certainty_factor = null;
                 $event->description = 'Количество погибших; Количество пострадавших; Продолжительность поражающего действия – T;';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
@@ -553,6 +574,7 @@ class EventTreesController extends Controller
 
                 $event = new Node();
                 $event->name = 'Воздействие на население';
+                $event->certainty_factor = null;
                 $event->description = 'Количество погибших; Количество пострадавших; Продолжительность поражающего действия – T;';
                 $event->operator = Node::AND_OPERATOR;
                 $event->type = Node::EVENT_TYPE;
