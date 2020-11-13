@@ -1033,14 +1033,14 @@ class TreeDiagramsController extends Controller
         if ($tree_diagram->mode == TreeDiagram::EXTENDED_TREE_MODE){
             $count = Level::find()->where(['tree_diagram' => $id])->count();
             if ($count > 0){
-                Yii::$app->getSession()->setFlash('danger',
+                Yii::$app->getSession()->setFlash('warning',
                     Yii::t('app', 'MESSAGE_CLEANING'));
             }
         }
         if ($tree_diagram->mode == TreeDiagram::CLASSIC_TREE_MODE){
             $count = Node::find()->where(['tree_diagram' => $id])->count();
             if ($count > 0){
-                Yii::$app->getSession()->setFlash('danger',
+                Yii::$app->getSession()->setFlash('warning',
                     Yii::t('app', 'MESSAGE_CLEANING'));
             }
         }

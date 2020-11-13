@@ -734,6 +734,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             id_initial_node = $(this).attr('id');
         });
 
+        //высота начального node
+        var height_initial_node;
+
         // ширина и высота элемента + отступ
         var width_node = 200 + 20;
         var height_node = 200 + 40;
@@ -764,7 +767,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (parent_node != null){
                         var parent_node_left = parent_node.offsetLeft;
                         var parent_node_top = parent_node.offsetTop;
-
                     }
 
                     var level_parent = node.offsetParent;
@@ -778,12 +780,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (id_level_parent == id_level){
                         //если начальное событие
                         if (id_node == id_initial_node){
+                            height_initial_node = node.offsetHeight;
                             $(this).css({
                                 left: current_left + left,
                                 top: current_top + top
                             });
-                            left = left + width_node;
-                            top = top + height_node;
+                            top = top + height_node + height_initial_node;
 
                         //если это потомки начального события
                         } else if (id_parent_node == n_initial_node){
@@ -804,6 +806,17 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
             var col = 0;
             var sum_col = 0;
+
+            //нахождение максимальной высоты node
+            var max_height_node = 0;
+            $(".node").each(function(i) {
+                var id_node = $(this).attr('id');
+                var node = document.getElementById(id_node);
+
+                if ((id_node != id_initial_node) && (max_height_node < node.offsetHeight)){
+                    max_height_node = node.offsetHeight;
+                }
+            });
 
             do {
                 sum_col = 0;
@@ -885,7 +898,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     if (parent_node_id_level_parent == id_level_parent){
                                         $(this).css({
                                             left: parent_node_left + left,
-                                            top: parent_node_top + top,
+                                            top: parent_node_top + height_node + max_height_node,
                                         });
                                         left = left + width_node;
                                     //иначе уровни разные
