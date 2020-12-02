@@ -213,7 +213,17 @@ class TreeDiagramsController extends Controller
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
         $sequence_model_all = Sequence::find()->where(['tree_diagram' => $id])->all();
         $node_model_all = Node::find()->where(['tree_diagram' => $id])->all();
-        $parameter_model_all = Parameter::find()->all();
+
+        $parameter_all = Parameter::find()->all();
+        $parameter_model_all = array();//массив пустых уровней
+        foreach ($parameter_all as $p){
+            foreach ($node_model_all as $n){
+                if ($p->node == $n->id){
+                    array_push($parameter_model_all, $p);
+                }
+            }
+        }
+
         $level_model = new Level();
         $node_model = new Node();
         $parameter_model = new Parameter();
@@ -769,7 +779,8 @@ class TreeDiagramsController extends Controller
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
-                $data["operator"] = $model->getOperatorName();
+                $data["operator_name"] = $model->getOperatorName();
+                $data["operator"] = $model->operator;
                 $data["value"] = $model->value;
 
             } else
@@ -801,7 +812,8 @@ class TreeDiagramsController extends Controller
                 $data["id"] = $model->id;
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
-                $data["operator"] = $model->getOperatorName();
+                $data["operator_name"] = $model->getOperatorName();
+                $data["operator"] = $model->operator;
                 $data["value"] = $model->value;
 
             } else
