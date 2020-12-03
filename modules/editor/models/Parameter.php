@@ -51,7 +51,7 @@ class Parameter extends \yii\db\ActiveRecord
             [['name', 'value'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
-            // name и tree_diagram вместе должны быть уникальны, но только name будет получать сообщение об ошибке
+            // name и node вместе должны быть уникальны, но только name будет получать сообщение об ошибке
             ['name', 'unique', 'targetAttribute' => ['name', 'node'],
                 'message' => Yii::t('app', 'MESSAGE_PARAMETER_NAME_ALREADY_IN_EVENT')],
 

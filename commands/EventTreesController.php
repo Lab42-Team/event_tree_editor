@@ -389,7 +389,7 @@ class EventTreesController extends Controller
 
                 //второй уровень
                 $level = new Level();
-                $level->name = 'Аварийная ситуация';
+                $level->name = 'Аварийная ситуация2';
                 $level->description = 'Поддерево событий стадии нежелательного процесса «аварийная ситуация»';
                 $level->parent_level = $level1;
                 $level->tree_diagram = $tree_diagram->id;
