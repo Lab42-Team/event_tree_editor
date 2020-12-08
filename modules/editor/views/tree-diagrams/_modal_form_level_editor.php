@@ -216,7 +216,7 @@ use app\modules\main\models\Lang;
 <?= $form->field($level_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
 <?= Button::widget([
-    'label' => Yii::t('app', 'BUTTON_ADD'),
+    'label' => Yii::t('app', 'BUTTON_SAVE'),
     'options' => [
         'id' => 'edit-level-button',
         'class' => 'btn-success',

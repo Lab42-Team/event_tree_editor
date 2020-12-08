@@ -35,20 +35,26 @@ div.top > div {
 
 .div-level-name {
     position: relative;
-    min-width: 100px;
+    width: 100px;
     border:0px solid #337ab7;
     background-color: #fafafa;
     cursor: pointer;
 }
 
-.div-level-name > .div-title-name {
-    width: 150px;
-    transform: rotate(-90deg);
-    margin-left: -30px;
-    margin-top: 100px;
-    white-space: nowrap; /* Запрещаем перенос строк */
+.div-title-name {
+    position: absolute;
+    width: 70px;
+    height: 100%;
+    margin-left: 10px;
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    writing-mode:vertical-rl;
+    transform: rotate(180deg);
+    text-align: right;
+    word-wrap: break-word; /* перенос текста */
     overflow: hidden; /* Обрезаем все, что не помещается в область */
-    text-overflow: ellipsis; /* Добавляем многоточие */
 }
 
 .div-level-description {
@@ -68,7 +74,6 @@ div.top > div {
     border-radius: 5px;
     /* текст по центру для дочернего блока div-event-name*/
     position: absolute;
-
     overflow:hidden
 }
 
@@ -114,9 +119,10 @@ div.top > div {
 
 .div-mechanism-name {
     position: absolute;
-    right: -15px;
+    right: 0px;
     text-align: right;
-    width: 180px;
+    word-wrap: break-word;
+    width: 150px;
     top: 50%;
     transform: translate(-50%, -50%);
 }
