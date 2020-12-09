@@ -295,6 +295,10 @@ use app\modules\editor\models\Node;
 
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
 
+                            //разместить новый node по новым координатам
+                            new_div_event.style.left = '50px';
+                            new_div_event.style.top = '50px';
+
                             var div_event_name = document.getElementById('node_name_' + data['id']);
                             if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
                                 div_event_name.innerHTML = data['name'];

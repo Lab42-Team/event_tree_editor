@@ -239,6 +239,10 @@ use app\modules\main\models\Lang;
 
                             div_level_layer.append(new_div_mechanism); // разместить клонированный элемент в новый уровень
 
+                            //разместить новый node по новым координатам
+                            new_div_mechanism.style.left = '50px';
+                            new_div_mechanism.style.top = '50px';
+
                             new_div_mechanism.title = data['description'];
                             var div_mechanism_name = document.getElementById('node_name_' + data['id']);
                             div_mechanism_name.innerHTML = data['name'];
