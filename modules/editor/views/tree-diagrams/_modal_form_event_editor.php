@@ -206,7 +206,7 @@ use app\modules\editor\models\TreeDiagram;
 
                             // Выключение переходов на модальные окна
                             var nav_add_event = document.getElementById('nav_add_event');
-                            if ((data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>) && (data['level_count'] == 1)){
+                            if ((data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>) && (data['level_count'] == 1) && (data['mode'] == <?= TreeDiagram::EXTENDED_TREE_MODE ?>)){
                                 nav_add_event.className = 'disabled';
                                 nav_add_event.setAttribute("data-target", "");
                             }
