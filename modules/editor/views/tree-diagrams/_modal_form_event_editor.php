@@ -5,6 +5,7 @@ use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
+use app\modules\editor\models\TreeDiagram;
 
 /* @var $node_model app\modules\editor\models\Node */
 /* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
@@ -15,6 +16,20 @@ use app\modules\editor\models\Node;
     $(document).on('change', '#node-level_id', function() {
         var alert = document.getElementById('alert_event_level_id');
         alert.style = "";
+    });
+
+    // Обработка открытия модального окна добавления нового события
+    $("#addEventModalForm").on("show.bs.modal", function() {
+        //если начальное событие есть тогда
+        var initial_event = document.getElementsByClassName("div-initial-event");
+        if ((initial_event.length == 0)||(<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)){
+            //блокировка изменения левела
+            document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
+            document.getElementById('add_label_level').style.display = "none";
+        } else {
+            document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
+            document.getElementById('add_label_level').style.display = "";
+        }
     });
 </script>
 
@@ -188,6 +203,16 @@ use app\modules\editor\models\Node;
                                 j = j + 1;
                             });
                             mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description, certainty_factor:certainty_factor,};
+
+                            // Выключение переходов на модальные окна
+                            var nav_add_event = document.getElementById('nav_add_event');
+                            if ((data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>) && (data['level_count'] == 1)){
+                                nav_add_event.className = 'disabled';
+                                nav_add_event.setAttribute("data-target", "");
+                            }
+
+                            document.getElementById("pjax-event-editor-button").click();
+
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
@@ -214,7 +239,13 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php if ((TreeDiagram::CLASSIC_TREE_MODE == $model->mode) or ($the_initial_event_is == 0) ){ ?>
+    <?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->
+                    label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php } else { ?>
+    <?= $form->field($node_model, 'level_id')->dropDownList($array_levels_initial_without)->
+                    label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php } ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
@@ -498,6 +529,15 @@ use app\modules\editor\models\Node;
                             });
                         });
                         sequence_mas.splice(pos_i, 1);
+
+                        // Включение переходов на модальные окна
+                        var nav_add_event = document.getElementById('nav_add_event');
+                        if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
+                            nav_add_event.className = 'enabled';
+                            nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                        }
+
+                        document.getElementById("pjax-event-editor-button").click();
                     }
                 },
                 error: function() {

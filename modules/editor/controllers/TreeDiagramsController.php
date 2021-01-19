@@ -207,7 +207,8 @@ class TreeDiagramsController extends Controller
     public function actionVisualDiagram($id)
     {
         $level_model_all = Level::find()->where(['tree_diagram' => $id])->all();
-        $level_model_count = Level::find()->where(['tree_diagram' => $id])->count();
+        $level_model_count = Level::find()->where(['tree_diagram' => $id])->count();//количество уровней
+        $the_initial_event_is = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->count();//переменная определяющая наличие начального события
         $initial_event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->all();
         $event_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::EVENT_TYPE])->all();
         $mechanism_model_all = Node::find()->where(['tree_diagram' => $id, 'type' => Node::MECHANISM_TYPE])->all();
@@ -245,6 +246,7 @@ class TreeDiagramsController extends Controller
             'import_model' => $import_model,
             'level_model_all' => $level_model_all,
             'level_model_count' => $level_model_count,
+            'the_initial_event_is' => $the_initial_event_is,
             'initial_event_model_all' =>$initial_event_model_all,
             'event_model_all' => $event_model_all,
             'mechanism_model_all' => $mechanism_model_all,
@@ -372,6 +374,8 @@ class TreeDiagramsController extends Controller
                 $sequence->save();
 
                 $data["id_level"] = $model->level_id;
+                $data["level_count"] = Level::find()->where(['tree_diagram' => $id])->count();
+
             } else
                 $data = ActiveForm::validate($model);
             // Возвращение данных
@@ -629,7 +633,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteLevel()
+    public function actionDeleteLevel($id)
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -683,6 +687,8 @@ class TreeDiagramsController extends Controller
             }
             $level -> delete();
 
+            $data["level_count"] = Level::find()->where(['tree_diagram' => $id])->count();
+            $data["the_initial_event_is"] = Node::find()->where(['tree_diagram' => $id, 'type' => Node::INITIAL_EVENT_TYPE])->count();
             $data["success"] = true;
 
             // Возвращение данных
@@ -712,6 +718,7 @@ class TreeDiagramsController extends Controller
             }
 
             $node = Node::find()->where(['id' => $node_id_on_click])->one();
+            $data["type"] = $node->type;
             $node -> delete();
 
             $data["success"] = true;

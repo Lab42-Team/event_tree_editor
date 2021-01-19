@@ -107,6 +107,8 @@ foreach ($initial_event_model_all as $i){
     'model' => $model,
     'node_model' => $node_model,
     'array_levels' => $array_levels,
+    'array_levels_initial_without' => $array_levels_initial_without,
+    'the_initial_event_is' => $the_initial_event_is,
 ]) ?>
 
 <?= $this->render('_modal_form_mechanism_editor', [
@@ -149,15 +151,17 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var nav_add_event = document.getElementById('nav_add_event');
             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
 
+            // Включение переходов на модальные окна
             if (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>){
-                // Включение переходов на модальные окна
                 nav_add_level.className = 'enabled';
                 nav_add_level.setAttribute("data-target", "#addLevelModalForm");
-                if ('<?php echo $level_model_count; ?>' > 0){
+                if (('<?php echo $level_model_count; ?>' > 0)&&('<?php echo $the_initial_event_is; ?>' == 0)){
                     nav_add_event.className = 'enabled';
                     nav_add_event.setAttribute("data-target", "#addEventModalForm");
                 }
                 if ('<?php echo $level_model_count; ?>' > 1){
+                    nav_add_event.className = 'enabled';
+                    nav_add_event.setAttribute("data-target", "#addEventModalForm");
                     nav_add_mechanism.className = 'enabled';
                     nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
                 }
@@ -1086,7 +1090,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         // отрисовка
         if (id_node_any != null){
             mousemoveNode(id_node_any);
-            increaseLevel();//расширение последнего уровня
+            //increaseLevel();//расширение последнего уровня
             // Обновление формы редактора
             instance.repaintEverything();
         }
@@ -1097,7 +1101,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
-        increaseLevel();//расширение последнего уровня
+        //increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
@@ -1106,7 +1110,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
-        increaseLevel();//расширение последнего уровня
+        //increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();

@@ -73,7 +73,7 @@ use app\modules\main\models\Lang;
                             div_level_description.className = 'div-level-description' ;
                             div_level.append(div_level_description);
 
-
+                            // Включение переходов на модальные окна
                             var nav_add_event = document.getElementById('nav_add_event');
                             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
                             if (data['level_count'] > 0){
@@ -256,7 +256,7 @@ use app\modules\main\models\Lang;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/delete-level'?>",
+                '/tree-diagrams/delete-level/' . $model->id ?>",
                 type: "post",
                 data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&level_id_on_click=" + level_id_on_click,
                 dataType: "json",
@@ -421,6 +421,22 @@ use app\modules\main\models\Lang;
                             instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
                         }
                         instance.remove(div_level);// удаляем визуально уровень
+
+                        // Выключение переходов на модальные окна
+                        var nav_add_event = document.getElementById('nav_add_event');
+                        var nav_add_mechanism = document.getElementById('nav_add_mechanism');
+                        if ((data['level_count'] == 1) && (data['the_initial_event_is'] != 0)){
+                            nav_add_event.className = 'disabled';
+                            nav_add_event.setAttribute("data-target", "");
+                        }
+                        if (data['level_count'] < 1){
+                            nav_add_event.className = 'disabled';
+                            nav_add_event.setAttribute("data-target", "");
+                        }
+                        if (data['level_count'] < 2){
+                            nav_add_mechanism.className = 'disabled';
+                            nav_add_mechanism.setAttribute("data-target", "");
+                        }
 
                         document.getElementById("pjax-event-editor-button").click();
                     }
