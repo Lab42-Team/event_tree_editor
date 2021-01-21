@@ -100,7 +100,7 @@ use app\modules\main\models\Lang;
                                 j = j + 1;
                             });
 
-                            mas_data_level[j] = {id_level:id, name:name, description:description};
+                            mas_data_level[j] = {id_level:id, parent_level:parent_level, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);
@@ -270,17 +270,29 @@ use app\modules\main\models\Lang;
                         //--------- убираем из массива удаляемый уровень
                         var temporary_mas_data_level = {};
                         var q = 0;
+                        var del_parent_level;
                         $.each(mas_data_level, function (i, elem_level) {
                             if (level_id_on_click != elem_level.id_level){//убираем элемент
                                 temporary_mas_data_level[q] = {
                                     "id_level":elem_level.id_level,
+                                    "parent_level":elem_level.parent_level,
                                     "name":elem_level.name,
                                     "description":elem_level.description,
                                 };
                                 q = q+1;
                             }
+                            if (level_id_on_click == elem_level.id_level){//находим parent_level из удаляемого уровня
+                                del_parent_level = elem_level.parent_level;
+                            }
                         });
                         mas_data_level = temporary_mas_data_level;
+
+                        $.each(mas_data_level, function (i, elem_level) {
+                            if (level_id_on_click == elem_level.parent_level){//заменяем parent_level на удаленный
+                                elem_level.parent_level = del_parent_level;
+                            }
+                        });
+
                         //--------- убираем из массива элементы на удаляемом уровне и их связи
                         var div_level_layer = document.getElementById('level_description_'+ level_id_on_click);
                         var mas_node = div_level_layer.getElementsByClassName("node");

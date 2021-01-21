@@ -267,15 +267,18 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var mas_data_level = {};
     var q = 0;
     var id_level = "";
+    var parent_level = "";
     var name_level = "";
     var description_level = "";
     $.each(level_mas, function (i, mas) {
         $.each(mas, function (j, elem) {
             if (j == 0) {id_level = elem;}
+            if (j == 1) {parent_level = elem;}
             if (j == 2) {name_level = elem;}
             if (j == 3) {description_level = elem;}
             mas_data_level[q] = {
                 "id_level":id_level,
+                "parent_level":parent_level,
                 "name":name_level,
                 "description":description_level,
             }
@@ -686,32 +689,20 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     var increaseLevel = function() {
-        //построение одномерного массива по порядку следования уровней
-        var mas_level_order = {};
         var q = 0;
-        var id_l = "";
-        var id_p_l = "";
-        $.each(level_mas, function (i, mas) {
-            $.each(mas, function (j, elem) {
-                //первый элемент это id уровня
-                if (j == 0) {id_l = elem;}//записываем id уровня
-                //второй элемент это id родительского уровня
-                if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
-                mas_level_order[q] = {
-                    "id_l":id_l,
-                    "id_p_l":id_p_l,
-                }
-            });
-            q = q+1;
+        $.each(mas_data_level, function (i, elem) {
+            q = q + 1;
         });
+
         var last_level = null;//id последнего уровня
         for (var i = 0; i < q; i++) {
-            $.each(mas_level_order, function (i, elem) {
-                if (elem.id_p_l == last_level){
-                    last_level = elem.id_l;
+            $.each(mas_data_level, function (j, elem) {
+                if (elem.parent_level == last_level){
+                    last_level = elem.id_level;
                 }
             });
         }
+
         var div_level = document.getElementById('level_'+ last_level);
         var height_div_level = div_level.clientHeight;
 
@@ -1090,7 +1081,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         // отрисовка
         if (id_node_any != null){
             mousemoveNode(id_node_any);
-            //increaseLevel();//расширение последнего уровня
+            increaseLevel();//расширение последнего уровня
             // Обновление формы редактора
             instance.repaintEverything();
         }
@@ -1101,7 +1092,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
-        //increaseLevel();//расширение последнего уровня
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
@@ -1110,7 +1101,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
-        //increaseLevel();//расширение последнего уровня
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
