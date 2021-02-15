@@ -49,7 +49,7 @@ use app\modules\editor\models\Parameter;
                             var div_parameter_name = document.createElement('div');
                             div_parameter_name.id = 'parameter_name_' + data['id'];
                             div_parameter_name.className = 'div-parameter-name';
-                            div_parameter_name.innerHTML = data['name'] + " " + data['operator'] + " " + data['value'];
+                            div_parameter_name.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
                             div_parameter.append(div_parameter_name);
 
                             var div_button_parameter = document.createElement('div');
@@ -79,8 +79,7 @@ use app\modules\editor\models\Parameter;
                             $.each(mas_data_parameter, function (i, elem) {
                                 j = j + 1;
                             });
-                            mas_data_parameter[j] = {id:id, name:name, description:description, operator:operator, value:value,};
-
+                            mas_data_parameter[j] = {id:id, name:name, description:description, operator:operator, value:value};
 
                             document.getElementById('add-parameter-form').reset();
 
@@ -181,7 +180,7 @@ use app\modules\editor\models\Parameter;
                         });
 
                         var div_parameter_name = document.getElementById('parameter_name_' + parameter_id_on_click);
-                        div_parameter_name.innerHTML = data['name'] + " " + data['operator'] + " " + data['value'];
+                        div_parameter_name.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
 
                         document.getElementById('edit-parameter-form').reset();
                     } else {

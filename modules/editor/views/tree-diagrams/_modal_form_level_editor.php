@@ -73,7 +73,7 @@ use app\modules\main\models\Lang;
                             div_level_description.className = 'div-level-description' ;
                             div_level.append(div_level_description);
 
-
+                            // Включение переходов на модальные окна
                             var nav_add_event = document.getElementById('nav_add_event');
                             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
                             if (data['level_count'] > 0){
@@ -100,7 +100,7 @@ use app\modules\main\models\Lang;
                                 j = j + 1;
                             });
 
-                            mas_data_level[j] = {id_level:id, name:name, description:description};
+                            mas_data_level[j] = {id_level:id, parent_level:parent_level, name:name, description:description};
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);
@@ -216,7 +216,7 @@ use app\modules\main\models\Lang;
 <?= $form->field($level_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
 <?= Button::widget([
-    'label' => Yii::t('app', 'BUTTON_ADD'),
+    'label' => Yii::t('app', 'BUTTON_SAVE'),
     'options' => [
         'id' => 'edit-level-button',
         'class' => 'btn-success',
@@ -256,7 +256,7 @@ use app\modules\main\models\Lang;
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/delete-level'?>",
+                '/tree-diagrams/delete-level/' . $model->id ?>",
                 type: "post",
                 data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&level_id_on_click=" + level_id_on_click,
                 dataType: "json",
@@ -270,17 +270,29 @@ use app\modules\main\models\Lang;
                         //--------- убираем из массива удаляемый уровень
                         var temporary_mas_data_level = {};
                         var q = 0;
+                        var del_parent_level;
                         $.each(mas_data_level, function (i, elem_level) {
                             if (level_id_on_click != elem_level.id_level){//убираем элемент
                                 temporary_mas_data_level[q] = {
                                     "id_level":elem_level.id_level,
+                                    "parent_level":elem_level.parent_level,
                                     "name":elem_level.name,
                                     "description":elem_level.description,
                                 };
                                 q = q+1;
                             }
+                            if (level_id_on_click == elem_level.id_level){//находим parent_level из удаляемого уровня
+                                del_parent_level = elem_level.parent_level;
+                            }
                         });
                         mas_data_level = temporary_mas_data_level;
+
+                        $.each(mas_data_level, function (i, elem_level) {
+                            if (level_id_on_click == elem_level.parent_level){//заменяем parent_level на удаленный
+                                elem_level.parent_level = del_parent_level;
+                            }
+                        });
+
                         //--------- убираем из массива элементы на удаляемом уровне и их связи
                         var div_level_layer = document.getElementById('level_description_'+ level_id_on_click);
                         var mas_node = div_level_layer.getElementsByClassName("node");
@@ -421,6 +433,22 @@ use app\modules\main\models\Lang;
                             instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
                         }
                         instance.remove(div_level);// удаляем визуально уровень
+
+                        // Выключение переходов на модальные окна
+                        var nav_add_event = document.getElementById('nav_add_event');
+                        var nav_add_mechanism = document.getElementById('nav_add_mechanism');
+                        if ((data['level_count'] == 1) && (data['the_initial_event_is'] != 0)){
+                            nav_add_event.className = 'disabled';
+                            nav_add_event.setAttribute("data-target", "");
+                        }
+                        if (data['level_count'] < 1){
+                            nav_add_event.className = 'disabled';
+                            nav_add_event.setAttribute("data-target", "");
+                        }
+                        if (data['level_count'] < 2){
+                            nav_add_mechanism.className = 'disabled';
+                            nav_add_mechanism.setAttribute("data-target", "");
+                        }
 
                         document.getElementById("pjax-event-editor-button").click();
                     }

@@ -43,6 +43,10 @@ class Level extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
+            // name и tree_diagram вместе должны быть уникальны, но только name будет получать сообщение об ошибке
+            ['name', 'unique', 'targetAttribute' => ['name', 'tree_diagram'],
+                'message' => Yii::t('app', 'MESSAGE_LEVEL_NAME_ALREADY_ON_DIAGRAM')],
+
             [['parent_level'], 'exist', 'skipOnError' => true, 'targetClass' => Level::className(),
                 'targetAttribute' => ['parent_level' => 'id']],
         ];
