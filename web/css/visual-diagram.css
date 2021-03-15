@@ -220,11 +220,26 @@ path { cursor:pointer; }
     font-size: 13px;
     font-family: "Glyphicons Halflings";
 }
+
+.transfer-level {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+    transform: rotate(-90deg);
+}
+
 /*показать скрытые кнопки*/
 .div-level-name:hover .edit-level {
     display:block;
 }
 .div-level-name:hover .del-level {
+    display:block;
+}
+.div-level-name:hover .transfer-level {
     display:block;
 }
 

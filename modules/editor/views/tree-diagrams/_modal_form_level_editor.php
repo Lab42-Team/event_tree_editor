@@ -68,6 +68,14 @@ use app\modules\main\models\Lang;
                             div_edit.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                             div_level_name.append(div_edit);
 
+                            if (data['parent_level'] != null){
+                                var div_transfer = document.createElement('div');
+                                div_transfer.id = 'level_transfer_' + data['id'];
+                                div_transfer.className = 'transfer transfer-level glyphicon-transfer';
+                                div_transfer.title = '<?php echo Yii::t('app', 'BUTTON_TRANSFER'); ?>' ;
+                                div_level_name.append(div_transfer);
+                            }
+
                             var div_level_description = document.createElement('div');
                             div_level_description.id = 'level_description_' + data['id'];
                             div_level_description.className = 'div-level-description' ;
@@ -486,6 +494,260 @@ use app\modules\main\models\Lang;
     'label' => Yii::t('app', 'BUTTON_DELETE'),
     'options' => [
         'id' => 'delete-level-button',
+        'class' => 'btn-success',
+        'style' => 'margin:5px'
+    ]
+]); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_CANCEL'),
+    'options' => [
+        'class' => 'btn-danger',
+        'style' => 'margin:5px',
+        'data-dismiss'=>'modal'
+    ]
+]); ?>
+
+<?php ActiveForm::end(); ?>
+
+<?php Modal::end(); ?>
+
+
+
+<!-- Модальное окно изменения нового уровня -->
+<?php Modal::begin([
+    'id' => 'moveLevelModalForm',
+    'header' => '<h3>' . Yii::t('app', 'LEVEL_MOVING_LEVEL') . '</h3>',
+]); ?>
+
+<!-- Скрипт модального окна -->
+<script type="text/javascript">
+    // Выполнение скрипта при загрузке страницы
+    $(document).ready(function() {
+        // Обработка нажатия кнопки сохранения
+        $("#move-level-button").click(function(e) {
+            //e.preventDefault();
+            var form = $("#move-level-form");
+            // Ajax-запрос
+            $.ajax({
+                //переход на экшен левел
+                url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+                '/tree-diagrams/move-level/' . $model->id ?>",
+                type: "post",
+                data: form.serialize() + "&level_id_on_click=" + level_id_on_click,
+                dataType: "json",
+                success: function(data) {
+                    // Если валидация прошла успешно (нет ошибок ввода)
+                    if (data['success']) {
+                        // Скрывание модального окна
+                        $("#moveLevelModalForm").modal("hide");
+
+                        //data['parent_level_movable_level']--уровень до перемещаемого уровня
+                        //data['movable_level'])--перемещаемый уровень
+                        //data['level_after_movable_level']--уровень после перемещаемого уровня
+                        //data['location_level']--уровень после которого нужно разместить
+                        //data['level_after_location']--уровень до которого нужно разместить
+
+                        var visual_diagram_top_layer = document.getElementById('top_layer');
+                        //определяем уровень после которого нужно разместить
+                        var location_level = document.getElementById('level_' + data['location_level']);
+                        //перемещаемый уровень
+                        var movable_level = document.getElementById('level_' + data['movable_level']);
+                        // клонировать уровень
+                        var new_movable_level = movable_level.cloneNode(true);
+
+
+                        // удаляем старый уровень
+                        var g_name = 'group'+ data['movable_level']; //определяем имя группы
+                        var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                        if (grp != 0){
+                            //если группа существует то
+                            instance.removeGroup(g_name, true);//удаляем группу и т.к. true еще и элементы
+                        }
+                        instance.remove(movable_level);// удаляем визуально уровень
+
+                        //размещаем новый уровень после location_level
+                        visual_diagram_top_layer.insertBefore(new_movable_level, location_level.nextSibling);
+
+
+                        //добавляем элемент new_div_event в группу с именем g_name
+                        //находим DOM элемент description уровня (идентификатор div level_description)
+                        var div_level_id = document.getElementById('level_description_'+ data['movable_level']);
+                        var g_name = 'group'+ data['movable_level']; //определяем имя группы
+                        var grp = instance.getGroup(g_name);//определяем существует ли группа с таким именем
+                        if (grp == 0){
+                            //если группа не существует то создаем группу с определенным именем group_name
+                            instance.addGroup({
+                                el: div_level_id,
+                                id: g_name,
+                                draggable: false, //перетаскивание группы
+                                //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                                dropOverride:true,
+                            });
+                        }
+
+                        //перебираем все node в уровне
+                        var div_new_nodes = new_movable_level.getElementsByClassName("node");
+                        $.each(div_new_nodes, function (i, node) {
+                            var cl = node.className.indexOf('div-mechanism');
+
+                            instance.draggable(node);// делаем node перетаскиваемыми
+
+                            instance.addToGroup(g_name, node);//добавляем node в группу
+
+                            var anchor_top = "";
+                            var anchor_bottom = "";
+                            var max_con = 1;
+                            if (cl == -1) {
+                                console.log("событие");
+                                anchor_top = "Top";
+                                anchor_bottom = "Bottom";
+                            } else {
+                                console.log("механизм");
+                                anchor_top = [ 0.5, 0, 0, -1, 0, 20 ];
+                                anchor_bottom = [ 0.5, 1, 0, 1, 0, -20 ];
+                            }
+
+
+                            instance.makeSource(node, {
+                                filter: ".ep",
+                                anchor: anchor_bottom,
+                            });
+
+                            instance.makeTarget(node, {
+                                dropOptions: { hoverClass: "dragHover" },
+                                anchor: anchor_top,
+                                allowLoopback: false, // Нельзя создать кольцевую связь
+                                //anchor: "Top",
+                                maxConnections: max_con,
+                                onMaxConnections: function (info, e) {
+                                    var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
+                                    document.getElementById("message-text").lastChild.nodeValue = message;
+                                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
+                                }
+                            });
+                        });
+
+
+                        //чистка массива mas_data_level
+                        $.each(mas_data_level, function (i, elem_level) {
+                            if (elem_level.id_level == data['level_after_movable_level']){
+                                mas_data_level[i].parent_level = data['parent_level_movable_level'];
+                            }
+
+                            if (elem_level.id_level == data['movable_level']){
+                                mas_data_level[i].parent_level = parseInt(data['location_level'], 10);
+                            }
+
+                            if (data['level_after_location'] != null){
+                                if (elem_level.id_level == data['level_after_location']){
+                                    mas_data_level[i].parent_level = data['movable_level'];
+                                }
+                            }
+                        });
+                        //---чистка массива mas_data_level
+
+
+
+                        //чистка массива mas_data_node
+                        var div_level_layer = document.getElementById('level_description_'+ data['movable_level']);
+                        var mas_node = div_level_layer.getElementsByClassName("node");
+
+                        $.each(mas_node, function (i, elem) {
+                            var id_node = parseInt(elem.getAttribute('id').match(/\d+/));
+                            $.each(mas_data_node, function (j, elem_node) {
+                                //находим элемент в массиве
+                                if (id_node == elem_node.id){
+                                    if (elem_node.parent_node != null) {
+                                        var div_node = document.getElementById('node_' + elem_node.parent_node);
+                                        var div_level = div_node.offsetParent.getAttribute('id');
+                                        var id_div_level = parseInt(div_level.match(/\d+/));
+                                        //если связь идет из предыдущего уровня
+                                        if (id_div_level == data['parent_level_movable_level']){
+                                            mas_data_node[j].parent_node = null;//убираем входящую связь
+                                        }
+                                    }
+                                }
+
+                                //находим родительский элемент в массиве
+                                if (id_node == elem_node.parent_node){
+                                    var div_node = document.getElementById('node_' + elem_node.id);
+                                    var div_level = div_node.offsetParent.getAttribute('id');
+                                    var id_div_level = parseInt(div_level.match(/\d+/));
+                                    //если связь идет в следующий уровень
+                                    if (id_div_level == data['level_after_movable_level']){
+                                        mas_data_node[j].parent_node = null;//убираем исходящую связь
+                                    }
+                                }
+                            });
+                        });
+
+                        if (data['level_after_location'] != null){
+                            var div_level_layer = document.getElementById('level_description_'+ data['level_after_location']);
+                            var mas_node = div_level_layer.getElementsByClassName("node");
+
+                            $.each(mas_node, function (i, elem) {
+                                var id_node = parseInt(elem.getAttribute('id').match(/\d+/));
+                                $.each(mas_data_node, function (j, elem_node) {
+                                    //находим элемент в массиве
+                                    if (id_node == elem_node.id){
+                                        if (elem_node.parent_node != null) {
+                                            var div_node = document.getElementById('node_' + elem_node.parent_node);
+                                            var div_level = div_node.offsetParent.getAttribute('id');
+                                            var id_div_level = parseInt(div_level.match(/\d+/));
+                                            //если связь идет из предыдущего уровня
+                                            if (id_div_level == data['location_level']){
+                                                mas_data_node[j].parent_node = null;//убираем входящую связь
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                        //---чистка массива mas_data_node
+
+
+                        //-------------построить связи элементов в перемещаемом уровне
+                        //----------удаляем все соединения
+                        instance.deleteEveryEndpoint();
+
+                        $.each(mas_data_node, function (j, elem_node) {
+                            if (elem_node.parent_node != null){
+                                instance.connect({
+                                    source: "node_" + elem_node.parent_node,
+                                    target: "node_" + elem_node.id,
+                                });
+                            }
+                        });
+
+                    } else {
+                        // Отображение ошибок ввода
+                        viewErrors("#move-level-form", data);
+                    }
+                },
+                error: function() {
+                    alert('Error!');
+                }
+            });
+        });
+    });
+</script>
+
+<?php $form = ActiveForm::begin([
+    'id' => 'move-level-form',
+    'enableAjaxValidation' => true,
+    'enableClientValidation' => true,
+]); ?>
+
+<?= $form->errorSummary($level_model); ?>
+
+<?= $form->field($level_model, 'movement_level')->dropDownList($array_levels)->
+        label(Yii::t('app', 'LEVEL_MODEL_MOVEMENT_LEVEL'), ['id' => 'move_level']); ?>
+
+<?= Button::widget([
+    'label' => Yii::t('app', 'BUTTON_MOVE'),
+    'options' => [
+        'id' => 'move-level-button',
         'class' => 'btn-success',
         'style' => 'margin:5px'
     ]

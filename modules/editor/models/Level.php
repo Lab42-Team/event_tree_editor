@@ -23,6 +23,8 @@ use yii\helpers\ArrayHelper;
  */
 class Level extends \yii\db\ActiveRecord
 {
+    public $movement_level;
+
     /**
      * @return string table name
      */
@@ -39,7 +41,7 @@ class Level extends \yii\db\ActiveRecord
         return [
             [['name', 'tree_diagram'], 'required'],
             [['tree_diagram', 'parent_level'], 'default', 'value' => null],
-            [['tree_diagram', 'parent_level'], 'integer'],
+            [['tree_diagram', 'parent_level', 'movement_level'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
@@ -65,6 +67,7 @@ class Level extends \yii\db\ActiveRecord
             'description' => Yii::t('app', 'LEVEL_MODEL_DESCRIPTION'),
             'parent_level' => Yii::t('app', 'LEVEL_MODEL_PARENT_LEVEL'),
             'tree_diagram' => Yii::t('app', 'LEVEL_MODEL_TREE_DIAGRAM'),
+            'movement_level' => Yii::t('app', 'LEVEL_MODEL_MOVEMENT_LEVEL'),
         ];
     }
 

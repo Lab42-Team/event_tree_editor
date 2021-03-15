@@ -764,6 +764,126 @@ class TreeDiagramsController extends Controller
         return false;
     }
 
+    public function actionMoveLevel($id)
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            //перемещаемый уровень
+            $movable_level = Level::find()->where(['id' => Yii::$app->request->post('level_id_on_click')])->one();
+            $parent_level_movable_level = $movable_level->parent_level;//id родительский уровень перемещаемого уровня
+
+            //id уровня местонахождения
+            $id_location_level = new Level;
+            $id_location_level->name = "Test";
+            $id_location_level->tree_diagram = $id;
+
+            if ( $id_location_level->load(Yii::$app->request->post()) && $id_location_level->validate()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+
+                $level_after_location = Level::find()->where(['parent_level' => $id_location_level->movement_level])->one();
+                if ($level_after_location != null){
+                    $id_level_after_location = $level_after_location->id;
+                } else {
+                    $id_level_after_location = null;
+                }
+
+                if ( $id_level_after_location != $movable_level->id){
+                    //меняем parent_level у уровня следующего после перемещаемого (убираем перемещаемый уровень)
+                    $level_after_movable = Level::find()->where(['parent_level' => $movable_level->id])->one();
+                    if ($level_after_movable != null){
+                        $level_after_movable_level = $level_after_movable->id;
+                        $level_after_movable->parent_level = $movable_level->parent_level;
+                        $level_after_movable->updateAttributes(['parent_level']);
+                    }
+
+                    //меняем parent_level у перемещаемого уровня (перемещаем уровень)
+                    $movable_level->parent_level = $id_location_level->movement_level;
+                    $movable_level->updateAttributes(['parent_level']);
+
+                    //меняем parent_level у уровня следующего после перемещенного (после перемещения )
+                    if ($level_after_location != null){
+                        $level_after_location->parent_level = $movable_level->id;
+                        $level_after_location->updateAttributes(['parent_level']);
+                    }
+                }
+
+
+                //Убираем связи элементов у затронутых уровней
+
+                //удаляем связи идущие в узлы на перемещаемом уовне с предыдущего уровня
+                $sequence_mas = Sequence::find()->where(['level' => $movable_level->id])->all();//все узлы на перемещаемом уровне
+                foreach ($sequence_mas as $elem){
+                    $node = Node::find()->where(['id' => $elem->node])->one();
+
+                    //условие проверки что родительский узел находится на предыдущем уровне
+                    $sequence = Sequence::find()->where(['node' => $node->parent_node])->one();
+                    if ($sequence != null){
+                        if ($sequence->level == $parent_level_movable_level){
+                            $node->parent_node = null;
+                            $node->updateAttributes(['parent_node']);
+                        }
+                    }
+                }
+
+                //удаляем связи идущие в узлы от перемещаемого уовня в следующий
+                $sequence_mas = Sequence::find()->where(['level' => $movable_level->id])->all();//все узлы на перемещаемом уровне
+                foreach ($sequence_mas as $elem){
+
+                    $node_mas = Node::find()->where(['parent_node' => $elem->node])->all();//все узлы чьи parent_node на перемещаемом уровне
+                    foreach ($node_mas as $el){
+
+                        $seq = Sequence::find()->where(['node' => $el->id])->one();
+                        if ($seq != null){
+                            //исключаем узлы на том же уровне
+                            if ($seq->level != $movable_level->id){
+                                $el->parent_node = null;
+                                $el->updateAttributes(['parent_node']);
+                            }
+                        }
+                    }
+                }
+
+                //если уровень до которого нужно разместить существует
+                if ($id_level_after_location != null){
+                    //удаляем связи идущие в уровень до которого нужно разместить с предыдущего уровня
+                    $sequence_mas = Sequence::find()->where(['level' => $id_level_after_location])->all();//все узлы на уровне до которого нужно разместить
+                    foreach ($sequence_mas as $elem){
+                        $node = Node::find()->where(['id' => $elem->node])->one();
+
+                        //условие проверки что родительский узел находится на предыдущем уровне
+                        $sequence = Sequence::find()->where(['node' => $node->parent_node])->one();
+                        if ($sequence != null){
+                            if ($sequence->level == $id_location_level->movement_level){
+                                $node->parent_node = null;
+                                $node->updateAttributes(['parent_node']);
+                            }
+                        }
+                    }
+                }
+
+                $data["parent_level_movable_level"] = $parent_level_movable_level;//уровень до перемещаемого уровня
+                $data["movable_level"] = $movable_level->id;//перемещаемый уровень
+                $data["level_after_movable_level"] = $level_after_movable_level;//уровень после перемещаемого уровня
+                $data["location_level"] = $id_location_level->movement_level;//уровень после которого нужно разместить
+                $data["level_after_location"] =  $id_level_after_location;//уровень до которого нужно разместить
+
+            } else
+                $data = ActiveForm::validate($id_location_level);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+
+        return false;
+    }
 
     public function actionAddParameter()
     {
