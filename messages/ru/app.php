@@ -65,6 +65,7 @@ return [
     'BUTTON_RETURN' => 'Вернуться к',
     'BUTTON_CONNECTION' => 'Соединение',
     'BUTTON_OPEN_DIAGRAM' => 'Открыть диаграмму',
+    'BUTTON_MOVE' => 'Переместить',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Страница не найдена.',
@@ -236,6 +237,7 @@ return [
     'LEVEL_MODEL_DESCRIPTION' => 'Описание',
     'LEVEL_MODEL_PARENT_LEVEL' => 'Родительский уровень',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Диаграмма',
+    'LEVEL_MODEL_MOVEMENT_LEVEL' => 'Уровень переместить после:',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -255,6 +257,7 @@ return [
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
     'LEVEL_DELETE_LEVEL' => 'Удаление уровня',
+    'LEVEL_MOVING_LEVEL' => 'Перемещение уровня',
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
     'EVENT_DELETE_EVENT' => 'Удаление события',

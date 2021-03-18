@@ -84,11 +84,6 @@ foreach ($initial_event_model_all as $i){
 ?>
 
 
-<?= $this->render('_modal_form_level_editor', [
-    'model' => $model,
-    'level_model' => $level_model,
-]) ?>
-
 <?= $this->render('_modal_form_relationship', [
     'model' => $model,
 ]) ?>
@@ -102,6 +97,12 @@ foreach ($initial_event_model_all as $i){
 
 <?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
     ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
+
+<?= $this->render('_modal_form_level_editor', [
+    'model' => $model,
+    'level_model' => $level_model,
+    'array_levels' => $array_levels,
+]) ?>
 
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
@@ -411,42 +412,23 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var target_id_level = parseInt(target_level.match(/\d+/));
 
 
+            //длинна массива
+            var length = 0
+            $.each(mas_data_level, function (i, mas) {
+                length = length + 1;
+            });
+
             //построение одномерного массива по порядку следования уровней
-            var mas_level_order = {};
+            var mas_level_order = {};//одномерный массив
+            var next_parent_level = null;
             var q = 0;
-            var id_l = "";
-            var id_p_l = "";
-            var next_parent_level = "";
-            $.each(level_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //первый элемент это id уровня
-                    if (j == 0) {id_l = elem;}//записываем id уровня
-                    //второй элемент это id родительского уровня
-                    if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
-                    if (id_p_l == null){
-                        mas_level_order[q] = id_l;
-                        next_parent_level = id_l;
+            for (let i = 0; i < length; i++) {
+                $.each(mas_data_level, function (i, mas) {
+                    if (mas.parent_level == next_parent_level){
+                        next_parent_level = mas.id_level;
+                        mas_level_order[q] = mas.id_level;
                         q = q+1;
                     }
-                });
-                id_l = "";
-                id_p_l = "";
-            });
-            for (let i = 1; i < level_mas.length; i++) {
-                $.each(level_mas, function (i, mas) {
-                    $.each(mas, function (j, elem) {
-                        //первый элемент это id уровня
-                        if (j == 0) {id_l = elem;}//записываем id уровня
-                        //второй элемент это id родительского уровня
-                        if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
-                        if (id_p_l == next_parent_level){
-                            mas_level_order[q] = id_l;
-                            next_parent_level = id_l;
-                            q = q+1;
-                        }
-                    });
-                    id_l = "";
-                    id_p_l = "";
                 });
             }
 
@@ -714,7 +696,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
         var div_level_description = document.getElementById('level_description_'+ last_level);
         if (h_top_layer < h_visual_diagram){
-            div_level_description.style.height = height_div_level + h_visual_diagram - h_top_layer + 'px';
+            div_level_description.style.height = height_div_level + h_visual_diagram - h_top_layer  + 'px';
         }
     }
 
@@ -1290,6 +1272,46 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
+    // перемещение уровня
+    $(document).on('click', '.transfer-level', function() {
+        if (!guest) {
+            var del = $(this).attr('id');
+            level_id_on_click = parseInt(del.match(/\d+/));
+
+            //var number;
+            //var mas_level = document.getElementsByClassName("div-level");
+            //$.each(mas_level, function (i, elem) {
+            //    var id_level = parseInt(elem.getAttribute('id').match(/\d+/));
+            //    if (level_id_on_click == id_level) {
+            //        number = i;
+            //    }
+            //});
+            // Если уровень начальный то выводим сообщение
+            //if (number == 0) {
+            //    var alert_initial_level = document.getElementById('alert_level_initial_level');
+            //    alert_initial_level.style = "";
+            //} else {
+            //    var alert_initial_level = document.getElementById('alert_level_initial_level');
+            //    alert_initial_level.style = "display:none;";
+            //}
+
+            //var del_level = document.getElementById('level_' + level_id_on_click);
+            //var mas_node = del_level.getElementsByClassName("node");
+            // Если на уровне есть элементы то выводим сообщение
+            //if (mas_node.length != 0) {
+            //    var alert_delete_level = document.getElementById('alert_level_delete_level');
+            //    alert_delete_level.style = "";
+            //} else {
+            //    var alert_delete_level = document.getElementById('alert_level_delete_level');
+            //    alert_delete_level.style = "display:none;";
+            //}
+
+            $("#moveLevelModalForm").modal("show");
+        }
+    });
+
+
     // добавление параметра
     $(document).on('click', '.add-parameter', function() {
         if (!guest) {
@@ -1483,6 +1505,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <div id="level_title_<?= $level_value->id ?>" class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
                                 <div id="level_del_<?= $level_value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                 <div id="level_edit_<?= $level_value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                <div id="level_transfer_<?= $level_value->id ?>" class="transfer transfer-level glyphicon-transfer" title="<?php echo Yii::t('app', 'BUTTON_TRANSFER'); ?>"></div>
                             </div>
                             <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->

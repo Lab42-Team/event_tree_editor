@@ -65,6 +65,7 @@ return [
     'BUTTON_RETURN' => 'Return to',
     'BUTTON_CONNECTION' => 'Connection',
     'BUTTON_OPEN_DIAGRAM' => 'Open diagram',
+    'BUTTON_MOVE' => 'Move',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',
@@ -236,6 +237,7 @@ return [
     'LEVEL_MODEL_DESCRIPTION' => 'Description',
     'LEVEL_MODEL_PARENT_LEVEL' => 'Parent level',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
+    'LEVEL_MODEL_MOVEMENT_LEVEL' => 'Level move after:',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -255,6 +257,7 @@ return [
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'LEVEL_EDIT_LEVEL' => 'Level change',
     'LEVEL_DELETE_LEVEL' => 'Level delete',
+    'LEVEL_MOVING_LEVEL' => 'Transfer level',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
     'EVENT_DELETE_EVENT' => 'Delete event',
