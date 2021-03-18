@@ -784,8 +784,11 @@ class TreeDiagramsController extends Controller
             $id_location_level->tree_diagram = $id;
 
             if ( $id_location_level->load(Yii::$app->request->post()) && $id_location_level->validate()) {
+
                 // Успешный ввод данных
                 $data["success"] = true;
+
+                $level_after_movable_level = null;
 
                 $level_after_location = Level::find()->where(['parent_level' => $id_location_level->movement_level])->one();
                 if ($level_after_location != null){

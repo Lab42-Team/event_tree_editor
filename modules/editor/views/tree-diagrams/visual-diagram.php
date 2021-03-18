@@ -1274,38 +1274,42 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     // перемещение уровня
-    $(document).on('click', '.transfer-level', function() {
+    $(document).on('click', '.move-level', function() {
         if (!guest) {
             var del = $(this).attr('id');
             level_id_on_click = parseInt(del.match(/\d+/));
 
-            //var number;
-            //var mas_level = document.getElementsByClassName("div-level");
-            //$.each(mas_level, function (i, elem) {
-            //    var id_level = parseInt(elem.getAttribute('id').match(/\d+/));
-            //    if (level_id_on_click == id_level) {
-            //        number = i;
-            //    }
-            //});
-            // Если уровень начальный то выводим сообщение
-            //if (number == 0) {
-            //    var alert_initial_level = document.getElementById('alert_level_initial_level');
-            //    alert_initial_level.style = "";
-            //} else {
-            //    var alert_initial_level = document.getElementById('alert_level_initial_level');
-            //    alert_initial_level.style = "display:none;";
-            //}
+            //ид уровня предшествующего level_id_on_click
+            var parent_level_id;
 
-            //var del_level = document.getElementById('level_' + level_id_on_click);
-            //var mas_node = del_level.getElementsByClassName("node");
-            // Если на уровне есть элементы то выводим сообщение
-            //if (mas_node.length != 0) {
-            //    var alert_delete_level = document.getElementById('alert_level_delete_level');
-            //    alert_delete_level.style = "";
-            //} else {
-            //    var alert_delete_level = document.getElementById('alert_level_delete_level');
-            //    alert_delete_level.style = "display:none;";
-            //}
+            //список уровней содержащихся в dropdownlist
+            var dropdownlist = document.getElementById("level-movement_level");
+
+            //поиск уровня предшествующего level_id_on_click
+            $.each(mas_data_level, function (i, elem) {
+                if (elem.id_level == level_id_on_click){
+                    parent_level_id = elem.parent_level;
+                }
+            });
+
+            //делаем весь список уровней видимым
+            for (let i = 0; i < dropdownlist.length; i++) {
+                dropdownlist.options[i].style.display = ""
+            }
+
+            for (let i = 0; i < dropdownlist.length; i++) {
+                //скрываем перемещаеммый уровень
+                if(dropdownlist.options[i].value == level_id_on_click){
+                    dropdownlist.options[i].style.display = "none"
+                }
+                //скрываем уровень до перемещаемого
+                if(dropdownlist.options[i].value == parent_level_id){
+                    dropdownlist.options[i].style.display = "none"
+                }
+            }
+
+            //очищаем уровень выбранный по умолчанию
+            dropdownlist.options.selectedIndex = -1;
 
             $("#moveLevelModalForm").modal("show");
         }
@@ -1505,7 +1509,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <div id="level_title_<?= $level_value->id ?>" class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
                                 <div id="level_del_<?= $level_value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                 <div id="level_edit_<?= $level_value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
-                                <div id="level_transfer_<?= $level_value->id ?>" class="transfer transfer-level glyphicon-transfer" title="<?php echo Yii::t('app', 'BUTTON_TRANSFER'); ?>"></div>
+                                <div id="level_move_<?= $level_value->id ?>" class="move move-level glyphicon-transfer" title="<?php echo Yii::t('app', 'BUTTON_MOVE'); ?>"></div>
                             </div>
                             <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->

@@ -69,11 +69,11 @@ use app\modules\main\models\Lang;
                             div_level_name.append(div_edit);
 
                             if (data['parent_level'] != null){
-                                var div_transfer = document.createElement('div');
-                                div_transfer.id = 'level_transfer_' + data['id'];
-                                div_transfer.className = 'transfer transfer-level glyphicon-transfer';
-                                div_transfer.title = '<?php echo Yii::t('app', 'BUTTON_TRANSFER'); ?>' ;
-                                div_level_name.append(div_transfer);
+                                var div_move = document.createElement('div');
+                                div_move.id = 'level_move_' + data['id'];
+                                div_move.className = 'move move-level glyphicon-transfer';
+                                div_move.title = '<?php echo Yii::t('app', 'BUTTON_MOVE'); ?>' ;
+                                div_level_name.append(div_move);
                             }
 
                             var div_level_description = document.createElement('div');
@@ -514,7 +514,7 @@ use app\modules\main\models\Lang;
 
 
 
-<!-- Модальное окно изменения нового уровня -->
+<!-- Модальное окно перемещения нового уровня -->
 <?php Modal::begin([
     'id' => 'moveLevelModalForm',
     'header' => '<h3>' . Yii::t('app', 'LEVEL_MOVING_LEVEL') . '</h3>',
@@ -546,7 +546,7 @@ use app\modules\main\models\Lang;
                         //data['movable_level'])--перемещаемый уровень
                         //data['level_after_movable_level']--уровень после перемещаемого уровня
                         //data['location_level']--уровень после которого нужно разместить
-                        //data['level_after_location']--уровень до которого нужно разместить
+                        //data['level_after_location']--уровень после data['location_level']
 
                         var visual_diagram_top_layer = document.getElementById('top_layer');
                         //определяем уровень после которого нужно разместить
@@ -599,11 +599,9 @@ use app\modules\main\models\Lang;
                             var anchor_bottom = "";
                             var max_con = 1;
                             if (cl == -1) {
-                                console.log("событие");
                                 anchor_top = "Top";
                                 anchor_bottom = "Bottom";
                             } else {
-                                console.log("механизм");
                                 anchor_top = [ 0.5, 0, 0, -1, 0, 20 ];
                                 anchor_bottom = [ 0.5, 1, 0, 1, 0, -20 ];
                             }

@@ -221,7 +221,7 @@ path { cursor:pointer; }
     font-family: "Glyphicons Halflings";
 }
 
-.transfer-level {
+.move-level {
     position: absolute;
     right: 10px;
     top: 35px;
@@ -239,7 +239,7 @@ path { cursor:pointer; }
 .div-level-name:hover .del-level {
     display:block;
 }
-.div-level-name:hover .transfer-level {
+.div-level-name:hover .move-level {
     display:block;
 }
 
