@@ -722,6 +722,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var left = 0;
         var top = 0;
 
+        var indent_mechanism = 0;
+
         if (id_initial_node != 0){
             //размещение начального события и его потомков
             $(".div-level-description").each(function(i) {
@@ -766,8 +768,15 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
                         //если это потомки начального события
                         } else if (id_parent_node == n_initial_node){
+                            var cl = node.className.indexOf('div-mechanism');
+                            if (cl == -1) {
+                                indent_mechanism = 0;
+                            } else {
+                                indent_mechanism = 68;
+                            }
+
                             $(this).css({
-                                left: parent_node_left + left,
+                                left: parent_node_left + left + indent_mechanism,
                                 top: parent_node_top + top
                             });
                             left = left + width_node;
@@ -854,11 +863,17 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             var node = document.getElementById(id_node);
                             var id_parent_node = node.getAttribute("parent_node");
 
-
                             //поиск родительского элемента и его параметров
                             var parent_node = document.getElementById("node_" + id_parent_node);
                             if (parent_node != null){
-                                var parent_node_left = parent_node.offsetLeft;
+                                var pn = parent_node.className.indexOf('div-mechanism');
+                                if (pn == -1) {
+                                    indent_mechanism = 0;
+                                } else {
+                                    indent_mechanism = 68;
+                                }
+
+                                var parent_node_left = parent_node.offsetLeft - indent_mechanism;
                                 var parent_node_top = parent_node.offsetTop;
                                 var parent_node_level_parent = parent_node.offsetParent;
                                 var parent_node_id_level_parent = parent_node_level_parent.getAttribute('id');
@@ -871,17 +886,24 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
                             if (id_level_parent == id_level) {
                                 if (id_parent_node == n_current){
+                                    var cl = node.className.indexOf('div-mechanism');
+                                    if (cl == -1) {
+                                        indent_mechanism = 0;
+                                    } else {
+                                        indent_mechanism = 68;
+                                    }
+
                                     //если уровень родительского элемента равен уровню в кот.находится элемент
                                     if (parent_node_id_level_parent == id_level_parent){
                                         $(this).css({
-                                            left: parent_node_left + left,
+                                            left: parent_node_left + left + indent_mechanism,
                                             top: parent_node_top + height_node + max_height_node,
                                         });
                                         left = left + width_node;
                                     //иначе уровни разные
                                     } else {
                                         $(this).css({
-                                            left: parent_node_left + left,
+                                            left: parent_node_left + left + indent_mechanism,
                                             top: current_top,
                                         });
                                         left = left + width_node;
