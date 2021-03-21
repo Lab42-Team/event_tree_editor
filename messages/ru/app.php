@@ -36,8 +36,8 @@ return [
 
     'NAV_IMPORT' => 'Импортировать',
     'NAV_EXPORT' => 'Экспортировать',
-
     'NAV_VERIFY' => 'Проверить',
+    'NAV_ALIGNMENT' => 'Выравнивание',
 
     'NAV_ACCOUNT' => 'Аккаунт',
 

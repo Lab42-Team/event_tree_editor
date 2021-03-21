@@ -24,6 +24,8 @@ class m191115_115223_node extends Migration
             'type' => $this->smallInteger()->notNull()->defaultValue(0),
             'parent_node' => $this->integer(),
             'tree_diagram' => $this->integer()->notNull(),
+            'indent_x' => $this->integer(),
+            'indent_y' => $this->integer(),
         ], $tableOptions);
 
         $this->createIndex('idx_node_name', '{{%node}}', 'name');

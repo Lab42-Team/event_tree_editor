@@ -1238,4 +1238,32 @@ class TreeDiagramsController extends Controller
         ]);
     }
 
+
+    public function actionSaveIndent()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $node = Node::find()->where(['id' => Yii::$app->request->post('node_id')])->one();
+            $node->indent_x = Yii::$app->request->post('indent_x');
+            $node->indent_y = Yii::$app->request->post('indent_y');
+            $node->updateAttributes(['indent_x']);
+            $node->updateAttributes(['indent_y']);
+
+            $data["indent_x"] = $node->indent_x;
+            $data["indent_y"] = $node->indent_y;
+            $data["success"] = true;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
 }
