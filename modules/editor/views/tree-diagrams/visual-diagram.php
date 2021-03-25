@@ -1142,6 +1142,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         //поиск начального события
         $(".div-initial-event").each(function(i) {
             id_initial_node = $(this).attr('id');
+            $(this).css({
+                left: 20,
+                top: 0
+            });
         });
 
         //высота начального node
