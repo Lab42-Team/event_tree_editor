@@ -53,7 +53,8 @@ class Node extends \yii\db\ActiveRecord
         return [
             [['name', 'tree_diagram', 'level_id'], 'required'],
             [['operator', 'type', 'parent_node', 'tree_diagram'], 'default', 'value' => null],
-            [['operator', 'type', 'parent_node', 'tree_diagram', 'level_id'], 'integer'],
+            [['indent_x', 'indent_y'], 'default', 'value' => 0],
+            [['operator', 'type', 'parent_node', 'tree_diagram', 'level_id', 'indent_x', 'indent_y'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
@@ -89,6 +90,8 @@ class Node extends \yii\db\ActiveRecord
             'parent_node' => Yii::t('app', 'NODE_MODEL_PARENT_NODE'),
             'tree_diagram' => Yii::t('app', 'NODE_MODEL_TREE_DIAGRAM'),
             'level_id' => Yii::t('app', 'NODE_MODEL_LEVEL_ID'),
+            'indent_x' => Yii::t('app', 'NODE_MODEL_INDENT_X'),
+            'indent_y' => Yii::t('app', 'NODE_MODEL_INDENT_Y'),
         ];
     }
 
