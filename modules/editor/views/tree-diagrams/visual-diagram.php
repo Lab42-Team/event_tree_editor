@@ -785,7 +785,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var indent_x = $(this).position().left;
             var indent_y = $(this).position().top;
 
-            saveIndent(node_id, indent_x, indent_y);
+            //если отступ элемента не отрицательный
+            if (indent_y >= 0){
+                saveIndent(node_id, indent_x, indent_y);
+            } else {
+                //если отступ элемента недостаточный чтобы вернуться в свой ровень (стоит на границе)
+                //тогда indent_y делаем нулевым
+                if (indent_y >= (($(this).height() + 3)*-1 )) {
+                    saveIndent(node_id, indent_x, 0);
+                }
+            }
         }
     });
 
