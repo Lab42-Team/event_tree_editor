@@ -26,6 +26,7 @@ class m191115_115223_node extends Migration
             'tree_diagram' => $this->integer()->notNull(),
             'indent_x' => $this->integer(),
             'indent_y' => $this->integer(),
+            'comment' => $this->text(),
         ], $tableOptions);
 
         $this->createIndex('idx_node_name', '{{%node}}', 'name');

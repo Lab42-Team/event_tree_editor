@@ -44,6 +44,7 @@ class Level extends \yii\db\ActiveRecord
             [['tree_diagram', 'parent_level', 'movement_level'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
+            [['comment'], 'string'],
 
             // name и tree_diagram вместе должны быть уникальны, но только name будет получать сообщение об ошибке
             ['name', 'unique', 'targetAttribute' => ['name', 'tree_diagram'],
@@ -68,6 +69,7 @@ class Level extends \yii\db\ActiveRecord
             'parent_level' => Yii::t('app', 'LEVEL_MODEL_PARENT_LEVEL'),
             'tree_diagram' => Yii::t('app', 'LEVEL_MODEL_TREE_DIAGRAM'),
             'movement_level' => Yii::t('app', 'LEVEL_MODEL_MOVEMENT_LEVEL'),
+            'comment' => Yii::t('app', 'LEVEL_MODEL_COMMENT'),
         ];
     }
 

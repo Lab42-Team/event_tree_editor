@@ -66,6 +66,7 @@ return [
     'BUTTON_CONNECTION' => 'Connection',
     'BUTTON_OPEN_DIAGRAM' => 'Open diagram',
     'BUTTON_MOVE' => 'Move',
+    'BUTTON_COMMENT' => 'Comment',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',
@@ -201,6 +202,7 @@ return [
     'NODE_MODEL_PARENT_NODE' => 'Parent node',
     'NODE_MODEL_TREE_DIAGRAM' => 'Diagram',
     'NODE_MODEL_LEVEL_ID' => 'Level name',
+    'NODE_MODEL_COMMENT' => 'Comment',
     /* Значения операторов */
     'NODE_MODEL_NOT_OPERATOR' => 'NOT',
     'NODE_MODEL_AND_OPERATOR' => 'AND',
@@ -238,6 +240,7 @@ return [
     'LEVEL_MODEL_PARENT_LEVEL' => 'Parent level',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
     'LEVEL_MODEL_MOVEMENT_LEVEL' => 'Level move after:',
+    'LEVEL_MODEL_COMMENT' => 'Comment',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -261,6 +264,9 @@ return [
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
     'EVENT_DELETE_EVENT' => 'Delete event',
+    'EVENT_ADD_NEW_COMMENT' => 'Add new comment',
+    'EVENT_EDIT_COMMENT' => 'Comment change',
+    'EVENT_DELETE_COMMENT' => 'Delete comment',
     'PARAMETER_ADD_NEW_PARAMETER' => 'Add new parameter',
     'PARAMETER_EDIT_PARAMETER' => 'Parameter change',
     'PARAMETER_DELETE_PARAMETER' => 'Parameter delete',
@@ -288,6 +294,7 @@ return [
     'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
     'DELETE_MECHANISM_TEXT' => 'Are you sure you want to delete the mechanism?',
     'DELETE_PARAMETER_TEXT' => 'Are you sure you want to delete the parameter?',
+    'DELETE_COMMENT_TEXT' => 'Are you sure you want to delete the comment?',
 
     'CONNECTION_DELETE' => 'Delete',
 

@@ -365,3 +365,86 @@ path { cursor:pointer; }
 .div-parameter:hover .del-parameter {
     display:block;
 }
+
+
+
+
+
+
+
+
+
+/*--------------расположить эти новые стили во все предыдущие   рассортировать*/
+
+.div-comment {
+    /* форма*/
+    width: 150px;
+    /*min-height: 80px;*/
+    border:2px dotted #777777;
+    /*background-color:#f5f5f5;*/
+    border-radius: 5px;
+    position: absolute;
+
+    box-sizing: border-box;
+    padding-left: 5px;
+
+    /* текст по центру для дочернего блока div-event-name*/
+    position: absolute;
+    overflow:hidden;
+}
+
+.show-comment {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.content-event:hover .show-comment{
+    display:block;
+}
+
+.div-comment-name {
+    display: inline-block;
+    position: relative;
+    width: 135px;
+    padding-bottom: 20px;
+    word-wrap: break-word; /* перенос строк */
+}
+
+/*кнопки параметров*/
+.edit-comment {
+    position: absolute;
+    right: 30px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-comment {
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+
+
+
+
+
+/*показать скрытые кнопки*/
+.div-comment:hover .edit-comment {
+    display:block;
+}
+.div-comment:hover .del-comment {
+    display:block;
+}

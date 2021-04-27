@@ -66,6 +66,7 @@ return [
     'BUTTON_CONNECTION' => 'Соединение',
     'BUTTON_OPEN_DIAGRAM' => 'Открыть диаграмму',
     'BUTTON_MOVE' => 'Переместить',
+    'BUTTON_COMMENT' => 'Комментарий',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Страница не найдена.',
@@ -201,6 +202,7 @@ return [
     'NODE_MODEL_PARENT_NODE' => 'Родительский узел',
     'NODE_MODEL_TREE_DIAGRAM' => 'Диаграмма',
     'NODE_MODEL_LEVEL_ID' => 'Название уровня',
+    'NODE_MODEL_COMMENT' => 'Комментарий',
     /* Значения операторов */
     'NODE_MODEL_NOT_OPERATOR' => 'Отрицание',
     'NODE_MODEL_AND_OPERATOR' => 'И',
@@ -238,6 +240,7 @@ return [
     'LEVEL_MODEL_PARENT_LEVEL' => 'Родительский уровень',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Диаграмма',
     'LEVEL_MODEL_MOVEMENT_LEVEL' => 'Уровень переместить после:',
+    'LEVEL_MODEL_COMMENT' => 'Комментарий',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -261,6 +264,9 @@ return [
     'EVENT_ADD_NEW_EVENT' => 'Добавить новое событие',
     'EVENT_EDIT_EVENT' => 'Изменение события',
     'EVENT_DELETE_EVENT' => 'Удаление события',
+    'EVENT_ADD_NEW_COMMENT' => 'Добавить новый комментарий',
+    'EVENT_EDIT_COMMENT' => 'Изменить комментарий',
+    'EVENT_DELETE_COMMENT' => 'Удалить комментарий',
     'PARAMETER_ADD_NEW_PARAMETER' => 'Добавить новый параметр',
     'PARAMETER_EDIT_PARAMETER' => 'Изменение параметра',
     'PARAMETER_DELETE_PARAMETER' => 'Удаление параметра',
@@ -288,6 +294,7 @@ return [
     'DELETE_EVENT_TEXT' => 'Вы действительно хотите удалить событие?',
     'DELETE_MECHANISM_TEXT' => 'Вы действительно хотите удалить механизм?',
     'DELETE_PARAMETER_TEXT' => 'Вы действительно хотите удалить параметр?',
+    'DELETE_COMMENT_TEXT' => 'Вы действительно хотите удалить комментарий?',
 
     'CONNECTION_DELETE' => 'Удалить',
 
