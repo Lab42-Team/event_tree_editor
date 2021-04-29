@@ -157,7 +157,7 @@ use app\modules\main\models\Lang;
                         document.getElementById('edit-comment-form').reset();
 
                         //находим DOM элемент comment и делаем его видимым
-                        var comment = document.getElementById('node_comment_'+ data['id']);
+                        var comment = document.getElementById('comment_'+ data['id']);
                         comment.style.visibility='visible'
                     } else {
                         // Отображение ошибок ввода

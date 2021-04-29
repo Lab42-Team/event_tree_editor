@@ -106,6 +106,11 @@ use app\modules\editor\models\TreeDiagram;
                                 div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>' ;
                                 div_content_event.append(div_add_parameter);
 
+                                var div_show_comment = document.createElement('div');
+                                div_show_comment .id = 'node_show_comment_' + data['id'];
+                                div_show_comment .className = 'show-comment glyphicon-paperclip' ;
+                                div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
+                                div_content_event.append(div_show_comment );
                             } else {
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
 
@@ -150,6 +155,12 @@ use app\modules\editor\models\TreeDiagram;
                                 div_add_parameter.className = 'param add-parameter glyphicon-plus' ;
                                 div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>';
                                 div_content_event.append(div_add_parameter);
+
+                                var div_show_comment = document.createElement('div');
+                                div_show_comment .id = 'node_show_comment_' + data['id'];
+                                div_show_comment .className = 'show-comment glyphicon-paperclip' ;
+                                div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
+                                div_content_event.append(div_show_comment );
                             }
 
                             document.getElementById('add-event-form').reset();
