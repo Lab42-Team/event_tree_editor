@@ -66,6 +66,8 @@ class Node extends \yii\db\ActiveRecord
             ['name', 'unique', 'targetAttribute' => ['name', 'tree_diagram'],
                 'message' => Yii::t('app', 'MESSAGE_ELEMENT_NAME_ALREADY_ON_DIAGRAM')],
 
+            [['comment'], 'string'],
+
             [['parent_node'], 'exist', 'skipOnError' => true, 'targetClass' => Node::className(),
                 'targetAttribute' => ['parent_node' => 'id']],
             [['tree_diagram'], 'exist', 'skipOnError' => true, 'targetClass' => TreeDiagram::className(),
@@ -92,6 +94,7 @@ class Node extends \yii\db\ActiveRecord
             'level_id' => Yii::t('app', 'NODE_MODEL_LEVEL_ID'),
             'indent_x' => Yii::t('app', 'NODE_MODEL_INDENT_X'),
             'indent_y' => Yii::t('app', 'NODE_MODEL_INDENT_Y'),
+            'comment' => Yii::t('app', 'NODE_MODEL_COMMENT'),
         ];
     }
 

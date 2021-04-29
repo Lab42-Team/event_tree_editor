@@ -123,6 +123,11 @@ foreach ($initial_event_model_all as $i){
 
 <?php Pjax::end(); ?>
 
+<?= $this->render('_modal_form_comment_editor', [
+    'model' => $model,
+    'node_model' => $node_model,
+]) ?>
+
 <?= $this->render('_modal_form_view_message', [
 ]) ?>
 
@@ -420,6 +425,19 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     instance.addToGroup(group_name, div_node_id);
                 }
             });
+        });
+
+        //находим все элементы с классом div-comment
+        $(".div-comment").each(function(i) {
+            var id_comment = $(this).attr('id');
+            var comment = document.getElementById(id_comment);
+            var level = comment.offsetParent;
+            var id_level = parseInt(level.getAttribute('id').match(/\d+/));
+            var group_name = 'group'+ id_level; //определяем имя группы
+            //делаем comment перетаскиваемым
+            instance.draggable(comment);
+            //добавляем элемент comment в группу с именем group_name
+            instance.addToGroup(group_name, comment);
         });
 
 
@@ -1549,6 +1567,53 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
+    //отображение комментария или создание если его нет
+    $(document).on('click', '.show-comment', function() {
+        var node = $(this).attr('id');
+        node_id_on_click = parseInt(node.match(/\d+/));
+
+        //Поиск комментария
+        var comment = document.getElementById("comment_" + node_id_on_click);
+
+        //если комментария нет то добавляем его
+        if (comment == null){
+            $("#addCommentModalForm").modal("show");
+        } else {
+            if (comment.style.visibility == 'hidden'){
+                comment.style.visibility='visible'
+            } else {
+                comment.style.visibility='hidden'
+            }
+        }
+    });
+
+
+    //изменение комментария
+    $(document).on('click', '.edit-comment', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+
+            //Поиск комментария
+            var comment = document.getElementById("comment_name_" + node_id_on_click);
+
+            document.forms["edit-comment-form"].reset();
+            document.forms["edit-comment-form"].elements["Node[comment]"].value = comment.innerHTML;
+            $("#editCommentModalForm").modal("show");
+        }
+    });
+
+
+    //удаление комментария
+    $(document).on('click', '.del-comment', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+
+            $("#deleteCommentModalForm").modal("show");
+        }
+    });
+
 </script>
 
 
@@ -1584,6 +1649,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                     <div id="node_edit_<?= $initial_event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                     <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                    <div id="node_show_comment_<?= $initial_event_value->id ?>" class="show-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                 </div>
 
                                 <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1597,8 +1663,15 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         </div>
                                     <?php } ?>
                                 <?php endforeach; ?>
-
                             </div>
+
+                            <?php if ($initial_event_value->comment != null){ ?>
+                                <div id="comment_<?= $initial_event_value->id ?>" class="div-comment" style="visibility:hidden;">
+                                    <div id="comment_name_<?= $initial_event_value->id ?>" class="div-comment-name"><?= $initial_event_value->comment ?></div>
+                                    <div id="edit_comment_<?= $initial_event_value->id ?>" class="edit-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                    <div id="del_comment_<?= $initial_event_value->id ?>" class="del-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                </div>
+                            <?php } ?>
                         <?php endforeach; ?>
 
                         <?php foreach ($sequence_model_all as $sequence_value): ?>
@@ -1617,6 +1690,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                 <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                 <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                 <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                <div id="node_show_comment_<?= $event_value->id ?>" class="show-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                             </div>
 
                                             <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1630,8 +1704,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                     </div>
                                                 <?php } ?>
                                             <?php endforeach; ?>
-
                                         </div>
+
+                                        <?php if ($event_value->comment != null){ ?>
+                                            <div id="comment_<?= $event_value->id ?>" class="div-comment"  style="visibility:hidden;">
+                                                <div id="comment_name_<?= $event_value->id ?>" class="div-comment-name"><?= $event_value->comment ?></div>
+                                                <div id="edit_comment_<?= $event_value->id ?>" class="edit-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                <div id="del_comment_<?= $event_value->id ?>" class="del-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                            </div>
+                                        <?php } ?>
+
                                     <?php } ?>
                                 <?php endforeach; ?>
                             <?php } ?>
@@ -1685,6 +1767,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                         <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                         <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                         <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                        <div id="node_show_comment_<?= $event_value->id ?>" class="show-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                                     </div>
 
                                                     <?php foreach ($parameter_model_all as $parameter_value): ?>
@@ -1698,8 +1781,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                             </div>
                                                         <?php } ?>
                                                     <?php endforeach; ?>
-
                                                 </div>
+
+                                                <?php if ($event_value->comment != null){ ?>
+                                                    <div id="comment_<?= $event_value->id ?>" class="div-comment"  style="visibility:hidden;">
+                                                        <div id="comment_name_<?= $event_value->id ?>" class="div-comment-name"><?= $event_value->comment ?></div>
+                                                        <div id="edit_comment_<?= $event_value->id ?>" class="edit-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                        <div id="del_comment_<?= $event_value->id ?>" class="del-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                    </div>
+                                                <?php } ?>
+
                                             <?php } ?>
                                         <?php endforeach; ?>
                                     <?php } ?>

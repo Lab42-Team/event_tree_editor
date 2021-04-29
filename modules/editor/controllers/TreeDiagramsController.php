@@ -1266,4 +1266,94 @@ class TreeDiagramsController extends Controller
         return false;
     }
 
+
+    public function actionAddComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
+
+            $sequence = Sequence::find()->where(['node' => $model->id])->one();
+
+            $model->level_id = $sequence->level;
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["id"] = $model->id;
+                $data["comment"] = $model->comment;
+                $data["level_id"] = $model->level_id;
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionEditComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
+
+            $sequence = Sequence::find()->where(['node' => $model->id])->one();
+
+            $model->level_id = $sequence->level;
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["id"] = $model->id;
+                $data["comment"] = $model->comment;
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionDeleteComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Node::find()->where(['id' => Yii::$app->request->post('node_id_on_click')])->one();
+
+            $model->comment = null;
+            $model->updateAttributes(['comment']);
+            $data["success"] = true;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
 }
