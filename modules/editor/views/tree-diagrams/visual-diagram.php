@@ -1633,6 +1633,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <div id="level_title_<?= $value->id ?>" class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
                         <div id="level_del_<?= $value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                         <div id="level_edit_<?= $value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+
+                        <div id="level_show_comment_<?= $value->id ?>" class="show-comment-level glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
+
                     </div>
                     <div id="level_description_<?= $value->id ?>" class="div-level-description">
                         <!--?= $level_value->description ?>-->
@@ -1734,6 +1737,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <div id="level_del_<?= $level_value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                 <div id="level_edit_<?= $level_value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                 <div id="level_move_<?= $level_value->id ?>" class="move move-level glyphicon-transfer" title="<?php echo Yii::t('app', 'BUTTON_MOVE'); ?>"></div>
+
+                                <div id="level_show_comment_<?= $value->id ?>" class="show-comment-level glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
+
                             </div>
                             <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->

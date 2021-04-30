@@ -304,10 +304,9 @@ class TreeDiagramsController extends Controller
                 $data["name"] = $model->name;
                 $data["description"] = $model->description;
                 $data["parent_level"] = $model->parent_level;
+                $data["level_count"] = Level::find()->where(['tree_diagram' => $id])->count();
             } else
                 $data = ActiveForm::validate($model);
-
-            $data["level_count"] = Level::find()->where(['tree_diagram' => $id])->count();
 
             // Возвращение данных
             $response->data = $data;
