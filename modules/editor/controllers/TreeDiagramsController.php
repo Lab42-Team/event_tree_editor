@@ -1206,10 +1206,10 @@ class TreeDiagramsController extends Controller
                     $mode = TreeDiagram::CLASSIC_TREE_MODE;
                 }
 
-                if ($tree_diagram->mode == $mode){
+                if ($tree_diagram->mode == $mode) {
                     //импорт xml файла
                     $generator = new EventTreeXMLImport();
-                    $generator->importCodeXML($id, $file);
+                    $generator->importXMLCode($id, $file);
 
                     //удаление файла
                     unlink('uploads/temp.xml');
