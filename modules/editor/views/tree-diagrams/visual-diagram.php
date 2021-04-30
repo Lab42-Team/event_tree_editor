@@ -1,10 +1,5 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\Pjax;
-use app\modules\main\models\Lang;
-use app\modules\editor\models\TreeDiagram;
-
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
 /* @var $level_model app\modules\editor\models\Level */
@@ -17,13 +12,18 @@ use app\modules\editor\models\TreeDiagram;
 /* @var $mechanism_model_all app\modules\editor\controllers\TreeDiagramsController */
 /* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
 /* @var $array_levels_initial_without app\modules\editor\controllers\TreeDiagramsController */
+/* @var $node_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $parameter_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $parameter_model app\modules\editor\controllers\TreeDiagramsController */
+/* @var $the_initial_event_is app\modules\editor\controllers\TreeDiagramsController */
+
+use yii\bootstrap\ButtonDropdown;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
+use app\modules\main\models\Lang;
+use app\modules\editor\models\TreeDiagram;
 
 $this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM') . ' - ' . $model->name;
-
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS'),
-    'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
 
 $this->params['menu_add'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
@@ -49,11 +49,7 @@ $this->params['menu_diagram'] = [
 
     ['label' => '<span class="glyphicon glyphicon-object-align-vertical"></span> ' . Yii::t('app', 'NAV_ALIGNMENT'),
         'url' => '#', 'options' => ['id'=>'nav_alignment']],
-
-    ['label' => '<span class="glyphicon glyphicon-blackboard"></span> ' .
-        Yii::t('app', 'NAV_BACK_LIST'), 'url' => ['/editor/tree-diagrams/index']],
 ];
-
 ?>
 
 

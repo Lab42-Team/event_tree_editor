@@ -67,6 +67,8 @@ return [
     'BUTTON_OPEN_DIAGRAM' => 'Открыть диаграмму',
     'BUTTON_MOVE' => 'Переместить',
     'BUTTON_COMMENT' => 'Комментарий',
+    'BUTTON_UPLOAD' => 'Загрузить',
+    'BUTTON_UPLOAD_ONTOLOGY' => 'Загрузить онтологию',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Страница не найдена.',
@@ -94,11 +96,14 @@ return [
     'TREE_DIAGRAMS_PAGE_IMPORT_TREE_DIAGRAM' => 'Импортирование визуальной диаграммы',
     'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Создать диаграмму по шаблону',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Вы уверены, что хотите удалить данную диаграмму?',
+    'TREE_DIAGRAMS_PAGE_UPLOAD_ONTOLOGY' => 'Загрузить онтологию',
+    'TREE_DIAGRAMS_PAGE_CONVERT_ONTOLOGY' => 'Преобразование онтологии',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'Вы успешно создали новую диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'Вы успешно обновили данную диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'Вы успешно удалили диаграмму.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_IMPORT_TREE_DIAGRAM' => 'Вы успешно импортировали диаграмму.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_UPLOAD_ONTOLOGY' => 'Вы успешно загрузили файл OWL-онтологии.',
     /* Имя диаграммы созданной из шаблона */
     'TREE_DIAGRAMS_CREATED_FROM' => 'Диаграмма созданная из ',
     'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Шаблоны диаграмм не найдены',
@@ -163,8 +168,8 @@ return [
 
     /* TreeDiagram */
     'TREE_DIAGRAM_MODEL_ID' => 'ID',
-    'TREE_DIAGRAM_MODEL_CREATED_AT' => 'Создан',
-    'TREE_DIAGRAM_MODEL_UPDATED_AT' => 'Обновлен',
+    'TREE_DIAGRAM_MODEL_CREATED_AT' => 'Создана',
+    'TREE_DIAGRAM_MODEL_UPDATED_AT' => 'Обновлена',
     'TREE_DIAGRAM_MODEL_NAME' => 'Название',
     'TREE_DIAGRAM_MODEL_DESCRIPTION' => 'Описание',
     'TREE_DIAGRAM_MODEL_TYPE' => 'Тип',
@@ -255,6 +260,9 @@ return [
     'IMPORT_FORM_FILE_NAME' => 'Имя файла',
     'MESSAGE_CLEANING' => 'При импорте все элементы диаграммы будут удалены',
     'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Режим импортируемого файла не совпадает с режимом диаграммы',
+
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'Файл онтологии в формате OWL',
 
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',

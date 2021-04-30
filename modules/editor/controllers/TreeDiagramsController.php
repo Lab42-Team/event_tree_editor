@@ -14,11 +14,13 @@ use app\modules\editor\models\Node;
 use app\modules\editor\models\Sequence;
 use app\modules\editor\models\Parameter;
 use app\modules\editor\models\TreeDiagram;
+use app\modules\editor\models\OWLFileForm;
 use app\modules\editor\models\TreeDiagramSearch;
 use app\modules\editor\models\Import;
 use yii\filters\AccessControl;
 use app\components\EventTreeXMLGenerator;
 use app\components\EventTreeXMLImport;
+
 /**
  * TreeDiagramsController implements the CRUD actions for TreeDiagram model.
  */
@@ -183,15 +185,15 @@ class TreeDiagramsController extends Controller
     /**
      * Finds the TreeDiagram model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return TreeDiagram the loaded model
+     *
+     * @param $id
+     * @return TreeDiagram|null the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = TreeDiagram::findOne($id)) !== null) {
+        if (($model = TreeDiagram::findOne($id)) !== null)
             return $model;
-        }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
@@ -1205,10 +1207,10 @@ class TreeDiagramsController extends Controller
                     $mode = TreeDiagram::CLASSIC_TREE_MODE;
                 }
 
-                if ($tree_diagram->mode == $mode){
+                if ($tree_diagram->mode == $mode) {
                     //импорт xml файла
                     $generator = new EventTreeXMLImport();
-                    $generator->importCodeXML($id, $file);
+                    $generator->importXMLCode($id, $file);
 
                     //удаление файла
                     unlink('uploads/temp.xml');
@@ -1354,5 +1356,61 @@ class TreeDiagramsController extends Controller
             return $response;
         }
         return false;
+    }
+
+    /**
+     * Загрузка онтологии вформате OWL на сервер во временную папку.
+     *
+     * @param $id - идентификатор диаграммы дерева событий
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionUploadOntology($id)
+    {
+        // Поиск модели диаграммы дерева событий по id
+        $model = $this->findModel($id);
+        // Создание формы файла OWL-онтологии
+        $file_form = new OWLFileForm();
+
+        // Если POST-запрос
+        if (Yii::$app->request->isPost) {
+            $file_form->owl_file = UploadedFile::getInstance($file_form, 'owl_file');
+            if ($file_form->validate()) {
+                // Временное сохранение загруженного файла онтологии
+                $file_form->owl_file->saveAs('uploads/uploaded-ontology.owl');
+                // Вывод сообщения об успехной загрузке файла онтологии
+                Yii::$app->getSession()->setFlash('success',
+                    Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_UPLOAD_ONTOLOGY'));
+
+                return $this->redirect(['convert-ontology', 'id' => $model->id]);
+            }
+        }
+
+        return $this->render('upload-ontology', [
+            'model' => $model,
+            'file_form' => $file_form
+        ]);
+    }
+
+    /**
+     * Преобразование OWL-онтологии в классическую диаграмму деревьев событий.
+     *
+     * @param $id - идентификатор диаграммы дерева событий
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionConvertOntology($id)
+    {
+        // Если существует файл с OWL-онтологией
+        if (file_exists(Yii::$app->basePath . '/web/uploads/uploaded-ontology.owl')) {
+            // Получение данных из OWL-онтологии
+            $xml_data = simplexml_load_file('uploads/uploaded-ontology.owl');
+        } else
+            $xml_data = null;
+
+        return $this->render('convert-ontology', [
+            'model' => $this->findModel($id),
+            'xml_data' => $xml_data
+        ]);
     }
 }
