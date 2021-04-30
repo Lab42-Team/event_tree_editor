@@ -29,7 +29,7 @@ class EventTreeXMLImport
     {
         //$parent родительский xml-элемент
         // Если у родетельского xml-элемента есть дочернии
-        if ($parent->count() != 0){
+        if ($parent->count() != 0) {
             // Получаем у родетельского xml-элемента дочернии
             foreach($parent->children() as $child) {
                 // Проверки если имя дочернего элемента равны
@@ -38,23 +38,23 @@ class EventTreeXMLImport
                 if ($child->getName() == 'Event') {
                     // Создание Node
                     $node_model = new Node();
-                    $node_model->name = (string) $child["name"];
-                    $node_model->certainty_factor = (real) $child["certainty_factor"];
-                    $node_model->description = (string) $child["description"];
+                    $node_model->name = (string)$child['name'];
+                    $node_model->certainty_factor = (real)$child['certainty_factor'];
+                    $node_model->description = (string)$child['description'];
                     $node_model->operator = Node::AND_OPERATOR;
 
-                    if ((string)$child["type"] == "Инициирующее событие" || (string)$child["type"] == "Initial event")
+                    if ((string)$child['type'] == 'Инициирующее событие' || (string)$child['type'] == 'Initial event')
                         $node_model->type = Node::INITIAL_EVENT_TYPE;
-                    if ((string)$child["type"] == "Событие" || (string)$child["type"] == "Event")
+                    if ((string)$child['type'] == 'Событие' || (string)$child['type'] == 'Event')
                         $node_model->type = Node::EVENT_TYPE;
-                    if ((string)$child["type"] == "Механизм" || (string)$child["type"] == "Mechanism")
+                    if ((string)$child['type'] == 'Механизм' || (string)$child['type'] == 'Mechanism')
                         $node_model->type = Node::MECHANISM_TYPE;
 
                     // Ннахождение parent_node из таблицы $array_nodes если родитель не определен,
                     // но присутствует значение parent_node в xml
-                    if ($node_id == null && (integer)$child["parent_node"] <> 0)
+                    if ($node_id == null && (integer)$child['parent_node'] <> 0)
                         for ($i = 0; $i < self::$j; $i++)
-                             if ((integer)$child["parent_node"] == self::$array_nodes[$i]['node_template'])
+                             if ((integer)$child['parent_node'] == self::$array_nodes[$i]['node_template'])
                                  $node_model->parent_node = self::$array_nodes[$i]['node'];
                     else
                         $node_model->parent_node = $node_id;
@@ -65,9 +65,9 @@ class EventTreeXMLImport
                     // Таблица $array_nodes внесение значений, где:
                     // 'node_template' значение id node из xml
                     // 'node' значение нового id node из только что созданного
-                    self::$array_nodes[self::$j]['node_template'] = (integer) $child["id"];
+                    self::$array_nodes[self::$j]['node_template'] = (integer)$child['id'];
                     self::$array_nodes[self::$j]['node'] = $node_model->id;
-                    self::$j = self::$j+1;
+                    ++self::$j;
 
                     // Создание модели Sequence
                     $sequence_model = new Sequence();
@@ -83,23 +83,23 @@ class EventTreeXMLImport
                 if ($child->getName() == 'Parameter') {
                     // Создание Parameter
                     $parameter_model = new Parameter();
-                    $parameter_model->name = (string)$child["name"];
-                    $parameter_model->description = (string)$child["description"];
-                    if ((string)$child["operator"] == "=")
+                    $parameter_model->name = (string)$child['name'];
+                    $parameter_model->description = (string)$child['description'];
+                    if ((string)$child['operator'] == '=')
                         $parameter_model->operator = Parameter::EQUALLY_OPERATOR;
-                    if ((string)$child["operator"] == ">")
+                    if ((string)$child['operator'] == '>')
                         $parameter_model->operator = Parameter::MORE_OPERATOR;
-                    if ((string)$child["operator"] == "<")
+                    if ((string)$child['operator'] == '<')
                         $parameter_model->operator = Parameter::LESS_OPERATOR;
-                    if ((string)$child["operator"] == ">=")
+                    if ((string)$child['operator'] == '>=')
                         $parameter_model->operator = Parameter::MORE_EQUAL_OPERATOR;
-                    if ((string)$child["operator"] == "<=")
+                    if ((string)$child['operator'] == '<=')
                         $parameter_model->operator = Parameter::LESS_EQUAL_OPERATOR;
-                    if ((string)$child["operator"] == "≠")
+                    if ((string)$child['operator'] == '≠')
                         $parameter_model->operator = Parameter::NOT_EQUAL_OPERATOR;
-                    if ((string)$child["operator"] == "≈")
+                    if ((string)$child['operator'] == '≈')
                         $parameter_model->operator = Parameter::APPROXIMATELY_EQUAL_OPERATOR;
-                    $parameter_model->value = (string)$child["value"];
+                    $parameter_model->value = (string)$child['value'];
                     $parameter_model->node = $node_id;
                     $parameter_model->save();
                 }
@@ -141,14 +141,14 @@ class EventTreeXMLImport
         self::$j = 0;
 
         $tree_diagram_model = TreeDiagram::find()->where(['id' => $id])->one();
-        $tree_diagram_model->description = (string)$file["description"];
+        $tree_diagram_model->description = (string)$file['description'];
         $tree_diagram_model->save();
 
         $parent_level = null;
         foreach($file->Level as $level) {
             $level_model = new Level();
-            $level_model->name = (string)$level["name"];
-            $level_model->description = (string)$level["description"];
+            $level_model->name = (string)$level['name'];
+            $level_model->description = (string)$level['description'];
             $level_model->parent_level = $parent_level;
             $level_model->tree_diagram = $id;
             $level_model->save();
