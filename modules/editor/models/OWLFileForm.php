@@ -2,6 +2,7 @@
 
 namespace app\modules\editor\models;
 
+use Yii;
 use yii\base\Model;
 
 /**
@@ -28,7 +29,7 @@ class OWLFileForm extends Model
     public function attributeLabels()
     {
         return array(
-            'owl_file' => 'Файл онтологии в формате OWL',
+            'owl_file' => Yii::t('app', 'OWL_FILE_FORM_OWL_FILE'),
         );
     }
 }

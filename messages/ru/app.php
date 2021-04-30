@@ -261,6 +261,9 @@ return [
     'MESSAGE_CLEANING' => 'При импорте все элементы диаграммы будут удалены',
     'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Режим импортируемого файла не совпадает с режимом диаграммы',
 
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'Файл онтологии в формате OWL',
+
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',

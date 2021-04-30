@@ -261,6 +261,9 @@ return [
     'MESSAGE_CLEANING' => 'When importing all chart elements are removed',
     'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Imported file mode does not match chart mode',
 
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'OWL ontology file',
+
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'LEVEL_EDIT_LEVEL' => 'Level change',
