@@ -67,7 +67,7 @@ class EventTreeXMLImport
                     // 'node' значение нового id node из только что созданного
                     self::$array_nodes[self::$j]['node_template'] = (integer)$child['id'];
                     self::$array_nodes[self::$j]['node'] = $node_model->id;
-                    ++self::$j;
+                    self::$j++;
 
                     // Создание модели Sequence
                     $sequence_model = new Sequence();
