@@ -16,6 +16,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $name
  * @property string $description
  * @property int $type
+ * @property int $mode
+ * @property int $correctness
  * @property int $status
  * @property int $author
  *

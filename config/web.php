@@ -43,7 +43,7 @@ $config = [
                 'sing-in' => 'main/default/sing-in',
                 '/tree-diagrams/<_ev:(index|create|edit-level|edit-event|edit-mechanism|delete-event|delete-mechanism|add-relationship|delete-relationship|add-parameter|edit-parameter|delete-parameter|add-comment|edit-comment|delete-comment|save-indent)>' =>
                     'editor/tree-diagrams/<_ev>',
-                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level|add-event|add-mechanism|delete-level|correctness|creation-template|import|move-level)>/<id:\d+>' =>
+                '/tree-diagrams/<_ev:(view|update|delete|visual-diagram|add-level|add-event|add-mechanism|delete-level|correctness|creation-template|import|move-level|upload-ontology|convert-ontology)>/<id:\d+>' =>
                     'editor/tree-diagrams/<_ev>',
             ],
         ],
