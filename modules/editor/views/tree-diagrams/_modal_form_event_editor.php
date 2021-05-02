@@ -158,7 +158,7 @@ use app\modules\editor\models\TreeDiagram;
 
                                 var div_show_comment = document.createElement('div');
                                 div_show_comment .id = 'node_show_comment_' + data['id'];
-                                div_show_comment .className = 'show-comment glyphicon-paperclip' ;
+                                div_show_comment .className = 'show-event-comment glyphicon-paperclip' ;
                                 div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
                                 div_content_event.append(div_show_comment );
                             }
@@ -380,6 +380,20 @@ use app\modules\editor\models\TreeDiagram;
                                 maxConnections: -1,
                             });
 
+                            //поиск комментария
+                            var div_comment = document.getElementById('node_comment_' + data['id']);
+                            if (div_comment != null){
+                                var new_div_comment = div_comment.cloneNode(true); // клонировать сообщение
+                                instance.removeFromGroup(div_comment);
+                                instance.remove(div_comment);
+                                div_level_layer.append(new_div_comment); // разместить клонированный элемент в новый уровень
+
+                                //делаем новый node перетаскиваемым
+                                instance.draggable(new_div_comment);
+
+                                instance.addToGroup(g_name, new_div_comment);//добавляем в группу
+                            }
+
                             //редактируем массив mas_data_node (чистим от удаляемого элемента)
                             $.each(mas_data_node, function (i, elem_node) {
                                 //убираем входящие
@@ -495,6 +509,13 @@ use app\modules\editor\models\TreeDiagram;
                         var div_del_event = document.getElementById('node_' + node_id_on_click);
                         instance.removeFromGroup(div_del_event);//удаляем из группы
                         instance.remove(div_del_event);// удаляем node
+
+                        //поиск комментария
+                        var div_comment = document.getElementById('node_comment_' + node_id_on_click);
+                        if (div_comment != null){
+                            instance.removeFromGroup(div_comment);
+                            instance.remove(div_comment);
+                        }
 
                         //редактируем массив mas_data_node (чистим от удаляемого элемента)
                         //убираем соединения от удаляемого элемента

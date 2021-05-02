@@ -1268,7 +1268,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionAddComment()
+    public function actionAddEventComment()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -1302,7 +1302,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionEditComment()
+    public function actionEditEventComment()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -1335,7 +1335,7 @@ class TreeDiagramsController extends Controller
     }
 
 
-    public function actionDeleteComment()
+    public function actionDeleteEventComment()
     {
         //Ajax-запрос
         if (Yii::$app->request->isAjax) {
@@ -1357,6 +1357,88 @@ class TreeDiagramsController extends Controller
         }
         return false;
     }
+
+
+    public function actionAddLevelComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Level::find()->where(['id' => Yii::$app->request->post('level_id_on_click')])->one();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["comment"] = $model->comment;
+
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionEditLevelComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Level::find()->where(['id' => Yii::$app->request->post('level_id_on_click')])->one();
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                // Успешный ввод данных
+                $data["success"] = true;
+                // Формирование данных об измененном событии
+                $data["comment"] = $model->comment;
+            } else
+                $data = ActiveForm::validate($model);
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
+
+    public function actionDeleteLevelComment()
+    {
+        //Ajax-запрос
+        if (Yii::$app->request->isAjax) {
+            // Определение массива возвращаемых данных
+            $data = array();
+            // Установка формата JSON для возвращаемых данных
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+
+            $model = Level::find()->where(['id' => Yii::$app->request->post('level_id_on_click')])->one();
+
+            $model->comment = null;
+            $model->updateAttributes(['comment']);
+            $data["success"] = true;
+
+            // Возвращение данных
+            $response->data = $data;
+            return $response;
+        }
+        return false;
+    }
+
 
     /**
      * Загрузка онтологии вформате OWL на сервер во временную папку.

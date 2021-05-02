@@ -11,9 +11,9 @@ use app\modules\main\models\Lang;
 ?>
 
 
-<!-- Модальное окно добавления нового комментария -->
+<!-- Модальное окно добавления нового комментария в событие -->
 <?php Modal::begin([
-    'id' => 'addCommentModalForm',
+    'id' => 'addEventCommentModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_ADD_NEW_COMMENT') . '</h3>',
 ]); ?>
 
@@ -22,14 +22,14 @@ use app\modules\main\models\Lang;
         // Выполнение скрипта при загрузке страницы
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
-            $("#add-comment-button").click(function(e) {
+            $("#add-event-comment-button").click(function(e) {
                 e.preventDefault();
-                var form = $("#add-comment-form");
+                var form = $("#add-event-comment-form");
                 // Ajax-запрос
                 $.ajax({
                     //переход на экшен левел
                     url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                    '/tree-diagrams/add-comment'?>",
+                    '/tree-diagrams/add-event-comment'?>",
                     type: "post",
                     data: form.serialize() + "&node_id_on_click=" + node_id_on_click,
                     dataType: "json",
@@ -37,49 +37,57 @@ use app\modules\main\models\Lang;
                         // Если валидация прошла успешно (нет ошибок ввода)
                         if (data['success']) {
                             // Скрывание модального окна
-                            $("#addCommentModalForm").modal("hide");
+                            $("#addEventCommentModalForm").modal("hide");
 
                             var div_level_layer = document.getElementById('level_description_' + data['level_id']);
 
                             var div_comment = document.createElement('div');
-                            div_comment.id = 'comment_' + data['id'];
-                            div_comment.className = 'div-comment';
+                            div_comment.id = 'node_comment_' + data['id'];
+                            div_comment.className = 'div-event-comment';
                             div_level_layer.append(div_comment);
 
                             var div_comment_name = document.createElement('div');
-                            div_comment_name.id = 'comment_name_' + data['id'];
+                            div_comment_name.id = 'node_comment_name_' + data['id'];
                             div_comment_name.className = 'div-comment-name';
                             div_comment_name.innerHTML = data['comment'];
                             div_comment.append(div_comment_name);
 
                             var div_edit_comment = document.createElement('div');
-                            div_edit_comment.id = 'edit_comment_' + data['id'];
-                            div_edit_comment.className = 'edit-comment glyphicon-pencil';
+                            div_edit_comment.id = 'node_edit_comment_' + data['id'];
+                            div_edit_comment.className = 'edit-event-comment glyphicon-pencil';
                             div_edit_comment.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
                             div_comment.append(div_edit_comment);
 
                             var div_del_comment = document.createElement('div');
-                            div_del_comment.id = 'del_comment_' + data['id'];
-                            div_del_comment.className = 'del-comment glyphicon-trash';
+                            div_del_comment.id = 'node_del_comment_' + data['id'];
+                            div_del_comment.className = 'del-event-comment glyphicon-trash';
                             div_del_comment.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
                             div_comment.append(div_del_comment);
 
-                            document.getElementById('add-comment-form').reset();
+                            var div_hide_comment = document.createElement('div');
+                            div_hide_comment.id = 'node_hide_comment_' + data['id'];
+                            div_hide_comment.className = 'hide-event-comment glyphicon-eye-close';
+                            div_hide_comment.title = '<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>' ;
+                            div_comment.append(div_hide_comment);
+
+                            document.getElementById('add-event-comment-form').reset();
 
                             //находим DOM элемент comment (идентификатор div comment)
-                            var comment = document.getElementById('comment_'+ data['id']);
+                            var comment = document.getElementById('node_comment_'+ data['id']);
+
+                            var group_name = 'group'+ data['level_id']; //определяем имя группы
+
                             //делаем node перетаскиваемым
                             instance.draggable(comment);
-
-                            var group_name = 'group'+ id_level; //определяем имя группы
 
                             //добавляем элемент div_node_id в группу с именем group_name
                             instance.addToGroup(group_name, comment);
 
                             comment.style.visibility='visible'
+                            arrangeEventComment(data['id']);
                         } else {
                             // Отображение ошибок ввода
-                            viewErrors("#add-comment-form", data);
+                            viewErrors("#add-event-comment-form", data);
                         }
                     },
                     error: function() {
@@ -91,7 +99,7 @@ use app\modules\main\models\Lang;
     </script>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'add-comment-form',
+    'id' => 'add-event-comment-form',
     'enableClientValidation' => true,
 ]); ?>
 
@@ -102,7 +110,7 @@ use app\modules\main\models\Lang;
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
     'options' => [
-        'id' => 'add-comment-button',
+        'id' => 'add-event-comment-button',
         'class' => 'btn-success',
         'style' => 'margin:5px'
     ]
@@ -123,9 +131,9 @@ use app\modules\main\models\Lang;
 
 
 
-<!-- Модальное окно изменения нового комментария -->
+<!-- Модальное окно изменения нового комментария в событии-->
 <?php Modal::begin([
-    'id' => 'editCommentModalForm',
+    'id' => 'editEventCommentModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_EDIT_COMMENT') . '</h3>',
 ]); ?>
 
@@ -134,14 +142,14 @@ use app\modules\main\models\Lang;
     // Выполнение скрипта при загрузке страницы
     $(document).ready(function() {
         // Обработка нажатия кнопки сохранения
-        $("#edit-comment-button").click(function(e) {
+        $("#edit-event-comment-button").click(function(e) {
             e.preventDefault();
-            var form = $("#edit-comment-form");
+            var form = $("#edit-event-comment-form");
             // Ajax-запрос
             $.ajax({
                 //переход на экшен левел
                 url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                '/tree-diagrams/edit-comment'?>",
+                '/tree-diagrams/edit-event-comment'?>",
                 type: "post",
                 data: form.serialize() + "&node_id_on_click=" + node_id_on_click,
                 dataType: "json",
@@ -149,19 +157,19 @@ use app\modules\main\models\Lang;
                     // Если валидация прошла успешно (нет ошибок ввода)
                     if (data['success']) {
                         // Скрывание модального окна
-                        $("#editCommentModalForm").modal("hide");
+                        $("#editEventCommentModalForm").modal("hide");
 
-                        var div_comment_name = document.getElementById('comment_name_' + data['id']);
+                        var div_comment_name = document.getElementById('node_comment_name_' + data['id']);
                         div_comment_name.innerHTML = data['comment'];
 
-                        document.getElementById('edit-comment-form').reset();
+                        document.getElementById('edit-event-comment-form').reset();
 
                         //находим DOM элемент comment и делаем его видимым
-                        var comment = document.getElementById('comment_'+ data['id']);
+                        var comment = document.getElementById('node_comment_'+ data['id']);
                         comment.style.visibility='visible'
                     } else {
                         // Отображение ошибок ввода
-                        viewErrors("#edit-comment-form", data);
+                        viewErrors("#edit-event-comment-form", data);
                     }
                 },
                 error: function() {
@@ -173,7 +181,7 @@ use app\modules\main\models\Lang;
 </script>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'edit-comment-form',
+    'id' => 'edit-event-comment-form',
     'enableClientValidation' => true,
 ]); ?>
 
@@ -184,7 +192,7 @@ use app\modules\main\models\Lang;
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_EDIT'),
     'options' => [
-        'id' => 'edit-comment-button',
+        'id' => 'edit-event-comment-button',
         'class' => 'btn-success',
         'style' => 'margin:5px'
     ]
@@ -205,9 +213,9 @@ use app\modules\main\models\Lang;
 
 
 
-<!-- Модальное окно удаления нового комментария -->
+<!-- Модальное окно удаления нового комментария в событии-->
 <?php Modal::begin([
-    'id' => 'deleteCommentModalForm',
+    'id' => 'deleteEventCommentModalForm',
     'header' => '<h3>' . Yii::t('app', 'EVENT_DELETE_COMMENT') . '</h3>',
 ]); ?>
 
@@ -216,14 +224,14 @@ use app\modules\main\models\Lang;
         // Выполнение скрипта при загрузке страницы
         $(document).ready(function() {
             // Обработка нажатия кнопки сохранения
-            $("#delete-comment-button").click(function(e) {
+            $("#delete-event-comment-button").click(function(e) {
                 e.preventDefault();
-                var form = $("#delete-comment-form");
+                var form = $("#delete-event-comment-form");
                 // Ajax-запрос
                 $.ajax({
                     //переход на экшен левел
                     url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
-                    '/tree-diagrams/delete-comment'?>",
+                    '/tree-diagrams/delete-event-comment'?>",
                     type: "post",
                     data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id_on_click=" + node_id_on_click,
                     dataType: "json",
@@ -231,14 +239,14 @@ use app\modules\main\models\Lang;
                         // Если валидация прошла успешно (нет ошибок ввода)
                         if (data['success']) {
                             // Скрывание модального окна
-                            $("#deleteCommentModalForm").modal("hide");
+                            $("#deleteEventCommentModalForm").modal("hide");
 
-                            var div_comment = document.getElementById('comment_' + node_id_on_click);
+                            var div_comment = document.getElementById('node_comment_' + node_id_on_click);
                             instance.removeFromGroup(div_comment);//удаляем из группы
                             instance.remove(div_comment);// удаляем node
                         } else {
                             // Отображение ошибок ввода
-                            viewErrors("#delete-comment-form", data);
+                            viewErrors("#delete-event-comment-form", data);
                         }
                     },
                     error: function() {
@@ -250,7 +258,7 @@ use app\modules\main\models\Lang;
     </script>
 
 <?php $form = ActiveForm::begin([
-    'id' => 'delete-comment-form',
+    'id' => 'delete-event-comment-form',
 ]); ?>
 
 <div class="modal-body">
@@ -262,7 +270,7 @@ use app\modules\main\models\Lang;
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_DELETE'),
     'options' => [
-        'id' => 'delete-comment-button',
+        'id' => 'delete-event-comment-button',
         'class' => 'btn-success',
         'style' => 'margin:5px'
     ]
