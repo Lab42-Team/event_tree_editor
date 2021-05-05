@@ -49,6 +49,7 @@ class EventTreesController extends Controller
                 $level->description = 'Описание';
                 $level->parent_level = null;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
 
 
@@ -62,6 +63,9 @@ class EventTreesController extends Controller
                 $initial_event->parent_node = null;
                 $initial_event->tree_diagram = $tree_diagram->id;
                 $initial_event->level_id = $level->id;
+                $initial_event->indent_x = 60;
+                $initial_event->indent_y = 10;
+                $initial_event->comment = null;
                 $this->log($initial_event->save());
 
                 $sequence =  new Sequence();
@@ -112,6 +116,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $initial_event->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 60;
+                $event->indent_y = 390;
+                $event->comment = null;
                 $this->log($event->save());
 
                 $sequence =  new Sequence();
@@ -146,6 +153,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $initial_event->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 230;
+                $event->indent_y = 390;
+                $event->comment = null;
                 $this->log($event->save());
 
                 $sequence =  new Sequence();
@@ -188,6 +198,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $initial_event->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 400;
+                $event->indent_y = 390;
+                $event->comment = null;
                 $this->log($event->save());
 
                 $sequence =  new Sequence();
@@ -230,6 +243,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $initial_event->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 570;
+                $event->indent_y = 390;
+                $event->comment = null;
                 $this->log($event->save());
 
                 $sequence =  new Sequence();
@@ -264,6 +280,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $initial_event->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 740;
+                $event->indent_y = 390;
+                $event->comment = null;
                 $this->log($event->save());
                 $event1 = $event->id;
 
@@ -307,6 +326,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event1;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level->id;
+                $event->indent_x = 740;
+                $event->indent_y = 600;
+                $event->comment = null;
                 $this->log($event->save());
 
                 $sequence =  new Sequence();
@@ -365,6 +387,7 @@ class EventTreesController extends Controller
                 $level->description = 'Поддерево событий стадии нежелательного процесса «аварийная ситуация»';
                 $level->parent_level = null;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level1 = $level->id;
 
@@ -377,6 +400,9 @@ class EventTreesController extends Controller
                 $initial_event->parent_node = null;
                 $initial_event->tree_diagram = $tree_diagram->id;
                 $initial_event->level_id = $level1;
+                $initial_event->indent_x = 40;
+                $initial_event->indent_y = 10;
+                $initial_event->comment = null;
                 $this->log($initial_event->save());
 
                 $sequence =  new Sequence();
@@ -393,6 +419,7 @@ class EventTreesController extends Controller
                 $level->description = 'Поддерево событий стадии нежелательного процесса «аварийная ситуация»';
                 $level->parent_level = $level1;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level2 = $level->id;
 
@@ -405,6 +432,9 @@ class EventTreesController extends Controller
                 $mechanism->parent_node = $initial_event->id;
                 $mechanism->tree_diagram = $tree_diagram->id;
                 $mechanism->level_id = $level2;
+                $mechanism->indent_x = 80;
+                $mechanism->indent_y = 10;
+                $mechanism->comment = null;
                 $this->log($mechanism->save());
 
                 $sequence =  new Sequence();
@@ -424,6 +454,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $mechanism->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level2;
+                $event->indent_x = 40;
+                $event->indent_y = 130;
+                $event->comment = null;
                 $this->log($event->save());
                 $event1 = $event->id;
 
@@ -444,6 +477,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event1;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level2;
+                $event->indent_x = 40;
+                $event->indent_y = 260;
+                $event->comment = null;
                 $this->log($event->save());
                 $event2 = $event->id;
 
@@ -461,6 +497,7 @@ class EventTreesController extends Controller
                 $level->description = 'Поддерево событий стадии нежелательного процесса «авария»';
                 $level->parent_level = $level2;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level3 = $level->id;
 
@@ -473,6 +510,9 @@ class EventTreesController extends Controller
                 $mechanism->parent_node = $event2;
                 $mechanism->tree_diagram = $tree_diagram->id;
                 $mechanism->level_id = $level3;
+                $mechanism->indent_x = 80;
+                $mechanism->indent_y = 10;
+                $mechanism->comment = null;
                 $this->log($mechanism->save());
 
                 $sequence =  new Sequence();
@@ -492,6 +532,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $mechanism->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level3;
+                $event->indent_x = 40;
+                $event->indent_y = 130;
+                $event->comment = null;
                 $this->log($event->save());
                 $event4 = $event->id;
 
@@ -513,6 +556,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event4;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level3;
+                $event->indent_x = 40;
+                $event->indent_y = 260;
+                $event->comment = null;
                 $this->log($event->save());
                 $event5 = $event->id;
 
@@ -530,6 +576,7 @@ class EventTreesController extends Controller
                 $level->description = 'Поддерево событий стадии нежелательного процесса «ЧС»';
                 $level->parent_level = $level3;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level4 = $level->id;
 
@@ -542,6 +589,9 @@ class EventTreesController extends Controller
                 $mechanism->parent_node = $event5;
                 $mechanism->tree_diagram = $tree_diagram->id;
                 $mechanism->level_id = $level4;
+                $mechanism->indent_x = 80;
+                $mechanism->indent_y = 10;
+                $mechanism->comment = null;
                 $this->log($mechanism->save());
 
                 $sequence =  new Sequence();
@@ -561,6 +611,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $mechanism->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level4;
+                $event->indent_x = 40;
+                $event->indent_y = 130;
+                $event->comment = null;
                 $this->log($event->save());
                 $event6 = $event->id;
 
@@ -581,6 +634,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $mechanism->id;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level4;
+                $event->indent_x = 210;
+                $event->indent_y = 130;
+                $event->comment = null;
                 $this->log($event->save());
                 $event7 = $event->id;
 
@@ -616,6 +672,7 @@ class EventTreesController extends Controller
                 $level->description = 'Тестовый уровень 1';
                 $level->parent_level = null;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level1 = $level->id;
 
@@ -628,6 +685,9 @@ class EventTreesController extends Controller
                 $initial_event->parent_node = null;
                 $initial_event->tree_diagram = $tree_diagram->id;
                 $initial_event->level_id = $level1;
+                $initial_event->indent_x = 60;
+                $initial_event->indent_y = 10;
+                $initial_event->comment = null;
                 $this->log($initial_event->save());
                 $event1 = $initial_event->id;
 
@@ -648,6 +708,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event1;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level1;
+                $event->indent_x = 60;
+                $event->indent_y = 150;
+                $event->comment = null;
                 $this->log($event->save());
                 $event2 = $event->id;
 
@@ -668,6 +731,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event1;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level1;
+                $event->indent_x = 570;
+                $event->indent_y = 150;
+                $event->comment = null;
                 $this->log($event->save());
                 $event3 = $event->id;
 
@@ -679,50 +745,50 @@ class EventTreesController extends Controller
                 $this->log($sequence->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр1';
+                    $parameter->name = 'Параметр 1';
                     $parameter->description = 'Описание параметра 1';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 1';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр2';
+                    $parameter->name = 'Параметр 2';
                     $parameter->description = 'Описание параметра 2';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 2';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр3';
+                    $parameter->name = 'Параметр 3';
                     $parameter->description = 'Описание параметра 3';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 3';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр4';
+                    $parameter->name = 'Параметр 4';
                     $parameter->description = 'Описание параметра 4';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 4';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр5';
+                    $parameter->name = 'Параметр 5';
                     $parameter->description = 'Описание параметра 5';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 5';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
                     $parameter = new Parameter();
-                    $parameter->name = 'Параметр6';
+                    $parameter->name = 'Параметр 6';
                     $parameter->description = 'Описание параметра 6';
                     $parameter->operator = Parameter::EQUALLY_OPERATOR;
-                    $parameter->value = 'значение';
+                    $parameter->value = 'значение 6';
                     $parameter->node = $event3;
                     $this->log($parameter->save());
 
@@ -736,6 +802,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event2;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level1;
+                $event->indent_x = 60;
+                $event->indent_y = 400;
+                $event->comment = null;
                 $this->log($event->save());
                 $event4 = $event->id;
 
@@ -756,6 +825,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event2;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level1;
+                $event->indent_x = 230;
+                $event->indent_y = 400;
+                $event->comment = null;
                 $this->log($event->save());
                 $event5 = $event->id;
 
@@ -776,6 +848,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $event2;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level1;
+                $event->indent_x = 400;
+                $event->indent_y = 400;
+                $event->comment = null;
                 $this->log($event->save());
                 $event6 = $event->id;
 
@@ -794,6 +869,7 @@ class EventTreesController extends Controller
                 $level->description = 'Тестовый уровень 2';
                 $level->parent_level = $level1;
                 $level->tree_diagram = $tree_diagram->id;
+                $level->comment = null;
                 $this->log($level->save());
                 $level2 = $level->id;
 
@@ -806,6 +882,9 @@ class EventTreesController extends Controller
                 $mechanism->parent_node = $event4;
                 $mechanism->tree_diagram = $tree_diagram->id;
                 $mechanism->level_id = $level2;
+                $mechanism->indent_x = 100;
+                $mechanism->indent_y = 10;
+                $mechanism->comment = null;
                 $this->log($mechanism->save());
                 $mechanism1 = $mechanism->id;
 
@@ -826,6 +905,9 @@ class EventTreesController extends Controller
                 $event->parent_node = $mechanism1;
                 $event->tree_diagram = $tree_diagram->id;
                 $event->level_id = $level2;
+                $event->indent_x = 60;
+                $event->indent_y = 150;
+                $event->comment = null;
                 $this->log($event->save());
                 $event7 = $event->id;
 
