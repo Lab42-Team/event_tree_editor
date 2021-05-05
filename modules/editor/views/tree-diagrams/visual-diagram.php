@@ -1273,7 +1273,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $(".div-level-description").each(function(i) {
                 var id_level = $(this).attr('id');
 
-                left = 50;
+                left = 0;
                 top = 0;
 
                 $(".node").each(function(i) {
@@ -1296,10 +1296,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     var id_level_parent = level_parent.getAttribute('id');
 
                     // curent_ первоначальное положение элемента + 20 отступ от края
-                    var current_left = 20;
-                    var current_top = 20;
-                    //var current_left = 20 + $(this).position().left;
-                    //var current_top = 20 + $(this).position().top;
+                    var current_left = 60;
+                    var current_top = 10;
 
                     //если поле уровней совпадает
                     if (id_level_parent == id_level){
@@ -1317,8 +1315,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             var cl = node.className.indexOf('div-mechanism');
                             if (cl == -1) {
                                 indent_mechanism = 0;
+
                             } else {
-                                indent_mechanism = -10;
+                                indent_mechanism = 40;
                             }
 
                             $(this).css({
@@ -1443,7 +1442,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     //если уровень родительского элемента равен уровню в кот.находится элемент
                                     if (parent_node_id_level_parent == id_level_parent){
                                         $(this).css({
-                                            left: parent_node_left + left + indent_mechanism,
+                                            left: parent_node_left + left - indent_mechanism,
                                             top: parent_node_top + height_node + max_height_node,
                                         });
                                         left = left + width_node;
@@ -1510,8 +1509,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 // curent_ первоначальное положение элемента + 20 отступ от края
                 var current_left = 20;
                 var current_top = 20;
-                //var current_left = 20 + $(this).position().left;
-                //var current_top = 20 + $(this).position().top;
 
                 if (id_level_parent == id_level){
                     //если родителя нет
@@ -1601,7 +1598,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
                         // curent_ первоначальное положение элемента + 20 отступ от края
                         var current_top = 20;
-                        //var current_top = 20 + $(this).position().top;
 
 
                         if (id_level_parent == id_level) {
