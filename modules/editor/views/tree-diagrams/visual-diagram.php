@@ -1259,8 +1259,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var height_initial_node;
 
         // ширина и высота элемента + отступ
-        var width_node = 200 + 20;
-        var height_node = 200 + 60;
+        var width_node = 150 + 20;
+        var height_node = 150 + 60;
 
         //переменные отступа
         var left = 0;
@@ -1273,7 +1273,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $(".div-level-description").each(function(i) {
                 var id_level = $(this).attr('id');
 
-                left = 0;
+                left = 50;
                 top = 0;
 
                 $(".node").each(function(i) {
@@ -1296,8 +1296,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     var id_level_parent = level_parent.getAttribute('id');
 
                     // curent_ первоначальное положение элемента + 20 отступ от края
-                    var current_left = 20 + $(this).position().left;
-                    var current_top = 20 + $(this).position().top;
+                    var current_left = 20;
+                    var current_top = 20;
+                    //var current_left = 20 + $(this).position().left;
+                    //var current_top = 20 + $(this).position().top;
 
                     //если поле уровней совпадает
                     if (id_level_parent == id_level){
@@ -1316,7 +1318,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             if (cl == -1) {
                                 indent_mechanism = 0;
                             } else {
-                                indent_mechanism = 68;
+                                indent_mechanism = -10;
                             }
 
                             $(this).css({
@@ -1414,7 +1416,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 if (pn == -1) {
                                     indent_mechanism = 0;
                                 } else {
-                                    indent_mechanism = 68;
+                                    indent_mechanism = 40;
                                 }
 
                                 var parent_node_left = parent_node.offsetLeft - indent_mechanism;
@@ -1426,7 +1428,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                             var level_parent = node.offsetParent;
                             var id_level_parent = level_parent.getAttribute('id');
 
-                            var current_top = 20 + $(this).position().top;
+                            var current_top = 20;
+                            //var current_top = 20 + $(this).position().top;
 
                             if (id_level_parent == id_level) {
                                 if (id_parent_node == n_current){
@@ -1434,7 +1437,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     if (cl == -1) {
                                         indent_mechanism = 0;
                                     } else {
-                                        indent_mechanism = 68;
+                                        indent_mechanism = 40;
                                     }
 
                                     //если уровень родительского элемента равен уровню в кот.находится элемент
@@ -1505,8 +1508,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 var id_level_parent = level_parent.getAttribute('id');
 
                 // curent_ первоначальное положение элемента + 20 отступ от края
-                var current_left = 20 + $(this).position().left;
-                var current_top = 20 + $(this).position().top;
+                var current_left = 20;
+                var current_top = 20;
+                //var current_left = 20 + $(this).position().left;
+                //var current_top = 20 + $(this).position().top;
 
                 if (id_level_parent == id_level){
                     //если родителя нет
@@ -1595,7 +1600,9 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         var id_level_parent = level_parent.getAttribute('id');
 
                         // curent_ первоначальное положение элемента + 20 отступ от края
-                        var current_top = 20 + $(this).position().top;
+                        var current_top = 20;
+                        //var current_top = 20 + $(this).position().top;
+
 
                         if (id_level_parent == id_level) {
                             if (id_parent_node == n_current){
@@ -1807,7 +1814,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <?php foreach ($parameter_model_all as $parameter_value): ?>
                                     <?php if ($parameter_value->node == $initial_event_value->id){ ?>
                                         <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                            <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                            <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                             <div class="button-parameter">
                                                 <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                 <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1849,7 +1856,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                 <?php if ($parameter_value->node == $event_value->id){ ?>
                                                     <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                        <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                                        <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                                         <div class="button-parameter">
                                                             <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                             <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash"  title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1938,7 +1945,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                     <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                         <?php if ($parameter_value->node == $event_value->id){ ?>
                                                             <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                                <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                                                <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                                                 <div class="button-parameter">
                                                                     <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                                     <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>

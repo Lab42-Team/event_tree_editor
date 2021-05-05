@@ -108,7 +108,7 @@ use app\modules\editor\models\TreeDiagram;
 
                                 var div_show_comment = document.createElement('div');
                                 div_show_comment .id = 'node_show_comment_' + data['id'];
-                                div_show_comment .className = 'show-comment glyphicon-paperclip' ;
+                                div_show_comment .className = 'show-event-comment glyphicon-paperclip' ;
                                 div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
                                 div_content_event.append(div_show_comment );
                             } else {
