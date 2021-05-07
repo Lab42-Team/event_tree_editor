@@ -69,6 +69,7 @@ return [
     'BUTTON_COMMENT' => 'Комментарий',
     'BUTTON_UPLOAD' => 'Загрузить',
     'BUTTON_UPLOAD_ONTOLOGY' => 'Загрузить онтологию',
+    'BUTTON_CONVERT' => 'Преобразовать',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Страница не найдена.',
@@ -108,6 +109,13 @@ return [
     'TREE_DIAGRAMS_CREATED_FROM' => 'Диаграмма созданная из ',
     'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Шаблоны диаграмм не найдены',
 
+    /* Страница импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_RELATIONSHIP_INTERPRETATION' => 'Интерпретировать как связь событий',
+    'CONVERT_ONTOLOGY_PAGE_CLASS_LIST' => 'Список классов онтологии',
+    'CONVERT_ONTOLOGY_PAGE_SELECT_ALL_CLASSES' => 'Выбрать все классы',
+    /* Сообщения на странице импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_MESSAGE_CONVERTED_ONTOLOGY' => 'Вы успешно преобразовали OWL-онтологию в диаграмму дерева событий.',
+
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'Вышеупомянутая ошибка произошла при обработке веб-сервером вашего запроса.',
     'ERROR_PAGE_TEXT_TWO' => 'Пожалуйста, свяжитесь с нами, если Вы думаете, что это ошибка сервера. Спасибо.',
@@ -137,6 +145,10 @@ return [
     'LOGIN_FORM_MESSAGE_INCORRECT_USERNAME_OR_PASSWORD' => 'Неверное имя пользователя или пароль.',
     'LOGIN_FORM_MESSAGE_BLOCKED_ACCOUNT' => 'Ваш аккаунт заблокирован.',
     'LOGIN_FORM_MESSAGE_NOT_CONFIRMED_ACCOUNT' => 'Ваш аккаунт не подтвержден.',
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'Файл онтологии в формате OWL',
+    'OWL_FILE_FORM_SUBCLASS_OF' => 'Отношение наследования (класс-подкласс)',
+    'OWL_FILE_FORM_OBJECT_PROPERTY' => 'Отношение между классами (объектные свойства)',
 
     /* Модели */
     /* Lang */
@@ -261,9 +273,6 @@ return [
     'MESSAGE_CLEANING' => 'При импорте все элементы диаграммы будут удалены',
     'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Режим импортируемого файла не совпадает с режимом диаграммы',
 
-    /* OWLFileForm */
-    'OWL_FILE_FORM_OWL_FILE' => 'Файл онтологии в формате OWL',
-
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Добавить новый уровень',
     'LEVEL_EDIT_LEVEL' => 'Изменение уровня',
@@ -286,7 +295,7 @@ return [
     'DELETE_RELATIONSHIP' => 'Удаление связи',
     'IMPORT_FORM' => 'Импортирование',
 
-    /* Cообщения */
+    /* Сообщения */
     'MAXIMUM_CONNECTIONS' => 'Максимальное количество соединений ',
     'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED' => 'Механизмы не должны быть связаны между собой',
     'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL' => 'Элементы не должны быть связаны с другими элементами на вышестоящем уровне',

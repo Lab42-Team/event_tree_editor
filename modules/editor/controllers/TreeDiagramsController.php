@@ -2,6 +2,7 @@
 
 namespace app\modules\editor\controllers;
 
+use app\components\OWLOntologyImporter;
 use Yii;
 use yii\web\Response;
 use yii\web\Controller;
@@ -1371,15 +1372,15 @@ class TreeDiagramsController extends Controller
         // Поиск модели диаграммы дерева событий по id
         $model = $this->findModel($id);
         // Создание формы файла OWL-онтологии
-        $file_form = new OWLFileForm();
+        $owl_file_form = new OWLFileForm(['scenario' => OWLFileForm::UPLOAD_OWL_FILE_SCENARIO]);
 
         // Если POST-запрос
         if (Yii::$app->request->isPost) {
-            $file_form->owl_file = UploadedFile::getInstance($file_form, 'owl_file');
-            if ($file_form->validate()) {
+            $owl_file_form->owl_file = UploadedFile::getInstance($owl_file_form, 'owl_file');
+            if ($owl_file_form->validate()) {
                 // Временное сохранение загруженного файла онтологии
-                $file_form->owl_file->saveAs('uploads/uploaded-ontology.owl');
-                // Вывод сообщения об успехной загрузке файла онтологии
+                $owl_file_form->owl_file->saveAs('uploads/uploaded-ontology.owl');
+                // Вывод сообщения об успешной загрузке файла онтологии
                 Yii::$app->getSession()->setFlash('success',
                     Yii::t('app', 'TREE_DIAGRAMS_PAGE_MESSAGE_UPLOAD_ONTOLOGY'));
 
@@ -1389,7 +1390,7 @@ class TreeDiagramsController extends Controller
 
         return $this->render('upload-ontology', [
             'model' => $model,
-            'file_form' => $file_form
+            'owl_file_form' => $owl_file_form
         ]);
     }
 
@@ -1402,16 +1403,44 @@ class TreeDiagramsController extends Controller
      */
     public function actionConvertOntology($id)
     {
+        // Поиск модели диаграммы дерева событий по id
+        $model = $this->findModel($id);
+        // Создание формы файла OWL-онтологии
+        $owl_file_form = new OWLFileForm();
+        // Массив для хранения классов онтологии
+        $all_classes = array();
         // Если существует файл с OWL-онтологией
         if (file_exists(Yii::$app->basePath . '/web/uploads/uploaded-ontology.owl')) {
-            // Получение данных из OWL-онтологии
-            $xml_data = simplexml_load_file('uploads/uploaded-ontology.owl');
-        } else
-            $xml_data = null;
+            // Получение XML-строк из OWL-файла онтологии
+            $xml_rows = simplexml_load_file('uploads/uploaded-ontology.owl');
+            // Создание объекта класса импортера онтологии
+            $owl_ontology_importer = new OWLOntologyImporter();
+            // Получение всех классов из онтологии
+            $all_classes = $owl_ontology_importer->getClasses($xml_rows);
+            // POST-запрос и валидация формы
+            if ($owl_file_form->load(Yii::$app->request->post()) && $owl_file_form->validate()) {
+                // Массив для хранения выбранных пользователем классов
+                $selected_classes = array();
+                // Обход всех найденных в онтологиии классов
+                foreach ($all_classes as $key => $item)
+                    if (Yii::$app->request->post('ontology-class-' . $key))
+                        // Формирование массива выбранных пользователем классов
+                        array_push($selected_classes, $item[0]);
+                // Конвертация OWL-онтологии в классическую диаграмму дерева событий
+                $owl_ontology_importer->convertOWLOntology($id, $xml_rows, $selected_classes,
+                    $owl_file_form->subclass_of, $owl_file_form->object_property);
+                // Вывод сообщения об успешном преобразовании онтологии
+                Yii::$app->getSession()->setFlash('success',
+                    Yii::t('app', 'CONVERT_ONTOLOGY_PAGE_MESSAGE_CONVERTED_ONTOLOGY'));
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        }
 
         return $this->render('convert-ontology', [
-            'model' => $this->findModel($id),
-            'xml_data' => $xml_data
+            'model' => $model,
+            'owl_file_form' => $owl_file_form,
+            'classes' => $all_classes,
         ]);
     }
 }

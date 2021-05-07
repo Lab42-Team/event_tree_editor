@@ -69,6 +69,7 @@ return [
     'BUTTON_COMMENT' => 'Comment',
     'BUTTON_UPLOAD' => 'Upload',
     'BUTTON_UPLOAD_ONTOLOGY' => 'Upload ontology',
+    'BUTTON_CONVERT' => 'Convert',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',
@@ -108,6 +109,13 @@ return [
     'TREE_DIAGRAMS_CREATED_FROM' => 'Chart created from ',
     'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Templates diagrams not found',
 
+    /* Страница импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_RELATIONSHIP_INTERPRETATION' => 'Interpret as relation between events',
+    'CONVERT_ONTOLOGY_PAGE_CLASS_LIST' => 'Ontology class list',
+    'CONVERT_ONTOLOGY_PAGE_SELECT_ALL_CLASSES' => 'Select all classes',
+    /* Сообщения на странице импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_MESSAGE_CONVERTED_ONTOLOGY' => 'You have successfully converted OWL ontology to event tree diagram.',
+
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'The above error occurred while the Web server was processing your request.',
     'ERROR_PAGE_TEXT_TWO' => 'Please contact us if you think this is a server error. Thank you.',
@@ -137,6 +145,10 @@ return [
     'LOGIN_FORM_MESSAGE_INCORRECT_USERNAME_OR_PASSWORD' => 'Username or password is incorrect.',
     'LOGIN_FORM_MESSAGE_BLOCKED_ACCOUNT' => 'Your account has been blocked.',
     'LOGIN_FORM_MESSAGE_NOT_CONFIRMED_ACCOUNT' => 'Your account is not confirmed.',
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'OWL ontology file',
+    'OWL_FILE_FORM_SUBCLASS_OF' => 'Inheritance relationship (class-subclass)',
+    'OWL_FILE_FORM_OBJECT_PROPERTY' => 'Relationship between classes (object properties)',
 
     /* Модели */
     /* Lang */
@@ -260,9 +272,6 @@ return [
     'IMPORT_FORM_FILE_NAME' => 'File name',
     'MESSAGE_CLEANING' => 'When importing all chart elements are removed',
     'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Imported file mode does not match chart mode',
-
-    /* OWLFileForm */
-    'OWL_FILE_FORM_OWL_FILE' => 'OWL ontology file',
 
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',

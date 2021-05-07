@@ -2,7 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
-/* @var $file_form app\modules\editor\models\OWLFileForm */
+/* @var $owl_file_form app\modules\editor\models\OWLFileForm */
 /* @var $xml_data app\modules\editor\controllers\TreeDiagramsController */
 
 use yii\helpers\Html;
@@ -26,12 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'options' => ['enctype' => 'multipart/form-data']
     ]); ?>
 
-        <?= $form->field($file_form, 'owl_file')->fileInput() ?>
+        <?= $form->field($owl_file_form, 'owl_file')->fileInput() ?>
 
         <div class="form-group">
             <?= Html::submitButton('<span class="glyphicon glyphicon-download-alt"></span> ' .
                 Yii::t('app', 'BUTTON_UPLOAD'),
-                ['class' => 'btn btn-success', 'name'=>'import-tree-diagram-button']) ?>
+                ['class' => 'btn btn-success', 'name'=>'upload-ontology-button']) ?>
         </div>
 
     <?php ActiveForm::end(); ?>

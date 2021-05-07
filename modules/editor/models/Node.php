@@ -16,7 +16,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $description
  * @property int $operator
  * @property int $type
+ * @property int $level_id
+ * @property string $comment
  * @property int $parent_node
+ * @property int $indent_x
+ * @property int $indent_y
  * @property int $tree_diagram
  *
  * @property Node $parentNode
