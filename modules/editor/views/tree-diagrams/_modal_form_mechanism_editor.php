@@ -17,7 +17,7 @@ use app\modules\main\models\Lang;
     });
 </script>
 
-    <!-- Модальное окно добавления нового уровня -->
+    <!-- Модальное окно добавления нового механизма -->
 <?php Modal::begin([
     'id' => 'addMechanismModalForm',
     'header' => '<h3>' . Yii::t('app', 'MECHANISM_ADD_NEW_MECHANISM') . '</h3>',
@@ -109,17 +109,18 @@ use app\modules\main\models\Lang;
 
                             instance.makeSource(div_node_id, {
                                 filter: ".ep",
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 1, 0, 1, 0, -20 ],
                             });
 
                             instance.makeTarget(div_node_id, {
                                 dropOptions: { hoverClass: "dragHover" },
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 0, 0, -1, 0, 20 ],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: 1,
                                 onMaxConnections: function (info, e) {
                                     var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
-                                    alert (message);
+                                    document.getElementById("message-text").lastChild.nodeValue = message;
+                                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                                 }
                             });
 
@@ -269,17 +270,18 @@ use app\modules\main\models\Lang;
 
                             instance.makeSource(new_div_mechanism, {
                                 filter: ".ep",
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 1, 0, 1, 0, -20 ],
                             });
 
                             instance.makeTarget(new_div_mechanism, {
                                 dropOptions: { hoverClass: "dragHover" },
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 0, 0, -1, 0, 20 ],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: 1,
                                 onMaxConnections: function (info, e) {
                                     var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
-                                    alert (message);
+                                    document.getElementById("message-text").lastChild.nodeValue = message;
+                                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                                 }
                             });
 

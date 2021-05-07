@@ -76,6 +76,12 @@ use app\modules\main\models\Lang;
                                 div_level_name.append(div_move);
                             }
 
+                            var div_show = document.createElement('div');
+                            div_show.id = 'level_show_comment_' + data['id'];
+                            div_show.className = 'show-level-comment glyphicon-paperclip';
+                            div_show.title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
+                            div_level_name.append(div_show);
+
                             var div_level_description = document.createElement('div');
                             div_level_description.id = 'level_description_' + data['id'];
                             div_level_description.className = 'div-level-description' ;

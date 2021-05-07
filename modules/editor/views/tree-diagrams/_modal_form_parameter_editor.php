@@ -44,13 +44,8 @@ use app\modules\editor\models\Parameter;
                             var div_parameter = document.createElement('div');
                             div_parameter.id = 'parameter_' + data['id'];
                             div_parameter.className = 'div-parameter';
+                            div_parameter.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
                             div_event.append(div_parameter);
-
-                            var div_parameter_name = document.createElement('div');
-                            div_parameter_name.id = 'parameter_name_' + data['id'];
-                            div_parameter_name.className = 'div-parameter-name';
-                            div_parameter_name.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
-                            div_parameter.append(div_parameter_name);
 
                             var div_button_parameter = document.createElement('div');
                             div_button_parameter.className = 'button-parameter';
@@ -179,8 +174,24 @@ use app\modules\editor\models\Parameter;
                             }
                         });
 
-                        var div_parameter_name = document.getElementById('parameter_name_' + parameter_id_on_click);
-                        div_parameter_name.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
+                        var div_parameter = document.getElementById('parameter_' + parameter_id_on_click);
+                        div_parameter.innerHTML = data['name'] + " " + data['operator_name'] + " " + data['value'];
+
+                        var div_button_parameter = document.createElement('div');
+                        div_button_parameter.className = 'button-parameter';
+                        div_parameter.append(div_button_parameter);
+
+                        var div_edit_parameter = document.createElement('div');
+                        div_edit_parameter.id = 'edit_parameter_' + data['id'];
+                        div_edit_parameter.className = 'edit edit-parameter glyphicon-pencil';
+                        div_edit_parameter.title = '<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>' ;
+                        div_button_parameter.append(div_edit_parameter);
+
+                        var div_del_parameter = document.createElement('div');
+                        div_del_parameter.id = 'del_parameter_' + data['id'];
+                        div_del_parameter.className = 'del del-parameter glyphicon-trash';
+                        div_del_parameter.title = '<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>' ;
+                        div_button_parameter.append(div_del_parameter);
 
                         document.getElementById('edit-parameter-form').reset();
                     } else {

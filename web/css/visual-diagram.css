@@ -68,8 +68,8 @@ div.top > div {
 /* -Стили для событий- */
 .div-event {
     /* форма*/
-    min-width: 200px;
-    min-height: 80px;
+    width: 150px;
+    min-height: 60px;
     border:2px solid #337ab7;
     background-color:#f5f5f5;
     border-radius: 5px;
@@ -89,12 +89,18 @@ div.top > div {
     cursor: move;
 }
 
+.content-event{
+    position: relative;
+    padding-top: 20px;
+    min-height: 60px;
+    padding-bottom: 20px;
+    font-size: 80%;
+}
+
 .div-event-name {
     /* текст по центру*/
     position: relative;
-    width: 180px;
     text-align: center;
-    margin-left: 10px;
     word-wrap: break-word; /* перенос строк */
 }
 
@@ -120,10 +126,11 @@ div.top > div {
 
 .div-mechanism-name {
     position: absolute;
-    right: 0px;
+    right: 25px;
     text-align: right;
     word-wrap: break-word;
-    width: 150px;
+    font-size: 80%;
+    width: 100px;
     top: 50%;
     transform: translate(-50%, -50%);
 }
@@ -141,32 +148,21 @@ div.top > div {
 
 .div-parameter {
     position: relative;
-    min-height:20px;
-    min-width: 200px;
+    min-height:25px;
+    min-width: 150px;
     border-top:2px dashed #337ab7;
-    text-indent: 5px;
-}
-
-.div-parameter-name {
-    display: inline-block;
-    position: relative;
-    width: 150px;
-    word-wrap: break-word; /* перенос строк */
+    padding-left: 2px;
+    padding-right: 2px;
+    display: table;
+    font-size: 80%;
 }
 
 .button-parameter{
-    display: inline-block;
     height: 25px;
-    width: 50px;
+    width: 40px;
+    float: right;
 }
 
-.content-event{
-    position: relative;
-    padding-top: 20px;
-    min-height: 80px;
-    padding-bottom: 20px;
-    min-width: 200px;
-}
 
 /* стиль курсора при наведении на связь*/
 path { cursor:pointer; }
@@ -232,6 +228,16 @@ path { cursor:pointer; }
     transform: rotate(-90deg);
 }
 
+.show-level-comment {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
 /*показать скрытые кнопки*/
 .div-level-name:hover .edit-level {
     display:block;
@@ -240,6 +246,9 @@ path { cursor:pointer; }
     display:block;
 }
 .div-level-name:hover .move-level {
+    display:block;
+}
+.div-level-name:hover .show-level-comment{
     display:block;
 }
 
@@ -274,6 +283,16 @@ path { cursor:pointer; }
     font-family: "Glyphicons Halflings";
 }
 
+.show-event-comment {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    display:none;
+    color: #337ab7;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
 .add-parameter {
     position: absolute;
     bottom: 5px;
@@ -291,6 +310,9 @@ path { cursor:pointer; }
     display:block;
 }
 .content-event:hover .ep-event {
+    display:block;
+}
+.content-event:hover .show-event-comment{
     display:block;
 }
 .content-event:hover .add-parameter {
@@ -342,7 +364,7 @@ path { cursor:pointer; }
 .edit-parameter {
     position: absolute;
     right: 30px;
-    top: 3px;
+    bottom: 3px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -352,7 +374,7 @@ path { cursor:pointer; }
 .del-parameter {
     position: absolute;
     right: 10px;
-    top: 3px;
+    bottom: 3px;
     display:none;
     color: #337ab7;
     font-size: 13px;
@@ -367,46 +389,20 @@ path { cursor:pointer; }
 }
 
 
-
-
-
-
-
-
-
-/*--------------расположить эти новые стили во все предыдущие   рассортировать*/
-
-.div-comment {
+/* стиль комментариев уровней*/
+.div-level-comment {
     /* форма*/
     width: 150px;
-    /*min-height: 80px;*/
     border:2px dotted #777777;
-    /*background-color:#f5f5f5;*/
+    background-color: #fafafa;
     border-radius: 5px;
     position: absolute;
-
     box-sizing: border-box;
     padding-left: 5px;
-
-    /* текст по центру для дочернего блока div-event-name*/
-    position: absolute;
     overflow:hidden;
 }
 
-.show-comment {
-    position: absolute;
-    bottom: 5px;
-    left: 10px;
-    display:none;
-    color: #337ab7;
-    font-size: 13px;
-    font-family: "Glyphicons Halflings";
-}
-
-.content-event:hover .show-comment{
-    display:block;
-}
-
+/* стиль названия комментариев уровней и событий*/
 .div-comment-name {
     display: inline-block;
     position: relative;
@@ -415,8 +411,8 @@ path { cursor:pointer; }
     word-wrap: break-word; /* перенос строк */
 }
 
-/*кнопки параметров*/
-.edit-comment {
+/*стили кнопок комментариев уровней*/
+.edit-level-comment {
     position: absolute;
     right: 30px;
     bottom: 3px;
@@ -426,7 +422,7 @@ path { cursor:pointer; }
     font-family: "Glyphicons Halflings";
 }
 
-.del-comment {
+.del-level-comment {
     position: absolute;
     right: 10px;
     bottom: 3px;
@@ -436,15 +432,80 @@ path { cursor:pointer; }
     font-family: "Glyphicons Halflings";
 }
 
-
-
-
-
+.hide-level-comment {
+    position: absolute;
+    level: 10px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
 
 /*показать скрытые кнопки*/
-.div-comment:hover .edit-comment {
+.div-level-comment:hover .edit-level-comment {
     display:block;
 }
-.div-comment:hover .del-comment {
+.div-level-comment:hover .del-level-comment {
+    display:block;
+}
+
+.div-level-comment:hover .hide-level-comment {
+    display:block;
+}
+
+
+/* стиль комментариев событий*/
+.div-event-comment {
+    /* форма*/
+    width: 150px;
+    border:2px dotted #337ab7;
+    border-radius: 5px;
+    position: absolute;
+    /* right: 25px;позиция справа */
+    box-sizing: border-box;
+    padding-left: 5px;
+    overflow:hidden;
+}
+
+/*стили кнопок комментариев событий*/
+.edit-event-comment {
+    position: absolute;
+    right: 30px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.del-event-comment {
+    position: absolute;
+    right: 10px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+.hide-event-comment {
+    position: absolute;
+    left: 10px;
+    bottom: 3px;
+    display:none;
+    color: #777777;
+    font-size: 13px;
+    font-family: "Glyphicons Halflings";
+}
+
+/*показать скрытые кнопки*/
+.div-event-comment:hover .edit-event-comment {
+    display:block;
+}
+.div-event-comment:hover .del-event-comment {
+    display:block;
+}
+.div-event-comment:hover .hide-event-comment {
     display:block;
 }
