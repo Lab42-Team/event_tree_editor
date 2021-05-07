@@ -221,7 +221,7 @@ use app\modules\editor\models\TreeDiagram;
                                 nav_add_event.setAttribute("data-target", "");
                             }
 
-                            document.getElementById("pjax-event-editor-button").click();
+                            //document.getElementById("pjax-event-editor-button").click();
 
                             // Скрывание модального окна
                             $("#addEventModalForm").modal("hide");
