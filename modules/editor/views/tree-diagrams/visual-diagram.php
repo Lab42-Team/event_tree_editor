@@ -917,10 +917,10 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     });
 
 
-    $(document).on('mouseout', '.div-event', function() {
+    //$(document).on('mouseout', '.div-event', function() {
         // Обновление формы редактора
-        instance.repaintEverything();
-    });
+    //    instance.repaintEverything();
+    //});
 
 
     // редактирование события
