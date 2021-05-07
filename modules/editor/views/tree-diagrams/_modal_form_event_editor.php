@@ -58,8 +58,7 @@ use app\modules\editor\models\TreeDiagram;
                     success: function(data) {
                         // Если валидация прошла успешно (нет ошибок ввода)
                         if (data['success']) {
-                            // Скрывание модального окна
-                            $("#addEventModalForm").modal("hide");
+
 
                             if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
@@ -224,6 +223,8 @@ use app\modules\editor\models\TreeDiagram;
 
                             document.getElementById("pjax-event-editor-button").click();
 
+                            // Скрывание модального окна
+                            $("#addEventModalForm").modal("hide");
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
