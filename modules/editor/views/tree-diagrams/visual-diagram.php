@@ -876,25 +876,25 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
 
     //сохранение расположения элемента
-    $(document).on('mouseup', '.node', function() {
-        if (!guest) {
-            var node = $(this).attr('id');
-            var node_id = parseInt(node.match(/\d+/));
-            var indent_x = $(this).position().left;
-            var indent_y = $(this).position().top;
+    //$(document).on('mouseup', '.node', function() {
+    //    if (!guest) {
+    //        var node = $(this).attr('id');
+    //        var node_id = parseInt(node.match(/\d+/));
+    //        var indent_x = $(this).position().left;
+    //        var indent_y = $(this).position().top;
 
             //если отступ элемента не отрицательный
-            if (indent_y >= 0){
-                saveIndent(node_id, indent_x, indent_y);
-            } else {
+    //        if (indent_y >= 0){
+    //            saveIndent(node_id, indent_x, indent_y);
+    //        } else {
                 //если отступ элемента недостаточный чтобы вернуться в свой ровень (стоит на границе)
                 //тогда indent_y делаем нулевым
-                if (indent_y >= (($(this).height() + 3)*-1 )) {
-                    saveIndent(node_id, indent_x, 0);
-                }
-            }
-        }
-    });
+    //            if (indent_y >= (($(this).height() + 3)*-1 )) {
+    //                saveIndent(node_id, indent_x, 0);
+    //            }
+    //        }
+    //    }
+    //});
 
 
     $(document).on('mousemove', '.div-event', function() {
@@ -903,7 +903,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
-        //instance.repaintEverything();
+        instance.repaintEverything();
     });
 
 
@@ -913,7 +913,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
-        //instance.repaintEverything();
+        instance.repaintEverything();
     });
 
 
