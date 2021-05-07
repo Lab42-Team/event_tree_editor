@@ -903,7 +903,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
-        //instance.repaintEverything();
+        instance.repaintEverything();
     });
 
 
@@ -913,7 +913,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
-        //instance.repaintEverything();
+        instance.repaintEverything();
     });
 
 

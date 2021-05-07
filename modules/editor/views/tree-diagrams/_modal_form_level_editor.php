@@ -33,9 +33,6 @@ use app\modules\main\models\Lang;
                     success: function(data) {
                         // Если валидация прошла успешно (нет ошибок ввода)
                         if (data['success']) {
-                            // Скрывание модального окна
-                            $("#addLevelModalForm").modal("hide");
-
                             //создание и вывод в <div> нового элемента
                             var visual_diagram_top_layer = document.getElementById('top_layer');
 
@@ -115,6 +112,9 @@ use app\modules\main\models\Lang;
                             });
 
                             mas_data_level[j] = {id_level:id, parent_level:parent_level, name:name, description:description};
+
+                            // Скрывание модального окна
+                            $("#addLevelModalForm").modal("hide");
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-level-form", data);
