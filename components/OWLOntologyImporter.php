@@ -5,6 +5,7 @@ namespace app\components;
 use app\modules\editor\models\Level;
 use app\modules\editor\models\Node;
 use app\modules\editor\models\Parameter;
+use app\modules\editor\models\Sequence;
 use app\modules\editor\models\TreeDiagram;
 
 /**
@@ -321,6 +322,7 @@ class OWLOntologyImporter
         // Поиск уровня у данной диаграммы дерева событий
         $level = Level::find()->where(['tree_diagram' => $tree_diagram->id])->one();
 
+        $number = 1;
         // Получение массива всех классов с комментариями из онтологии
         $classes = self::getClasses($xml_rows);
         // Получение массива свойств-знаечний для всех классов из онтологии
@@ -333,7 +335,7 @@ class OWLOntologyImporter
                 if ($selected_class == $item[0]) {
                     // Поиск улов (событий) в данном дереве событий
                     $nodes = Node::find()->where(['tree_diagram' => $tree_diagram->id])->all();
-                    // Создание новой модели узла (события) дерева событий
+                    // Создание нового узла (события) дерева событий
                     $node_model = new Node();
                     $node_model->name = $item[0];
                     $node_model->description = $item[1];
@@ -344,6 +346,14 @@ class OWLOntologyImporter
                     $node_model->level_id = $level->id;
                     $node_model->tree_diagram = $tree_diagram->id;
                     $node_model->save();
+                    // Создание новой модели Sequence
+                    $sequence_model = new Sequence();
+                    $sequence_model->node = $node_model->id;
+                    $sequence_model->level = $level->id;
+                    $sequence_model->tree_diagram = $tree_diagram->id;
+                    $sequence_model->priority = $number;
+                    $sequence_model->save();
+                    $number++;
                     // Обход всех свойств-значений классов, извлеченных из онтологии
                     foreach ($datatype_properties as $class => $items)
                         if ($selected_class == $class)
