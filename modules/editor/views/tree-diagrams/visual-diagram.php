@@ -91,16 +91,19 @@ foreach ($initial_event_model_all as $i){
     'parameter_model' => $parameter_model,
 ]) ?>
 
+
+
+<?php Pjax::begin(['timeout' => 5000 ]); ?>
+
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
+
+
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
     'level_model' => $level_model,
     'array_levels' => $array_levels,
 ]) ?>
-
-<?php Pjax::begin(); ?>
-
-<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
-    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
 
 
 <?= $this->render('_modal_form_event_editor', [

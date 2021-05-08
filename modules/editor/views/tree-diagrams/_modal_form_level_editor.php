@@ -97,7 +97,16 @@ use app\modules\main\models\Lang;
                             }
 
                             document.getElementById('add-level-form').reset();
+                            //document.getElementById("pjax-level-editor-button").click();
+
+                            //$.pjax.reload({container: '#pjaxContent'});
+                            //['/tree-diagrams/visual-diagram/' . $model->id]
+
                             document.getElementById("pjax-event-editor-button").click();
+
+
+
+
 
                             var id = data['id'];
                             var parent_level = data['parent_level'];
