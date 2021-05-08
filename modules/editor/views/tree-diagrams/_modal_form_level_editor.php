@@ -99,12 +99,17 @@ use app\modules\main\models\Lang;
                             document.getElementById('add-level-form').reset();
                             //document.getElementById("pjax-level-editor-button").click();
 
-                            //$.pjax.reload({container: '#pjaxContent'});
-                            //['/tree-diagrams/visual-diagram/' . $model->id]
+                            $.pjax.reload({container: '#pjaxContent'});
+                            $.pjax.xhr = null;
 
-                            document.getElementById("pjax-event-editor-button").click();
+                            //$.pjax.reload({container: '#pjaxContent', /tree-diagrams/visual-diagram/' . $model->id});
 
+                            $.pjax.reload({container: '#pjaxContent2'});
+                            $.pjax.xhr = null;
 
+                            //document.getElementById("pjax-event-editor-button").click();
+
+                            //$.pjax.reload({container: "#1-pjax", async:false});
 
 
 

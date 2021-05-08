@@ -93,11 +93,7 @@ foreach ($initial_event_model_all as $i){
 
 
 
-<?php Pjax::begin(['timeout' => 5000 ]); ?>
-
-<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
-    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
-
+<?php Pjax::begin([ 'id' => 'pjaxContent']); ?>
 
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
@@ -105,6 +101,12 @@ foreach ($initial_event_model_all as $i){
     'array_levels' => $array_levels,
 ]) ?>
 
+<?php Pjax::end(); ?>
+
+
+
+
+<?php Pjax::begin([ 'id' => 'pjaxContent2']); ?>
 
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
@@ -119,6 +121,20 @@ foreach ($initial_event_model_all as $i){
     'node_model' => $node_model,
     'array_levels_initial_without' => $array_levels_initial_without,
 ]) ?>
+
+<?php Pjax::end(); ?>
+
+
+
+<?php Pjax::begin(); ?>
+
+<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
+    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
+
+
+
+
+
 
 <?php Pjax::end(); ?>
 
