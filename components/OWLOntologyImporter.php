@@ -199,6 +199,7 @@ class OWLOntologyImporter
      */
     public function getObjectProperties($xml_rows)
     {
+        $object_property_names = array();
         // Массив для хранения извлекаемых объектных свойств
         $object_properties = array();
         // Получение всех пространств имен объявленых в XML-документе онтологии
@@ -211,11 +212,12 @@ class OWLOntologyImporter
                     foreach ($element->attributes($prefix, true) as $attribute_name => $attribute_value)
                         // Если текущий элемент является объектным свойством с определенным атрибутом
                         if ($element->getName() == 'ObjectProperty' && $attribute_name == 'about') {
-                            // Извлечение значения атрибута у текущего элемента (объектного свойства)
-                            $array = explode('#', (string)$attribute_value);
-                            $object_property = $array[1];
                             $domain_class = null;
                             $range_class = array();
+                            // Извлечение значения атрибута у текущего элемента (объектного свойства)
+                            $array = explode('#', (string)$attribute_value);
+                            //
+                            array_push($object_property_names, $array[1]);
                             // Обход всех тегов внутри элемента с учетом пространства имен
                             foreach ($namespaces as $prefix => $namespace)
                                 foreach ($element->children($namespaces[$prefix]) as $child)
@@ -235,8 +237,74 @@ class OWLOntologyImporter
                                         }
                             // Формирование массива объектных свойств (отношений между классами)
                             if (isset($domain_class))
-                                $object_properties[$object_property] = [$domain_class, $range_class];
+                                array_push($object_properties, [$domain_class, $range_class]);
                         }
+                // Если текущий элемент является классом
+                if ($element->getName() == 'Class') {
+                    $domain_class = null;
+                    $range_class = array();
+                    foreach ($namespaces as $prefix => $namespace) {
+                        // Извлечение значения атрибута у текущего элемента (класса онтологии)
+                        foreach ($element->attributes($prefix, true) as $attribute_name => $attribute_value)
+                            if ($attribute_name == 'about') {
+                                $array = explode('#', (string)$attribute_value);
+                                $domain_class = $array[1];
+                            }
+                        // Обход всех тегов внутри элемента класса с учетом пространства имен
+                        foreach ($element->children($namespaces[$prefix]) as $sub_class)
+                            if ($sub_class->getName() == 'subClassOf')
+                                foreach ($namespaces as $prefix => $namespace)
+                                    // Обход всех тегов внутри элемента подкласса с учетом пространства имен
+                                    foreach ($sub_class->children($namespaces[$prefix]) as $restriction)
+                                        if ($restriction->getName() == 'Restriction') {
+                                            $is_obj_prop = false;
+                                            foreach ($namespaces as $prefix => $namespace)
+                                                // Обход всех тегов внутри элемента ограничения подкласса с учетом пространства имен
+                                                foreach ($restriction->children($namespaces[$prefix]) as $property)
+                                                    foreach ($namespaces as $prefix => $namespace)
+                                                        // Обход всех атрибутов данного элемента с учетом пространства имен
+                                                        foreach ($property->attributes($prefix, true) as $attribute_name => $attribute_value) {
+                                                            // Определение названия объектного свойства
+                                                            if ($property->getName() == 'onProperty' &&
+                                                                $attribute_name == 'resource') {
+                                                                $array = explode('#', (string)$attribute_value);
+                                                                foreach ($object_property_names as $object_property_name)
+                                                                    if ($object_property_name == $array[1])
+                                                                        $is_obj_prop = true;
+                                                            }
+                                                            // Определение значения для свойства-значения
+                                                            if ($property->getName() == 'someValuesFrom' &&
+                                                                $attribute_name == 'resource' && $is_obj_prop) {
+                                                                $array = explode('#', (string)$attribute_value);
+                                                                array_push($range_class, $array[1]);
+                                                            }
+                                                        }
+                                        }
+                        // Добавление в массив нового отношения
+                        if (!empty($range_class)) {
+                            $index = null;
+                            $new_item = null;
+                            foreach ($object_properties as $key => $object_property)
+                                if ($object_property[0] == $domain_class) {
+                                    $item = $object_property[1];
+                                    $range_class_exist = false;
+                                    foreach ($range_class as $class) {
+                                        foreach ($item as $value)
+                                            if ($class == $value)
+                                                $range_class_exist = true;
+                                        if ($range_class_exist == false)
+                                            array_push($item, $class);
+                                    }
+                                    $new_item = [$object_property[0], $item];
+                                    $index = $key;
+                                }
+                            if (isset($new_item) && isset($index))
+                                $object_properties[$index] = $new_item;
+                            else
+                                array_push($object_properties, [$domain_class, $range_class]);
+                        }
+                    }
+                }
             }
 
         return $object_properties;
@@ -369,6 +437,7 @@ class OWLOntologyImporter
                 }
         }
 
+        $object_properties = array();
         // Если пользователь указал интерпретацию иерархических отношений
         if ($hierarchy) {
             // Получение массива иерархических отношений между классами из онтологии
@@ -393,7 +462,7 @@ class OWLOntologyImporter
                             $child_node = Node::find()->where(['name' => $subclass])->one();
                             // Если события найдены
                             if (!empty($parent_node) && !empty($child_node)) {
-                                // Задание родительского события (отношения между собьытиями)
+                                // Задание родительского события (отношения между событиями)
                                 $child_node->parent_node = $parent_node->id;
                                 $child_node->updateAttributes(['parent_node']);
                             }
@@ -405,6 +474,38 @@ class OWLOntologyImporter
         if ($relation) {
             // Получение массива объектных свойств для всех классов из онтологии
             $object_properties = self::getObjectProperties($xml_rows);
+            // Обход всех отношений (объектных свойств) между классами
+            foreach ($object_properties as $object_property) {
+                // Поиск "левого" класса из отношения среди выбранных пользователем классов
+                $domain_class_exists = false;
+                foreach ($selected_classes as $selected_class) {
+                    if ($selected_class == $object_property[0])
+                        $domain_class_exists = true;
+                }
+                // Обход всех "правых" классов
+                foreach ($object_property[1] as $range_class) {
+                    // Поиск "правого" класса из отношения среди выбранных пользователем классов
+                    $range_class_exists = false;
+                    foreach ($selected_classes as $selected_class) {
+                        if ($selected_class == $range_class)
+                            $range_class_exists = true;
+                    }
+                    // Если такие классы есть
+                    if ($domain_class_exists && $range_class_exists) {
+                        // Поиск событий в БД
+                        $parent_node = Node::find()->where(['name' => $object_property[0]])->one();
+                        $child_node = Node::find()->where(['name' => $range_class])->one();
+                        // Если события найдены
+                        if (!empty($parent_node) && !empty($child_node)) {
+                            // Задание родительского события (отношения между событиями)
+                            $child_node->parent_node = $parent_node->id;
+                            $child_node->updateAttributes(['parent_node']);
+                        }
+                    }
+                }
+            }
         }
+
+        return $object_properties;
     }
 }

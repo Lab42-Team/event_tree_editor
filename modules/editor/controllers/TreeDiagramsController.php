@@ -1521,7 +1521,7 @@ class TreeDiagramsController extends Controller
         return $this->render('convert-ontology', [
             'model' => $model,
             'owl_file_form' => $owl_file_form,
-            'classes' => $all_classes,
+            'classes' => $all_classes
         ]);
     }
 }
