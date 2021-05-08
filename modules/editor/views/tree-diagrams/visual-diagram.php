@@ -1263,7 +1263,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
 
         // ширина и высота элемента + отступ
         var width_node = 150 + 20;
-        var height_node = 150 + 60;
+        var height_node = 30 + 60;
 
         //переменные отступа
         var left = 0;
