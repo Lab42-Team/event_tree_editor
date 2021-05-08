@@ -221,8 +221,7 @@ use app\modules\editor\models\TreeDiagram;
                                 nav_add_event.setAttribute("data-target", "");
                             }
 
-                            //document.getElementById("pjax-event-editor-button").click();
-                            $.pjax.reload({container: '#pjaxContent2'});
+                            $.pjax.reload({container: '#pjax_event_editor'});
                             $.pjax.xhr = null;
 
                             // Скрывание модального окна
@@ -572,7 +571,8 @@ use app\modules\editor\models\TreeDiagram;
                             nav_add_event.setAttribute("data-target", "#addEventModalForm");
                         }
 
-                        document.getElementById("pjax-event-editor-button").click();
+                        $.pjax.reload({container: '#pjax_event_editor'});
+                        $.pjax.xhr = null;
                     }
                 },
                 error: function() {

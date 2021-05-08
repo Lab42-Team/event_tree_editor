@@ -92,8 +92,7 @@ foreach ($initial_event_model_all as $i){
 ]) ?>
 
 
-
-<?php Pjax::begin([ 'id' => 'pjaxContent']); ?>
+<?php Pjax::begin([ 'id' => 'pjax_level_editor']); ?>
 
 <?= $this->render('_modal_form_level_editor', [
     'model' => $model,
@@ -104,9 +103,7 @@ foreach ($initial_event_model_all as $i){
 <?php Pjax::end(); ?>
 
 
-
-
-<?php Pjax::begin([ 'id' => 'pjaxContent2']); ?>
+<?php Pjax::begin([ 'id' => 'pjax_event_editor']); ?>
 
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
@@ -124,19 +121,6 @@ foreach ($initial_event_model_all as $i){
 
 <?php Pjax::end(); ?>
 
-
-
-<?php Pjax::begin(); ?>
-
-<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
-    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
-
-
-
-
-
-
-<?php Pjax::end(); ?>
 
 <?= $this->render('_modal_form_event_comment_editor', [
     'model' => $model,

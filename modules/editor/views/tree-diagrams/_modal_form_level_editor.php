@@ -97,20 +97,12 @@ use app\modules\main\models\Lang;
                             }
 
                             document.getElementById('add-level-form').reset();
-                            //document.getElementById("pjax-level-editor-button").click();
 
-                            $.pjax.reload({container: '#pjaxContent'});
+                            $.pjax.reload({container: '#pjax_level_editor'});
                             $.pjax.xhr = null;
 
-                            //$.pjax.reload({container: '#pjaxContent', /tree-diagrams/visual-diagram/' . $model->id});
-
-                            $.pjax.reload({container: '#pjaxContent2'});
+                            $.pjax.reload({container: '#pjax_event_editor'});
                             $.pjax.xhr = null;
-
-                            //document.getElementById("pjax-event-editor-button").click();
-
-                            //$.pjax.reload({container: "#1-pjax", async:false});
-
 
 
                             var id = data['id'];
@@ -218,7 +210,11 @@ use app\modules\main\models\Lang;
 
                         document.getElementById('edit-level-form').reset();
 
-                        document.getElementById("pjax-event-editor-button").click();
+                        $.pjax.reload({container: '#pjax_level_editor'});
+                        $.pjax.xhr = null;
+
+                        $.pjax.reload({container: '#pjax_event_editor'});
+                        $.pjax.xhr = null;
                     } else {
                         // Отображение ошибок ввода
                         viewErrors("#edit-level-form", data);
@@ -478,7 +474,11 @@ use app\modules\main\models\Lang;
                             nav_add_mechanism.setAttribute("data-target", "");
                         }
 
-                        document.getElementById("pjax-event-editor-button").click();
+                        $.pjax.reload({container: '#pjax_level_editor'});
+                        $.pjax.xhr = null;
+
+                        $.pjax.reload({container: '#pjax_event_editor'});
+                        $.pjax.xhr = null;
                     }
                 },
                 error: function() {
