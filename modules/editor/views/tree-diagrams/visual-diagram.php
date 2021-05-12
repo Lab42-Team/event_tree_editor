@@ -775,9 +775,6 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         var div_level_description = document.getElementById('level_description_'+ last_level);
         if (h_top_layer < h_visual_diagram){
             div_level_description.style.height = height_div_level + h_visual_diagram - h_top_layer  + 'px';
-            visual_diagram.style.overflowY = 'hidden';
-        } else {
-            visual_diagram.style.overflowY = 'auto';
         }
     }
 
