@@ -2,9 +2,10 @@
     height:700px;
     border:1px solid #b9def0;
     background-color:white;
-    /* Вкл Прокрутку*/
-    overflow: auto !important;
     cursor:default;
+    /* Вкл Прокрутку (отдельно чтобы функция расширения increaseLevel корректно работала )*/
+    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .visual-diagram-top-layer {
