@@ -121,6 +121,29 @@ class TreeDiagram extends \yii\db\ActiveRecord
     }
 
     /**
+     * Получение списка типов диаграмм на английском.
+     *
+     * @return array - массив всех возможных типов диаграмм на английском
+     */
+    public static function getTypesArrayEn()
+    {
+        return [
+            self::EVENT_TREE_TYPE => 'Event tree',
+            self::FAULT_TREE_TYPE => 'Fault tree',
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм на английском.
+     *
+     * @return mixed
+     */
+    public function getTypeNameEn()
+    {
+        return ArrayHelper::getValue(self::getTypesArrayEn(), $this->type);
+    }
+
+    /**
      * Получение списка статусов.
      *
      * @return array - массив всех возможных статусов
@@ -164,6 +187,29 @@ class TreeDiagram extends \yii\db\ActiveRecord
     public function getModesName()
     {
         return ArrayHelper::getValue(self::getModesArray(), $this->mode);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм на английском.
+     *
+     * @return array - массив всех возможных статусов на английском
+     */
+    public static function getModesArrayEn()
+    {
+        return [
+            self::EXTENDED_TREE_MODE => 'Extended tree',
+            self::CLASSIC_TREE_MODE => 'Classic tree',
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм на английском.
+     *
+     * @return mixed
+     */
+    public function getModesNameEn()
+    {
+        return ArrayHelper::getValue(self::getModesArrayEn(), $this->mode);
     }
 
     /**

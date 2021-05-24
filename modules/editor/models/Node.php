@@ -154,5 +154,26 @@ class Node extends \yii\db\ActiveRecord
         return ArrayHelper::getValue(self::getTypesArray(), $this->type);
     }
 
+    /**
+     * Получение списка типов узлов на английском.
+     * @return array - массив всех возможных типов узлов на английском
+     */
+    public static function getTypesArrayEn()
+    {
+        return [
+            self::INITIAL_EVENT_TYPE => 'Initial event',
+            self::EVENT_TYPE => 'Event',
+            self::MECHANISM_TYPE => 'Mechanism',
+        ];
+    }
+
+    /**
+     * Получение названия типа узла на английском.
+     * @return mixed
+     */
+    public function getTypeNameEn()
+    {
+        return ArrayHelper::getValue(self::getTypesArrayEn(), $this->type);
+    }
 
 }
