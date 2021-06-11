@@ -44,7 +44,7 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 You can then install this editor using the following command:
 
 ~~~
-composer nikita-dorodnykh/eeteditor
+composer create-project nikita-dorodnykh/eeteditor
 ~~~
 
 

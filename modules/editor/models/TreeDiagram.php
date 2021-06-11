@@ -16,6 +16,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $name
  * @property string $description
  * @property int $type
+ * @property int $mode
+ * @property int $correctness
  * @property int $status
  * @property int $author
  *
@@ -32,6 +34,16 @@ class TreeDiagram extends \yii\db\ActiveRecord
     const PUBLIC_STATUS = 0;   // Публичный статус
     const PRIVATE_STATUS = 1;  // Приватный статус
 
+    const EXTENDED_TREE_MODE = 0; // Расширенное дерево
+    const CLASSIC_TREE_MODE = 1;  // Классическое дерево
+
+    const NOT_CHECKED_CORRECT = 0; // Корректность не проверялась
+    const CORRECTLY_CORRECT = 1;  // Корректно
+    const INCORRECTLY_CORRECT = 2;  // Некорректно
+
+    const ORDINARY_TREE_VIEW = 0; // обычное дерево
+    const TEMPLATE_TREE_VIEW = 1;  // шаблонное дерево
+
     /**
      * @return string table name
      */
@@ -47,15 +59,14 @@ class TreeDiagram extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'author'], 'required'],
-            [['type', 'status', 'author'], 'default', 'value' => null],
-            [['type', 'status', 'author'], 'integer'],
+            [['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'default', 'value' => null],
+            [['type', 'status', 'author', 'mode', 'correctness', 'tree_view'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
             [['author'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(),
                 'targetAttribute' => ['author' => 'id']],
-
         ];
     }
 
@@ -73,6 +84,9 @@ class TreeDiagram extends \yii\db\ActiveRecord
             'type' => Yii::t('app', 'TREE_DIAGRAM_MODEL_TYPE'),
             'status' => Yii::t('app', 'TREE_DIAGRAM_MODEL_STATUS'),
             'author' => Yii::t('app', 'TREE_DIAGRAM_MODEL_AUTHOR'),
+            'mode' => Yii::t('app', 'TREE_DIAGRAM_MODEL_MODE'),
+            'correctness' => Yii::t('app', 'TREE_DIAGRAM_MODEL_CORRECTNESS'),
+            'tree_view' => Yii::t('app', 'TREE_DIAGRAM_MODEL_TREE_VIEW'),
         ];
     }
 
@@ -107,6 +121,29 @@ class TreeDiagram extends \yii\db\ActiveRecord
     }
 
     /**
+     * Получение списка типов диаграмм на английском.
+     *
+     * @return array - массив всех возможных типов диаграмм на английском
+     */
+    public static function getTypesArrayEn()
+    {
+        return [
+            self::EVENT_TREE_TYPE => 'Event tree',
+            self::FAULT_TREE_TYPE => 'Fault tree',
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм на английском.
+     *
+     * @return mixed
+     */
+    public function getTypeNameEn()
+    {
+        return ArrayHelper::getValue(self::getTypesArrayEn(), $this->type);
+    }
+
+    /**
      * Получение списка статусов.
      *
      * @return array - массив всех возможных статусов
@@ -126,7 +163,100 @@ class TreeDiagram extends \yii\db\ActiveRecord
      */
     public function getStatusName()
     {
-        return ArrayHelper::getValue(self::getStatusesArray(), $this->type);
+        return ArrayHelper::getValue(self::getStatusesArray(), $this->status);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм.
+     *
+     * @return array - массив всех возможных статусов
+     */
+    public static function getModesArray()
+    {
+        return [
+            self::EXTENDED_TREE_MODE => Yii::t('app', 'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE'),
+            self::CLASSIC_TREE_MODE => Yii::t('app', 'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     *
+     * @return mixed
+     */
+    public function getModesName()
+    {
+        return ArrayHelper::getValue(self::getModesArray(), $this->mode);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм на английском.
+     *
+     * @return array - массив всех возможных статусов на английском
+     */
+    public static function getModesArrayEn()
+    {
+        return [
+            self::EXTENDED_TREE_MODE => 'Extended tree',
+            self::CLASSIC_TREE_MODE => 'Classic tree',
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм на английском.
+     *
+     * @return mixed
+     */
+    public function getModesNameEn()
+    {
+        return ArrayHelper::getValue(self::getModesArrayEn(), $this->mode);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм.
+     *
+     * @return array - массив всех возможных статусов
+     */
+    public static function getСorrectnessArray()
+    {
+        return [
+            self::NOT_CHECKED_CORRECT => Yii::t('app', 'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT'),
+            self::CORRECTLY_CORRECT => Yii::t('app', 'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT'),
+            self::INCORRECTLY_CORRECT => Yii::t('app', 'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     *
+     * @return mixed
+     */
+    public function getСorrectnessName()
+    {
+        return ArrayHelper::getValue(self::getСorrectnessArray(), $this->correctness);
+    }
+
+    /**
+     * Получение списка режимов деревьев диаграмм.
+     *
+     * @return array - массив всех возможных статусов
+     */
+    public static function getTreeViewArray()
+    {
+        return [
+            self::ORDINARY_TREE_VIEW => Yii::t('app', 'TREE_DIAGRAM_MODEL_ORDINARY_TREE_VIEW'),
+            self::TEMPLATE_TREE_VIEW => Yii::t('app', 'TREE_DIAGRAM_MODEL_TEMPLATE_TREE_VIEW'),
+        ];
+    }
+
+    /**
+     * Получение названия типа диаграмм.
+     *
+     * @return mixed
+     */
+    public function getTreeViewName()
+    {
+        return ArrayHelper::getValue(self::getTreeViewArray(), $this->tree_view);
     }
 
     /**

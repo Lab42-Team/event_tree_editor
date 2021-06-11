@@ -51,6 +51,10 @@ class Parameter extends \yii\db\ActiveRecord
             [['name', 'value'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
 
+            // name и node вместе должны быть уникальны, но только name будет получать сообщение об ошибке
+            ['name', 'unique', 'targetAttribute' => ['name', 'node'],
+                'message' => Yii::t('app', 'MESSAGE_PARAMETER_NAME_ALREADY_IN_EVENT')],
+
             [['node'], 'exist', 'skipOnError' => true, 'targetClass' => Node::className(),
                 'targetAttribute' => ['node' => 'id']],
         ];

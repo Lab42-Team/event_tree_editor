@@ -1,9 +1,5 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\Pjax;
-use app\modules\main\models\Lang;
-
 /* @var $this yii\web\View */
 /* @var $model app\modules\editor\models\TreeDiagram */
 /* @var $level_model app\modules\editor\models\Level */
@@ -16,18 +12,23 @@ use app\modules\main\models\Lang;
 /* @var $mechanism_model_all app\modules\editor\controllers\TreeDiagramsController */
 /* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
 /* @var $array_levels_initial_without app\modules\editor\controllers\TreeDiagramsController */
+/* @var $node_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $parameter_model_all app\modules\editor\controllers\TreeDiagramsController */
+/* @var $parameter_model app\modules\editor\controllers\TreeDiagramsController */
+/* @var $the_initial_event_is app\modules\editor\controllers\TreeDiagramsController */
+
+use yii\bootstrap\ButtonDropdown;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
+use app\modules\main\models\Lang;
+use app\modules\editor\models\TreeDiagram;
 
 $this->title = Yii::t('app', 'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM') . ' - ' . $model->name;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'TREE_DIAGRAMS_PAGE_TREE_DIAGRAMS'),
-    'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
-
 $this->params['menu_add'] = [
     ['label' => Yii::t('app', 'NAV_ADD_LEVEL'), 'url' => '#',
-        'options' => ['id'=>'nav_add_level', 'class' => 'enabled',
-            'data-toggle'=>'modal', 'data-target'=>'#addLevelModalForm']],
+        'options' => ['id'=>'nav_add_level', 'class' => 'disabled',
+            'data-toggle'=>'modal', 'data-target'=>'']],
     ['label' => Yii::t('app', 'NAV_ADD_EVENT'), 'url' => '#',
         'options' => ['id'=>'nav_add_event', 'class' => 'disabled',
             'data-toggle'=>'modal', 'data-target'=>'']],
@@ -36,6 +37,19 @@ $this->params['menu_add'] = [
             'data-toggle'=>'modal', 'data-target'=>'']],
 ];
 
+$this->params['menu_diagram'] = [
+    ['label' => '<span class="glyphicon glyphicon-import"></span> ' . Yii::t('app', 'NAV_IMPORT'),
+        'url' => Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .'/tree-diagrams/import/'. $model->id],
+
+    ['label' => '<span class="glyphicon glyphicon-export"></span> ' . Yii::t('app', 'NAV_EXPORT'),
+        'url' => '#', 'linkOptions' => ['data-method' => 'post']],
+
+    ['label' => '<span class="glyphicon glyphicon-check"></span> ' . Yii::t('app', 'NAV_VERIFY'),
+        'url' => '#', 'options' => ['id'=>'nav_correctness']],
+
+    ['label' => '<span class="glyphicon glyphicon-object-align-vertical"></span> ' . Yii::t('app', 'NAV_ALIGNMENT'),
+        'url' => '#', 'options' => ['id'=>'nav_alignment']],
+];
 ?>
 
 
@@ -49,7 +63,7 @@ foreach ($sequence_model_all as $s){
 // создаем массив из соотношения id и parent_node для передачи в jsplumb
 $node_mas = array();
 foreach ($node_model_all as $n){
-    array_push($node_mas, [$n->id, $n->parent_node, $n->name, $n->description]);
+    array_push($node_mas, [$n->id, $n->parent_node, $n->name, $n->description, $n->certainty_factor, $n->indent_x, $n->indent_y]);
 }
 
 $level_mas = array();
@@ -69,11 +83,6 @@ foreach ($initial_event_model_all as $i){
 ?>
 
 
-<?= $this->render('_modal_form_level_editor', [
-    'model' => $model,
-    'level_model' => $level_model,
-]) ?>
-
 <?= $this->render('_modal_form_relationship', [
     'model' => $model,
 ]) ?>
@@ -82,15 +91,26 @@ foreach ($initial_event_model_all as $i){
     'parameter_model' => $parameter_model,
 ]) ?>
 
-<?php Pjax::begin(); ?>
 
-<?= Html::a("Обновить", ['/tree-diagrams/visual-diagram/' . $model->id],
-    ['id' => 'pjax-event-editor-button', 'style' => 'display:none']) ?>
+<?php Pjax::begin([ 'id' => 'pjax_level_editor']); ?>
+
+<?= $this->render('_modal_form_level_editor', [
+    'model' => $model,
+    'level_model' => $level_model,
+    'array_levels' => $array_levels,
+]) ?>
+
+<?php Pjax::end(); ?>
+
+
+<?php Pjax::begin([ 'id' => 'pjax_event_editor']); ?>
 
 <?= $this->render('_modal_form_event_editor', [
     'model' => $model,
     'node_model' => $node_model,
     'array_levels' => $array_levels,
+    'array_levels_initial_without' => $array_levels_initial_without,
+    'the_initial_event_is' => $the_initial_event_is,
 ]) ?>
 
 <?= $this->render('_modal_form_mechanism_editor', [
@@ -100,6 +120,17 @@ foreach ($initial_event_model_all as $i){
 ]) ?>
 
 <?php Pjax::end(); ?>
+
+
+<?= $this->render('_modal_form_event_comment_editor', [
+    'model' => $model,
+    'node_model' => $node_model,
+]) ?>
+
+<?= $this->render('_modal_form_level_comment_editor', [
+    'model' => $model,
+    'level_model' => $level_model,
+]) ?>
 
 <?= $this->render('_modal_form_view_message', [
 ]) ?>
@@ -119,17 +150,39 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var guest = <?php echo json_encode(Yii::$app->user->isGuest); ?>;//переменная гость определяет пользователь гость или нет
 
     $(document).ready(function() {
+
+        //скрывание наименование уровня при классическом режиме построения деревьев событий
+        if (<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>){
+            var div_level = document.getElementsByClassName("div-level-name");
+            $.each(div_level, function (i, level) {
+                level.hidden = true;
+            });
+        }
+
         if (!guest){
-            // Включение переходов на модальные окна
+            var nav_add_level = document.getElementById('nav_add_level');
             var nav_add_event = document.getElementById('nav_add_event');
             var nav_add_mechanism = document.getElementById('nav_add_mechanism');
-            if ('<?php echo $level_model_count; ?>' > 0){
+
+            // Включение переходов на модальные окна
+            if (<?= TreeDiagram::CLASSIC_TREE_MODE ?> != <?= $model->mode ?>){
+                nav_add_level.className = 'enabled';
+                nav_add_level.setAttribute("data-target", "#addLevelModalForm");
+                if (('<?php echo $level_model_count; ?>' > 0)&&('<?php echo $the_initial_event_is; ?>' == 0)){
+                    nav_add_event.className = 'enabled';
+                    nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                }
+                if ('<?php echo $level_model_count; ?>' > 1){
+                    nav_add_event.className = 'enabled';
+                    nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                    nav_add_mechanism.className = 'enabled';
+                    nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+                }
+            } else {
                 nav_add_event.className = 'enabled';
                 nav_add_event.setAttribute("data-target", "#addEventModalForm");
-            }
-            if ('<?php echo $level_model_count; ?>' > 1){
-                nav_add_mechanism.className = 'enabled';
-                nav_add_mechanism.setAttribute("data-target", "#addMechanismModalForm");
+                nav_add_level.hidden = true;
+                nav_add_mechanism.hidden = true;
             }
 
             // Обработка закрытия модального окна добавления нового уровня
@@ -175,7 +228,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $("#addEventModalForm").on("show.bs.modal", function() {
                 //если начальное событие есть тогда
                 var initial_event = document.getElementsByClassName("div-initial-event");
-                if (initial_event.length == 0){
+                if ((initial_event.length == 0)||(<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)){
                     //блокировка изменения левела
                     document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
                     document.getElementById('add_label_level').style.display = "none";
@@ -227,15 +280,18 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var mas_data_level = {};
     var q = 0;
     var id_level = "";
+    var parent_level = "";
     var name_level = "";
     var description_level = "";
     $.each(level_mas, function (i, mas) {
         $.each(mas, function (j, elem) {
             if (j == 0) {id_level = elem;}
+            if (j == 1) {parent_level = elem;}
             if (j == 2) {name_level = elem;}
             if (j == 3) {description_level = elem;}
             mas_data_level[q] = {
                 "id_level":id_level,
+                "parent_level":parent_level,
                 "name":name_level,
                 "description":description_level,
             }
@@ -249,6 +305,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     var id_parent_node = "";
     var name_node = "";
     var description_node = "";
+    var certainty_factor = "";
     $.each(node_mas, function (i, mas) {
         $.each(mas, function (j, elem) {
             //первый элемент это id уровня
@@ -257,11 +314,13 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             if (j == 1) {id_parent_node = elem;}//записываем id узла события node или механизма mechanism
             if (j == 2) {name_node = elem;}
             if (j == 3) {description_node = elem;}
+            if (j == 4) {certainty_factor = elem;}
             mas_data_node[q] = {
                 "id":id_node,
                 "parent_node":id_parent_node,
                 "name":name_node,
                 "description":description_node,
+                "certainty_factor":certainty_factor,
             }
         });
         q = q+1;
@@ -290,6 +349,27 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 "description":description_parameter,
                 "operator":operator_parameter,
                 "value":value_parameter,
+            }
+        });
+        q = q+1;
+    });
+
+
+    var mas_location = {};
+    var q = 0;
+    var id_node = "";
+    var indent_x = "";
+    var indent_y = "";
+    $.each(node_mas, function (i, mas) {
+        $.each(mas, function (j, elem) {
+            //первый элемент это id уровня
+            if (j == 0) {id_node = elem;}//записываем id уровня
+            if (j == 5) {indent_x = elem;}
+            if (j == 6) {indent_y = elem;}
+            mas_location[q] = {
+                "id":id_node,
+                "indent_x":indent_x,
+                "indent_y":indent_y,
             }
         });
         q = q+1;
@@ -351,6 +431,50 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             });
         });
 
+        //находим все элементы с классом div-event-comment
+        $(".div-event-comment").each(function(i) {
+            var id_comment = $(this).attr('id');
+            var comment = document.getElementById(id_comment);
+            var level = comment.offsetParent;
+            var id_level = parseInt(level.getAttribute('id').match(/\d+/));
+            var group_name = 'group'+ id_level; //определяем имя группы
+            //делаем comment перетаскиваемым
+            instance.draggable(comment);
+            //добавляем элемент comment в группу с именем group_name
+            instance.addToGroup(group_name, comment);
+        });
+
+
+        //находим все элементы с классом div-level-comment
+        $(".div-level-comment").each(function(i) {
+            var id_comment = $(this).attr('id');
+            var comment = document.getElementById(id_comment);
+            var level = comment.offsetParent;
+            var id_level = parseInt(level.getAttribute('id').match(/\d+/));
+            var group_name = 'group'+ id_level; //определяем имя группы
+
+            //находим DOM элемент description уровня (идентификатор div level_description)
+            var div_level_id = document.getElementById('level_description_'+ id_level);
+
+            var grp = instance.getGroup(group_name);//определяем существует ли группа с таким именем
+            if (grp == 0){
+                //если группа не существует то создаем группу с определенным именем group_name
+                instance.addGroup({
+                    el: div_level_id,
+                    id: group_name,
+                    draggable: false, //перетаскивание группы
+                    //constrain: true, //запрет на перетаскивание элементов за группу (false перетаскивать можно)
+                    dropOverride:true,
+                });
+            }
+            group_name = "";
+
+            //делаем comment перетаскиваемым
+            instance.draggable(comment);
+            //добавляем элемент comment в группу с именем group_name
+            instance.addToGroup(group_name, comment);
+        });
+
 
         var windows = jsPlumb.getSelector(".node");
 
@@ -365,42 +489,23 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             var target_id_level = parseInt(target_level.match(/\d+/));
 
 
+            //длинна массива
+            var length = 0
+            $.each(mas_data_level, function (i, mas) {
+                length = length + 1;
+            });
+
             //построение одномерного массива по порядку следования уровней
-            var mas_level_order = {};
+            var mas_level_order = {};//одномерный массив
+            var next_parent_level = null;
             var q = 0;
-            var id_l = "";
-            var id_p_l = "";
-            var next_parent_level = "";
-            $.each(level_mas, function (i, mas) {
-                $.each(mas, function (j, elem) {
-                    //первый элемент это id уровня
-                    if (j == 0) {id_l = elem;}//записываем id уровня
-                    //второй элемент это id родительского уровня
-                    if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
-                    if (id_p_l == null){
-                        mas_level_order[q] = id_l;
-                        next_parent_level = id_l;
+            for (let i = 0; i < length; i++) {
+                $.each(mas_data_level, function (i, mas) {
+                    if (mas.parent_level == next_parent_level){
+                        next_parent_level = mas.id_level;
+                        mas_level_order[q] = mas.id_level;
                         q = q+1;
                     }
-                });
-                id_l = "";
-                id_p_l = "";
-            });
-            for (let i = 1; i < level_mas.length; i++) {
-                $.each(level_mas, function (i, mas) {
-                    $.each(mas, function (j, elem) {
-                        //первый элемент это id уровня
-                        if (j == 0) {id_l = elem;}//записываем id уровня
-                        //второй элемент это id родительского уровня
-                        if (j == 1) {id_p_l = elem;}//записываем id узла события node или механизма mechanism
-                        if (id_p_l == next_parent_level){
-                            mas_level_order[q] = id_l;
-                            next_parent_level = id_l;
-                            q = q+1;
-                        }
-                    });
-                    id_l = "";
-                    id_p_l = "";
                 });
             }
 
@@ -421,27 +526,27 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 && (source_node.getAttribute("class").search("mechanism") != -1)){
                 var message = "<?php echo Yii::t('app', 'MECHANISMS_SHOULD_NOT_BE_INTERCONNECTED'); ?>";
                 document.getElementById("message-text").lastChild.nodeValue = message;
-                $("#viewMessageModalForm").modal("show");
+                $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                 return false;
             } else {
                 // запрет на соединение c элементами на вышестоящем уровне
                 if (n_source > n_target){
                     var message = "<?php echo Yii::t('app', 'ELEMENTS_NOT_BE_ASSOCIATED_WITH_OTHER_ELEMENTS_HIGHER_LEVEL'); ?>";
                     document.getElementById("message-text").lastChild.nodeValue = message;
-                    $("#viewMessageModalForm").modal("show");
+                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                     return false;
                 } else {
                     // запрет на соединение c элементами кроме механизмов на нижестоящем уровне
                     if ((n_source < n_target) && (target_node.getAttribute("class").search("mechanism") == -1)){
                         var message = "<?php echo Yii::t('app', 'LEVEL_MUST_BEGIN_WITH_MECHANISM'); ?>";
                         document.getElementById("message-text").lastChild.nodeValue = message;
-                        $("#viewMessageModalForm").modal("show");
+                        $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                         return false;
                     } else {
                         if(target_node.getAttribute("class").search("div-initial-event") >= 0){
                             var message = "<?php echo Yii::t('app', 'INITIAL_EVENT_SHOULD_NOT_BE_INCOMING_CONNECTIONS'); ?>";
                             document.getElementById("message-text").lastChild.nodeValue = message;
-                            $("#viewMessageModalForm").modal("show");
+                            $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                             return false;
                         } else {
                             return true;
@@ -460,8 +565,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                 var anchor_bottom = "";
                 var max_con = 1;
                 if (cl == "div-mechanism node jtk-managed jtk-draggable") {
-                    anchor_top = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
-                    anchor_bottom = [ "Perimeter", { shape: "Triangle", rotation: 90 }];
+                    anchor_top = [ 0.5, 0, 0, -1, 0, 20 ];
+                    anchor_bottom = [ 0.5, 1, 0, 1, 0, -20 ];
                 } else {
                     anchor_top = "Top";
                     anchor_bottom = "Bottom";
@@ -481,7 +586,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     onMaxConnections: function (info, e) {
                         var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
                         document.getElementById("message-text").lastChild.nodeValue = message;
-                        $("#viewMessageModalForm").modal("show");
+                        $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                     }
                 });
             }
@@ -642,382 +747,183 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     };
 
 
-    // Равномерное раcпределение всех объектов в виде дерева
-    $(document).ready(function() {
-        var id_node_any; //любой id узла для выравнивания в конце
-
-        var id_initial_node = 0; //id начального события
-        //поиск начального события
-        $(".div-initial-event").each(function(i) {
-            id_initial_node = $(this).attr('id');
+    //функция расширения последнего уровня
+    var increaseLevel = function() {
+        var q = 0;
+        $.each(mas_data_level, function (i, elem) {
+            q = q + 1;
         });
 
-        // ширина и высота элемента + отступ
-        var width_node = 200 + 20;
-        var height_node = 200 + 40;
-
-        //переменные отступа
-        var left = 0;
-        var top = 0;
-
-        if (id_initial_node != 0){
-            //размещение начального события и его потомков
-            $(".div-level-description").each(function(i) {
-                var id_level = $(this).attr('id');
-
-                left = 0;
-                top = 0;
-
-                $(".node").each(function(i) {
-                    var id_node = $(this).attr('id');
-                    id_node_any = id_node;
-
-                    var node = document.getElementById(id_node);
-                    var n_initial_node = parseInt(id_initial_node.match(/\d+/));
-
-                    var id_parent_node = node.getAttribute("parent_node");
-
-                    //поиск родительского элемента
-                    var parent_node = document.getElementById("node_" + id_parent_node);
-                    if (parent_node != null){
-                        var parent_node_left = parent_node.offsetLeft;
-                        var parent_node_top = parent_node.offsetTop;
-
-                    }
-
-                    var level_parent = node.offsetParent;
-                    var id_level_parent = level_parent.getAttribute('id');
-
-                    // curent_ первоначальное положение элемента + 20 отступ от края
-                    var current_left = 20 + $(this).position().left;
-                    var current_top = 20 + $(this).position().top;
-
-                    //если поле уровней совпадает
-                    if (id_level_parent == id_level){
-                        //если начальное событие
-                        if (id_node == id_initial_node){
-                            $(this).css({
-                                left: current_left + left,
-                                top: current_top + top
-                            });
-                            left = left + width_node;
-                            top = top + height_node;
-
-                        //если это потомки начального события
-                        } else if (id_parent_node == n_initial_node){
-                            $(this).css({
-                                left: parent_node_left + left,
-                                top: parent_node_top + top
-                            });
-                            left = left + width_node;
-
-                            var classList = node.classList;
-                            classList.add('current'); // добавить класс для потомка
-                        }
-                    }
-                });
+        var last_level = null;//id последнего уровня
+        for (var i = 0; i < q; i++) {
+            $.each(mas_data_level, function (j, elem) {
+                if (elem.parent_level == last_level){
+                    last_level = elem.id_level;
+                }
             });
-
-            top = top + height_node;
-
-            var col = 0;
-            var sum_col = 0;
-
-            do {
-                sum_col = 0;
-                var count = 0;
-
-                //просматриваем всех потомков
-                $(".current").each(function(i) {
-                    var id_current = $(this).attr('id');
-                    var n_current = parseInt(id_current.match(/\d+/));
-                    var current = document.getElementById(id_current);
-
-                    col = 0;
-                    count++;
-                    left = 0;
-
-                    //нахождение количества потомков у выбранного потомка
-                    $(".node").each(function(i) {
-                        var id_node = $(this).attr('id');
-                        var node = document.getElementById(id_node);
-                        var id_parent_node = node.getAttribute("parent_node");
-                        var level_parent = node.offsetParent;
-                        var id_level_parent = level_parent.getAttribute('id');
-                        if (id_parent_node == n_current){
-                            col = col + 1;
-                        }
-                    });
-
-                    if (count == 1){
-                        sum_col = col;
-                    } else if (col == 0){
-                        sum_col = sum_col - 1;
-                    }
-
-                    var sdvig;
-
-                    if (sum_col < 1){
-                        sdvig = 0;
-                    } else {
-                        sdvig = sum_col - 1;
-                    }
-
-                    if (count > 1){
-                        left = left + width_node * sdvig;
-                    }
-
-                    if ((count > 1)&&(col > 1)){
-                        sum_col = sum_col + col - 1;
-                    }
-                    col = 0;
-
-
-                    $(".div-level-description").each(function(i) {
-                        var id_level = $(this).attr('id');
-
-                        $(".node").each(function(i) {
-                            var id_node = $(this).attr('id');
-                            id_node_any = id_node;
-                            var node = document.getElementById(id_node);
-                            var id_parent_node = node.getAttribute("parent_node");
-
-
-                            //поиск родительского элемента и его параметров
-                            var parent_node = document.getElementById("node_" + id_parent_node);
-                            if (parent_node != null){
-                                var parent_node_left = parent_node.offsetLeft;
-                                var parent_node_top = parent_node.offsetTop;
-                                var parent_node_level_parent = parent_node.offsetParent;
-                                var parent_node_id_level_parent = parent_node_level_parent.getAttribute('id');
-                            }
-
-                            var level_parent = node.offsetParent;
-                            var id_level_parent = level_parent.getAttribute('id');
-
-                            var current_top = 20 + $(this).position().top;
-
-                            if (id_level_parent == id_level) {
-                                if (id_parent_node == n_current){
-                                    //если уровень родительского элемента равен уровню в кот.находится элемент
-                                    if (parent_node_id_level_parent == id_level_parent){
-                                        $(this).css({
-                                            left: parent_node_left + left,
-                                            top: parent_node_top + top,
-                                        });
-                                        left = left + width_node;
-                                    //иначе уровни разные
-                                    } else {
-                                        $(this).css({
-                                            left: parent_node_left + left,
-                                            top: current_top,
-                                        });
-                                        left = left + width_node;
-                                    }
-                                    // присваиваем класс у дочернего
-                                    var classNode = node.classList;
-                                    classNode.add('current'); // добавить класс
-                                }
-                                // удаляем класс у родителя
-                                var classCurrent = current.classList;
-                                classCurrent.remove('current'); // удалить класс
-                            }
-                        });
-                    });
-                });
-                //длина массива
-                var a = $(".current").length;
-            //повторять до тех пор пока не кончатся .current
-            } while ( a != 0 );
         }
 
+        var div_level = document.getElementById('level_'+ last_level);
+        var height_div_level = div_level.clientHeight;
 
-        //максимальный отступ
-        var max_left = 0;
-        //поиск самого максимального отступа
-        $(".node").each(function(i) {
-            var id_node = $(this).attr('id');
-            var node = document.getElementById(id_node);
-            var node_left = node.offsetLeft;
-            if (node_left > max_left){
-                max_left = node_left;
+        var visual_diagram = document.getElementById('visual-diagram');
+        var h_visual_diagram = visual_diagram.clientHeight;
+
+        var top_layer = document.getElementById('top_layer');
+        var h_top_layer = top_layer.clientHeight;
+
+        var div_level_description = document.getElementById('level_description_'+ last_level);
+        if (h_top_layer < h_visual_diagram){
+            div_level_description.style.height = height_div_level + h_visual_diagram - h_top_layer  + 'px';
+        }
+    }
+
+
+    //функция сохранения расположения элемента
+    var saveIndent = function(node_id, indent_x, indent_y) {
+        $.ajax({
+            //переход на экшен левел
+            url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+            '/tree-diagrams/save-indent'?>",
+            type: "post",
+            data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>" + "&node_id=" + node_id +
+            "&indent_x=" + indent_x + "&indent_y=" + indent_y,
+            dataType: "json",
+            success: function (data) {
+                if (data['success']) {
+                    //console.log("x = " + data['indent_x']);
+                    //console.log("y = " + data['indent_y']);
+                }
+            },
+            error: function () {
+                alert('Error!');
             }
         });
+    };
 
-        //если начального события нет
-        if (max_left == 0){
-            left = 0;
-        } else {
-            left = max_left + width_node;
-        }
-        top = 0;
 
-        //размещение не связанных элементов (без родительского)
-        $(".div-level-description").each(function(i) {
-            var id_level = $(this).attr('id');
+    //функция расположения комментариев событий
+    var arrangeEventComment = function(comment_id) {
+        var comment = document.getElementById("node_comment_" + comment_id);
+        var width_comment = comment.offsetWidth;
+        var event = document.getElementById("node_" + comment_id);
+        var node_top = event.offsetTop;
+        var level  = event.offsetParent;
+        var width_level  = level.offsetWidth;
 
+        comment.style.left = width_level - width_comment + 'px';
+        comment.style.top = node_top + 'px';
+    }
+
+
+    //функция расположения комментариев событий
+    var arrangeLevelComment = function(comment_id) {
+        var comment = document.getElementById("level_comment_" + comment_id);
+        var width_comment = comment.offsetWidth;
+
+        var level  = document.getElementById("level_description_" + comment_id);
+        var width_level  = level.offsetWidth;
+
+        comment.style.left = width_level - width_comment + 'px';
+        comment.style.top = 2 + 'px';
+    }
+
+
+    // Равномерное раcпределение всех объектов в виде дерева
+    $(document).ready(function() {
+        var id_node_any;
+        $.each(mas_location, function (j, elem) {
             $(".node").each(function(i) {
-                var id_node = $(this).attr('id');
-                id_node_any = id_node;
-                var node = document.getElementById(id_node);
-                var id_parent_node = node.getAttribute("parent_node");
-                var parent_node = document.getElementById("node_" + id_parent_node);
+                var node = $(this).attr('id');
+                var node_id = parseInt(node.match(/\d+/));
 
-                var level_parent = node.offsetParent;
-                var id_level_parent = level_parent.getAttribute('id');
-
-                // curent_ первоначальное положение элемента + 20 отступ от края
-                var current_left = 20 + $(this).position().left;
-                var current_top = 20 + $(this).position().top;
-
-                if (id_level_parent == id_level){
-                    //если родителя нет
-                    if (id_parent_node == ""){
-                        $(this).css({
-                            left: current_left + left,
-                            top: current_top + top
-                        });
-                        left = left + width_node;
-
-                        var classList = node.classList;
-                        classList.add('zero'); // добавить класс
-                    }
+                if (elem.id == node_id) {
+                    id_node_any = node;
+                    $(this).css({
+                        left: parseInt(elem.indent_x),
+                        top: parseInt(elem.indent_y)
+                    });
                 }
             });
         });
-
-        top = top + height_node;
-
-        var col = 0;
-        var sum_col = 0;
-
-        do {
-            sum_col = 0;
-            var count = 0;
-
-            $(".zero").each(function(i) {
-                var id_current = $(this).attr('id');
-                var n_current = parseInt(id_current.match(/\d+/));
-                var current = document.getElementById(id_current);
-
-                col = 0;
-                count++;
-                left = 0;
-
-                $(".node").each(function(i) {
-                    var id_node = $(this).attr('id');
-                    var node = document.getElementById(id_node);
-                    var id_parent_node = node.getAttribute("parent_node");
-                    var level_parent = node.offsetParent;
-                    var id_level_parent = level_parent.getAttribute('id');
-                    if (id_parent_node == n_current){
-                        col = col + 1;
-                    }
-                });
-
-                if (count == 1){
-                    sum_col = col;
-                } else if (col == 0){
-                    sum_col = sum_col - 1;
-                }
-
-                var sdvig;
-
-                if (sum_col < 1){
-                    sdvig = 0;
-                } else {
-                    sdvig = sum_col - 1;
-                }
-
-                if (count > 1){
-                    left = left + width_node * sdvig;
-                }
-                if ((count > 1)&&(col > 1)){
-                    sum_col = sum_col + col - 1;
-                }
-                col = 0;
-
-                $(".div-level-description").each(function(i) {
-                    var id_level = $(this).attr('id');
-
-                    $(".node").each(function(i) {
-                        var id_node = $(this).attr('id');
-                        id_node_any = id_node;
-                        var node = document.getElementById(id_node);
-                        var id_parent_node = node.getAttribute("parent_node");
-                        var parent_node = document.getElementById("node_" + id_parent_node);
-                        if (parent_node != null){
-                            var parent_node_left = parent_node.offsetLeft;
-                            var parent_node_top = parent_node.offsetTop;
-                            var parent_node_level_parent = parent_node.offsetParent;
-                            var parent_node_id_level_parent = parent_node_level_parent.getAttribute('id');
-                        }
-
-                        var level_parent = node.offsetParent;
-                        var id_level_parent = level_parent.getAttribute('id');
-
-                        // curent_ первоначальное положение элемента + 20 отступ от края
-                        var current_top = 20 + $(this).position().top;
-
-                        if (id_level_parent == id_level) {
-                            if (id_parent_node == n_current){
-                                if (parent_node_id_level_parent == id_level_parent){
-                                    $(this).css({
-                                        left: parent_node_left + left,
-                                        top: parent_node_top + top,
-                                    });
-                                    left = left + width_node;
-                                } else {
-                                    $(this).css({
-                                        left: parent_node_left + left,
-                                        top: current_top,
-                                    });
-                                    left = left + width_node;
-                                }
-                                // присваиваем класс у дочернему
-                                var classNode = node.classList;
-                                classNode.add('zero'); // добавить класс
-                            }
-                            // удаляем класс у родителя
-                            var classCurrent = current.classList;
-                            classCurrent.remove('zero'); // удалить класс
-                        }
-                    });
-                });
-            });
-            var a = $(".zero").length;
-        } while ( a != 0 );
 
         // отрисовка
         if (id_node_any != null){
             mousemoveNode(id_node_any);
+            increaseLevel();//расширение последнего уровня
             // Обновление формы редактора
             instance.repaintEverything();
         }
+
+
+
+
+        //распределение комментариев событий
+        $(".div-event-comment").each(function(i) {
+            var elem = $(this).attr('id');
+            var comment_id = parseInt(elem.match(/\d+/));
+
+            arrangeEventComment(comment_id);
+        });
+
+        //распределение комментариев уровней
+        $(".div-level-comment").each(function(i) {
+            var elem = $(this).attr('id');
+            var comment_id = parseInt(elem.match(/\d+/));
+
+            arrangeLevelComment(comment_id);
+        });
+
+
     });
 
+
+    //сохранение расположения элемента
+    $(document).on('mouseup', '.node', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            var node_id = parseInt(node.match(/\d+/));
+            var indent_x = $(this).position().left;
+            var indent_y = $(this).position().top;
+
+            //если отступ элемента не отрицательный
+            if (indent_y >= 0){
+                saveIndent(node_id, indent_x, indent_y);
+            } else {
+                //если отступ элемента недостаточный чтобы вернуться в свой ровень (стоит на границе)
+                //тогда indent_y делаем нулевым
+                if (indent_y >= (($(this).height() + 3)*-1 )) {
+                    saveIndent(node_id, indent_x, 0);
+                }
+            }
+        }
+    });
 
 
     $(document).on('mousemove', '.div-event', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
     });
+
 
     $(document).on('mousemove', '.div-mechanism', function() {
         var id_node = $(this).attr('id');
         mousemoveNode(id_node);
+        increaseLevel();//расширение последнего уровня
         //------------------------------------------
         // Обновление формы редактора
         instance.repaintEverything();
     });
 
-    $(document).on('mouseout', '.div-event', function() {
+
+    //$(document).on('mouseout', '.div-event', function() {
         // Обновление формы редактора
-        instance.repaintEverything();
-    });
+    //    instance.repaintEverything();
+    //});
 
 
     // редактирование события
@@ -1035,11 +941,12 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             alert.style = style = "display:none;";
 
             //если событие инициирующее
-            if (div_node.getAttribute("class").search("div-initial-event") >= 0) {
+            if ((div_node.getAttribute("class").search("div-initial-event") >= 0) || (<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)) {
                 $.each(mas_data_node, function (i, elem) {
                     if (elem.id == node_id_on_click) {
                         document.forms["edit-event-form"].reset();
                         document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[certainty_factor]"].value = elem.certainty_factor;
                         document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
                         document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                         //блокировка изменения левела
@@ -1055,6 +962,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                     if (elem.id == node_id_on_click) {
                         document.forms["edit-event-form"].reset();
                         document.forms["edit-event-form"].elements["Node[name]"].value = elem.name;
+                        document.forms["edit-event-form"].elements["Node[certainty_factor]"].value = elem.certainty_factor;
                         document.forms["edit-event-form"].elements["Node[description]"].value = elem.description;
                         document.forms["edit-event-form"].elements["Node[level_id]"].value = level_id_on_click;
                         //разблокировка изменения левела
@@ -1149,6 +1057,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
     // удаление механизма
     $(document).on('click', '.del-mechanism', function() {
         if (!guest) {
@@ -1157,6 +1066,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $("#deleteMechanismModalForm").modal("show");
         }
     });
+
 
     // удаление уровня
     $(document).on('click', '.del-level', function() {
@@ -1196,6 +1106,50 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
+    // перемещение уровня
+    $(document).on('click', '.move-level', function() {
+        if (!guest) {
+            var del = $(this).attr('id');
+            level_id_on_click = parseInt(del.match(/\d+/));
+
+            //ид уровня предшествующего level_id_on_click
+            var parent_level_id;
+
+            //список уровней содержащихся в dropdownlist
+            var dropdownlist = document.getElementById("level-movement_level");
+
+            //поиск уровня предшествующего level_id_on_click
+            $.each(mas_data_level, function (i, elem) {
+                if (elem.id_level == level_id_on_click){
+                    parent_level_id = elem.parent_level;
+                }
+            });
+
+            //делаем весь список уровней видимым
+            for (let i = 0; i < dropdownlist.length; i++) {
+                dropdownlist.options[i].style.display = ""
+            }
+
+            for (let i = 0; i < dropdownlist.length; i++) {
+                //скрываем перемещаеммый уровень
+                if(dropdownlist.options[i].value == level_id_on_click){
+                    dropdownlist.options[i].style.display = "none"
+                }
+                //скрываем уровень до перемещаемого
+                if(dropdownlist.options[i].value == parent_level_id){
+                    dropdownlist.options[i].style.display = "none"
+                }
+            }
+
+            //очищаем уровень выбранный по умолчанию
+            dropdownlist.options.selectedIndex = -1;
+
+            $("#moveLevelModalForm").modal("show");
+        }
+    });
+
+
     // добавление параметра
     $(document).on('click', '.add-parameter', function() {
         if (!guest) {
@@ -1204,6 +1158,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
             $("#addParameterModalForm").modal("show");
         }
     });
+
 
     // изменение параметра
     $(document).on('click', '.edit-parameter', function() {
@@ -1223,6 +1178,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
     // удаление параметра
     $(document).on('click', '.del-parameter', function() {
         if (!guest) {
@@ -1234,6 +1190,587 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
         }
     });
 
+
+    //проверка диаграммы на корректность
+    $('#nav_correctness').on('click', function() {
+        $.ajax({
+            //переход на экшен левел
+            url: "<?= Yii::$app->request->baseUrl . '/' . Lang::getCurrent()->url .
+            '/tree-diagrams/correctness/' . $model->id ?>",
+            type: "post",
+            data: "YII_CSRF_TOKEN=<?= Yii::$app->request->csrfToken ?>",
+            dataType: "json",
+            success: function (data) {
+                if (data['success']) {
+                    var not_connected = data['not_connected'];
+                    var empty_level = data['empty_level'];
+                    var level_without_mechanism = data['level_without_mechanism'];
+
+                    var message = "";
+
+                    $.each(not_connected, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_NODE'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_IS_NOT_LINKED_TO_ANY_OTHER_NODES'); ?>" + '</p>';
+                    });
+
+                    $.each(empty_level, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_LEVEL'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_DOES_NOT_CONTAIN_ANY_ITEMS'); ?>" + '</p>';
+                    });
+
+                    $.each(level_without_mechanism, function (i, elem) {
+                        message = message + '<p style="font-size: 14px">' +
+                            "<?php echo Yii::t('app', 'TEXT_LEVEL'); ?>" + '<b>' + elem.name + '</b>'
+                            + "<?php echo Yii::t('app', 'TEXT_DOES_NOT_CONTAIN_ANY_MECHANISM'); ?>" + '</p>';
+                    });
+
+                    if (message == ""){
+                        var result = '<h4>' + "<?php echo Yii::t('app', 'NO_ERRORS_WERE_FOUND'); ?>" + '</h4>';;
+                    } else {
+                        var result = '<h4>' + "<?php echo Yii::t('app', 'TEXT_WHEN_CHECKING_THE_CORRECTNESS'); ?>" + '</h4>';
+                    }
+
+                    var div = document.getElementById('message-verification-text');
+                    div.innerHTML = result + message;
+                    $("#viewMessageErrorsWhenCheckingTheChartModalForm").modal("show");
+                }
+            },
+            error: function () {
+                alert('Error!');
+            }
+        });
+    });
+
+
+    //равномерное распределение и выравнивание элементов по диаграмме
+    $('#nav_alignment').on('click', function() {
+        var id_node_any; //любой id узла для выравнивания в конце
+
+        var id_initial_node = 0; //id начального события
+        //поиск начального события
+        $(".div-initial-event").each(function(i) {
+            id_initial_node = $(this).attr('id');
+            $(this).css({
+                left: 20,
+                top: 0
+            });
+        });
+
+        //высота начального node
+        var height_initial_node;
+
+        // ширина и высота элемента + отступ
+        var width_node = 150 + 20;
+        var height_node = 30 + 60;
+
+        //переменные отступа
+        var left = 0;
+        var top = 0;
+
+        var indent_mechanism = 0;
+
+        if (id_initial_node != 0){
+            //размещение начального события и его потомков
+            $(".div-level-description").each(function(i) {
+                var id_level = $(this).attr('id');
+
+                left = 0;
+                top = 0;
+
+                $(".node").each(function(i) {
+                    var id_node = $(this).attr('id');
+                    id_node_any = id_node;
+
+                    var node = document.getElementById(id_node);
+                    var n_initial_node = parseInt(id_initial_node.match(/\d+/));
+
+                    var id_parent_node = node.getAttribute("parent_node");
+
+                    //поиск родительского элемента
+                    var parent_node = document.getElementById("node_" + id_parent_node);
+                    if (parent_node != null){
+                        var parent_node_left = parent_node.offsetLeft;
+                        var parent_node_top = parent_node.offsetTop;
+                    }
+
+                    var level_parent = node.offsetParent;
+                    var id_level_parent = level_parent.getAttribute('id');
+
+                    // curent_ первоначальное положение элемента + 20 отступ от края
+                    var current_left = 60;
+                    var current_top = 10;
+
+                    //если поле уровней совпадает
+                    if (id_level_parent == id_level){
+                        //если начальное событие
+                        if (id_node == id_initial_node){
+                            height_initial_node = node.offsetHeight;
+                            $(this).css({
+                                left: current_left + left,
+                                top: current_top + top
+                            });
+                            top = top + height_node + height_initial_node;
+
+                            //если это потомки начального события
+                        } else if (id_parent_node == n_initial_node){
+                            var cl = node.className.indexOf('div-mechanism');
+                            if (cl == -1) {
+                                indent_mechanism = 0;
+
+                            } else {
+                                indent_mechanism = 40;
+                            }
+
+                            $(this).css({
+                                left: parent_node_left + left + indent_mechanism,
+                                top: parent_node_top + top
+                            });
+                            left = left + width_node;
+
+                            var classList = node.classList;
+                            classList.add('current'); // добавить класс для потомка
+                        }
+                    }
+                });
+            });
+
+            top = top + height_node;
+
+            var col = 0;
+            var sum_col = 0;
+
+            //нахождение максимальной высоты node
+            var max_height_node = 0;
+            $(".node").each(function(i) {
+                var id_node = $(this).attr('id');
+                var node = document.getElementById(id_node);
+
+                if ((id_node != id_initial_node) && (max_height_node < node.offsetHeight)){
+                    max_height_node = node.offsetHeight;
+                }
+            });
+
+            do {
+                sum_col = 0;
+                var count = 0;
+
+                //просматриваем всех потомков
+                $(".current").each(function(i) {
+                    var id_current = $(this).attr('id');
+                    var n_current = parseInt(id_current.match(/\d+/));
+                    var current = document.getElementById(id_current);
+
+                    col = 0;
+                    count++;
+                    left = 0;
+
+                    //нахождение количества потомков у выбранного потомка
+                    $(".node").each(function(i) {
+                        var id_node = $(this).attr('id');
+                        var node = document.getElementById(id_node);
+                        var id_parent_node = node.getAttribute("parent_node");
+                        var level_parent = node.offsetParent;
+                        var id_level_parent = level_parent.getAttribute('id');
+                        if (id_parent_node == n_current){
+                            col = col + 1;
+                        }
+                    });
+
+                    if (count == 1){
+                        sum_col = col;
+                    } else if (col == 0){
+                        sum_col = sum_col - 1;
+                    }
+
+                    var sdvig;
+
+                    if (sum_col < 1){
+                        sdvig = 0;
+                    } else {
+                        sdvig = sum_col - 1;
+                    }
+
+                    if (count > 1){
+                        left = left + width_node * sdvig;
+                    }
+
+                    if ((count > 1)&&(col > 1)){
+                        sum_col = sum_col + col - 1;
+                    }
+                    col = 0;
+
+
+                    $(".div-level-description").each(function(i) {
+                        var id_level = $(this).attr('id');
+
+                        $(".node").each(function(i) {
+                            var id_node = $(this).attr('id');
+                            id_node_any = id_node;
+                            var node = document.getElementById(id_node);
+                            var id_parent_node = node.getAttribute("parent_node");
+
+                            //поиск родительского элемента и его параметров
+                            var parent_node = document.getElementById("node_" + id_parent_node);
+                            if (parent_node != null){
+                                var pn = parent_node.className.indexOf('div-mechanism');
+                                if (pn == -1) {
+                                    indent_mechanism = 0;
+                                } else {
+                                    indent_mechanism = 40;
+                                }
+
+                                var parent_node_left = parent_node.offsetLeft - indent_mechanism;
+                                var parent_node_top = parent_node.offsetTop;
+                                var parent_node_level_parent = parent_node.offsetParent;
+                                var parent_node_id_level_parent = parent_node_level_parent.getAttribute('id');
+                            }
+
+                            var level_parent = node.offsetParent;
+                            var id_level_parent = level_parent.getAttribute('id');
+
+                            var current_top = 20;
+                            //var current_top = 20 + $(this).position().top;
+
+                            if (id_level_parent == id_level) {
+                                if (id_parent_node == n_current){
+                                    var cl = node.className.indexOf('div-mechanism');
+                                    if (cl == -1) {
+                                        indent_mechanism = 0;
+                                    } else {
+                                        indent_mechanism = 40;
+                                    }
+
+                                    //если уровень родительского элемента равен уровню в кот.находится элемент
+                                    if (parent_node_id_level_parent == id_level_parent){
+                                        $(this).css({
+                                            left: parent_node_left + left - indent_mechanism,
+                                            top: parent_node_top + height_node + max_height_node,
+                                        });
+                                        left = left + width_node;
+                                        //иначе уровни разные
+                                    } else {
+                                        $(this).css({
+                                            left: parent_node_left + left + indent_mechanism,
+                                            top: current_top,
+                                        });
+                                        left = left + width_node;
+                                    }
+                                    // присваиваем класс у дочернего
+                                    var classNode = node.classList;
+                                    classNode.add('current'); // добавить класс
+                                }
+                                // удаляем класс у родителя
+                                var classCurrent = current.classList;
+                                classCurrent.remove('current'); // удалить класс
+                            }
+                        });
+                    });
+                });
+                //длина массива
+                var a = $(".current").length;
+                //повторять до тех пор пока не кончатся .current
+            } while ( a != 0 );
+        }
+
+
+        //максимальный отступ
+        var max_left = 0;
+        //поиск самого максимального отступа
+        $(".node").each(function(i) {
+            var id_node = $(this).attr('id');
+            var node = document.getElementById(id_node);
+            var node_left = node.offsetLeft;
+            if (node_left > max_left){
+                max_left = node_left;
+            }
+        });
+
+        //если начального события нет
+        if (max_left == 0){
+            left = 0;
+        } else {
+            left = max_left + width_node;
+        }
+        top = 0;
+
+        //размещение не связанных элементов (без родительского)
+        $(".div-level-description").each(function(i) {
+            var id_level = $(this).attr('id');
+
+            $(".node").each(function(i) {
+                var id_node = $(this).attr('id');
+                id_node_any = id_node;
+                var node = document.getElementById(id_node);
+                var id_parent_node = node.getAttribute("parent_node");
+                var parent_node = document.getElementById("node_" + id_parent_node);
+
+                var level_parent = node.offsetParent;
+                var id_level_parent = level_parent.getAttribute('id');
+
+                // curent_ первоначальное положение элемента + 20 отступ от края
+                var current_left = 20;
+                var current_top = 20;
+
+                if (id_level_parent == id_level){
+                    //если родителя нет
+                    if (id_parent_node == ""){
+                        $(this).css({
+                            left: current_left + left,
+                            top: current_top + top
+                        });
+                        left = left + width_node;
+
+                        var classList = node.classList;
+                        classList.add('zero'); // добавить класс
+                    }
+                }
+            });
+        });
+
+        top = top + height_node;
+
+        var col = 0;
+        var sum_col = 0;
+
+        do {
+            sum_col = 0;
+            var count = 0;
+
+            $(".zero").each(function(i) {
+                var id_current = $(this).attr('id');
+                var n_current = parseInt(id_current.match(/\d+/));
+                var current = document.getElementById(id_current);
+
+                col = 0;
+                count++;
+                left = 0;
+
+                $(".node").each(function(i) {
+                    var id_node = $(this).attr('id');
+                    var node = document.getElementById(id_node);
+                    var id_parent_node = node.getAttribute("parent_node");
+                    var level_parent = node.offsetParent;
+                    var id_level_parent = level_parent.getAttribute('id');
+                    if (id_parent_node == n_current){
+                        col = col + 1;
+                    }
+                });
+
+                if (count == 1){
+                    sum_col = col;
+                } else if (col == 0){
+                    sum_col = sum_col - 1;
+                }
+
+                var sdvig;
+
+                if (sum_col < 1){
+                    sdvig = 0;
+                } else {
+                    sdvig = sum_col - 1;
+                }
+
+                if (count > 1){
+                    left = left + width_node * sdvig;
+                }
+                if ((count > 1)&&(col > 1)){
+                    sum_col = sum_col + col - 1;
+                }
+                col = 0;
+
+                $(".div-level-description").each(function(i) {
+                    var id_level = $(this).attr('id');
+
+                    $(".node").each(function(i) {
+                        var id_node = $(this).attr('id');
+                        id_node_any = id_node;
+                        var node = document.getElementById(id_node);
+                        var id_parent_node = node.getAttribute("parent_node");
+                        var parent_node = document.getElementById("node_" + id_parent_node);
+                        if (parent_node != null){
+                            var parent_node_left = parent_node.offsetLeft;
+                            var parent_node_top = parent_node.offsetTop;
+                            var parent_node_level_parent = parent_node.offsetParent;
+                            var parent_node_id_level_parent = parent_node_level_parent.getAttribute('id');
+                        }
+
+                        var level_parent = node.offsetParent;
+                        var id_level_parent = level_parent.getAttribute('id');
+
+                        // curent_ первоначальное положение элемента + 20 отступ от края
+                        var current_top = 20;
+
+
+                        if (id_level_parent == id_level) {
+                            if (id_parent_node == n_current){
+                                if (parent_node_id_level_parent == id_level_parent){
+                                    $(this).css({
+                                        left: parent_node_left + left,
+                                        top: parent_node_top + top,
+                                    });
+                                    left = left + width_node;
+                                } else {
+                                    $(this).css({
+                                        left: parent_node_left + left,
+                                        top: current_top,
+                                    });
+                                    left = left + width_node;
+                                }
+                                // присваиваем класс у дочернему
+                                var classNode = node.classList;
+                                classNode.add('zero'); // добавить класс
+                            }
+                            // удаляем класс у родителя
+                            var classCurrent = current.classList;
+                            classCurrent.remove('zero'); // удалить класс
+                        }
+                    });
+                });
+            });
+            var a = $(".zero").length;
+        } while ( a != 0 );
+
+        // отрисовка
+        if (id_node_any != null){
+            mousemoveNode(id_node_any);
+            increaseLevel();//расширение последнего уровня
+            // Обновление формы редактора
+            instance.repaintEverything();
+        }
+
+        //сохранение местоположения
+        $(".node").each(function(i) {
+            var node = $(this).attr('id');
+            var node_id = parseInt(node.match(/\d+/));
+            var indent_x = $(this).position().left;
+            var indent_y = $(this).position().top;
+
+            saveIndent(node_id, indent_x, indent_y);
+        });
+
+    });
+
+
+    //отображение комментария или создание если его нет
+    $(document).on('click', '.show-event-comment', function() {
+        var node = $(this).attr('id');
+        node_id_on_click = parseInt(node.match(/\d+/));
+
+        //Поиск комментария
+        var comment = document.getElementById("node_comment_" + node_id_on_click);
+
+        //если комментария нет то добавляем его
+        if (comment == null){
+            $("#addEventCommentModalForm").modal("show");
+        } else {
+            if (comment.style.visibility == 'hidden'){
+                comment.style.visibility='visible'
+                arrangeEventComment(node_id_on_click);
+            } else {
+                comment.style.visibility='hidden'
+            }
+        }
+    });
+
+
+    //изменение комментария
+    $(document).on('click', '.edit-event-comment', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+
+            //Поиск комментария
+            var comment = document.getElementById("node_comment_name_" + node_id_on_click);
+
+            document.forms["edit-event-comment-form"].reset();
+            document.forms["edit-event-comment-form"].elements["Node[comment]"].value = comment.innerHTML;
+            $("#editEventCommentModalForm").modal("show");
+        }
+    });
+
+
+    //удаление комментария
+    $(document).on('click', '.del-event-comment', function() {
+        if (!guest) {
+            var node = $(this).attr('id');
+            node_id_on_click = parseInt(node.match(/\d+/));
+
+            $("#deleteEventCommentModalForm").modal("show");
+        }
+    });
+
+    //скрытие комментария
+    $(document).on('click', '.hide-event-comment', function() {
+        var node = $(this).attr('id');
+        var node_id = parseInt(node.match(/\d+/));
+
+        //Поиск комментария
+        var comment = document.getElementById("node_comment_" + node_id);
+        comment.style.visibility='hidden'
+    });
+
+
+    //отображение комментария или создание если его нет
+    $(document).on('click', '.show-level-comment', function() {
+        var level = $(this).attr('id');
+        level_id_on_click = parseInt(level.match(/\d+/));
+
+        //Поиск комментария
+        var comment = document.getElementById("level_comment_" + level_id_on_click);
+
+        //если комментария нет то добавляем его
+        if (comment == null){
+            $("#addLevelCommentModalForm").modal("show");
+        } else {
+            if (comment.style.visibility == 'hidden'){
+                comment.style.visibility='visible'
+                arrangeLevelComment(level_id_on_click);
+            } else {
+                comment.style.visibility='hidden'
+            }
+        }
+    });
+
+
+    //изменение комментария
+    $(document).on('click', '.edit-level-comment', function() {
+        if (!guest) {
+            var level = $(this).attr('id');
+            level_id_on_click = parseInt(level.match(/\d+/));
+
+            //Поиск комментария
+            var comment = document.getElementById("level_comment_name_" + level_id_on_click);
+
+            document.forms["edit-level-comment-form"].reset();
+            document.forms["edit-level-comment-form"].elements["Level[comment]"].value = comment.innerHTML;
+            $("#editLevelCommentModalForm").modal("show");
+        }
+    });
+
+
+    //удаление комментария
+    $(document).on('click', '.del-level-comment', function() {
+        if (!guest) {
+            var level = $(this).attr('id');
+            level_id_on_click = parseInt(level.match(/\d+/));
+
+            $("#deleteLevelCommentModalForm").modal("show");
+        }
+    });
+
+
+    //скрытие комментария
+    $(document).on('click', '.hide-level-comment', function() {
+        var level = $(this).attr('id');
+        var level_id = parseInt(level.match(/\d+/));
+
+        //Поиск комментария
+        var comment = document.getElementById("level_comment_" + level_id);
+        comment.style.visibility='hidden'
+    });
+
 </script>
 
 
@@ -1241,7 +1778,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
     <h1><?= Html::encode($this->title) ?></h1>
 </div>
 
-<div class="visual-diagram col-md-12">
+<div id="visual-diagram" class="visual-diagram col-md-12">
 <div id="visual_diagram_field" class="visual-diagram-top-layer">
     <div id="top_layer" class="top">
             <!-- Вывод уровней -->
@@ -1253,6 +1790,7 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <div id="level_title_<?= $value->id ?>" class="div-title-name" title="<?= $value->name ?>"><?= $value->name ?></div>
                         <div id="level_del_<?= $value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                         <div id="level_edit_<?= $value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                        <div id="level_show_comment_<?= $value->id ?>" class="show-level-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                     </div>
                     <div id="level_description_<?= $value->id ?>" class="div-level-description">
                         <!--?= $level_value->description ?>-->
@@ -1260,17 +1798,22 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                         <?php foreach ($initial_event_model_all as $initial_event_value): ?>
                             <div id="node_<?= $initial_event_value->id ?>" class="div-event node div-initial-event">
                                 <div class="content-event">
-                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?></div>
+                                    <div id="node_name_<?= $initial_event_value->id ?>" class="div-event-name"><?= $initial_event_value->name ?>
+                                        <?php if ($initial_event_value->certainty_factor != null){ ?>
+                                            (<?= $initial_event_value->certainty_factor ?>)
+                                        <?php } ?>
+                                    </div>
                                     <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                     <div id="node_del_<?= $initial_event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                     <div id="node_edit_<?= $initial_event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                     <div id="node_add_parameter_<?= $initial_event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                    <div id="node_show_comment_<?= $initial_event_value->id ?>" class="show-event-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                 </div>
 
                                 <?php foreach ($parameter_model_all as $parameter_value): ?>
                                     <?php if ($parameter_value->node == $initial_event_value->id){ ?>
                                         <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                            <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                            <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                             <div class="button-parameter">
                                                 <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                 <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1278,8 +1821,16 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         </div>
                                     <?php } ?>
                                 <?php endforeach; ?>
-
                             </div>
+
+                            <?php if ($initial_event_value->comment != null){ ?>
+                                <div id="node_comment_<?= $initial_event_value->id ?>" class="div-event-comment" style="visibility:hidden;">
+                                    <div id="node_comment_name_<?= $initial_event_value->id ?>" class="div-comment-name"><?= $initial_event_value->comment ?></div>
+                                    <div id="node_edit_comment_<?= $initial_event_value->id ?>" class="edit-event-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                    <div id="node_del_comment_<?= $initial_event_value->id ?>" class="del-event-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                    <div id="node_hide_comment_<?= $initial_event_value->id ?>" class="hide-event-comment glyphicon-eye-close" title="<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>"></div>
+                                </div>
+                            <?php } ?>
                         <?php endforeach; ?>
 
                         <?php foreach ($sequence_model_all as $sequence_value): ?>
@@ -1289,17 +1840,22 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                     <?php if ($event_value->id == $event_id){ ?>
                                         <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node="<?= $event_value->parent_node ?>">
                                             <div class="content-event">
-                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?>
+                                                    <?php if ($event_value->certainty_factor != null){ ?>
+                                                        (<?= $event_value->certainty_factor ?>)
+                                                    <?php } ?>
+                                                </div>
                                                 <div class="ep ep-event glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                 <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                 <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil"  title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                 <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                <div id="node_show_comment_<?= $event_value->id ?>" class="show-event-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                             </div>
 
                                             <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                 <?php if ($parameter_value->node == $event_value->id){ ?>
                                                     <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                        <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                                        <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                                         <div class="button-parameter">
                                                             <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                             <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash"  title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1307,12 +1863,31 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                     </div>
                                                 <?php } ?>
                                             <?php endforeach; ?>
-
                                         </div>
+
+                                        <?php if ($event_value->comment != null){ ?>
+                                            <div id="node_comment_<?= $event_value->id ?>" class="div-event-comment"  style="visibility:hidden;">
+                                                <div id="node_comment_name_<?= $event_value->id ?>" class="div-comment-name"><?= $event_value->comment ?></div>
+                                                <div id="node_edit_comment_<?= $event_value->id ?>" class="edit-event-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                <div id="node_del_comment_<?= $event_value->id ?>" class="del-event-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                <div id="node_hide_comment_<?= $event_value->id ?>" class="hide-event-comment glyphicon-eye-close" title="<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>"></div>
+                                            </div>
+                                        <?php } ?>
+
                                     <?php } ?>
                                 <?php endforeach; ?>
                             <?php } ?>
                         <?php endforeach; ?>
+
+                        <?php if ($value->comment != null){ ?>
+                            <div id="level_comment_<?= $value->id ?>" class="div-level-comment" style="visibility:hidden;">
+                                <div id="level_comment_name_<?= $value->id ?>" class="div-comment-name"><?= $value->comment ?></div>
+                                <div id="level_edit_comment_<?= $value->id ?>" class="edit-level-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                <div id="level_del_comment_<?= $value->id ?>" class="del-level-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                <div id="level_hide_comment_<?= $value->id ?>" class="hide-level-comment glyphicon-eye-close" title="<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>"></div>
+                            </div>
+                        <?php } ?>
+
                     </div>
                 </div>
             <?php $a = $value->id; }?>
@@ -1328,6 +1903,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                 <div id="level_title_<?= $level_value->id ?>" class="div-title-name" title="<?= $level_value->name ?>"><?= $level_value->name ?></div>
                                 <div id="level_del_<?= $level_value->id ?>" class="del del-level glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                 <div id="level_edit_<?= $level_value->id ?>" class="edit edit-level glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                <div id="level_move_<?= $level_value->id ?>" class="move move-level glyphicon-transfer" title="<?php echo Yii::t('app', 'BUTTON_MOVE'); ?>"></div>
+                                <div id="level_show_comment_<?= $level_value->id ?>" class="show-level-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                             </div>
                             <div id="level_description_<?= $level_value->id ?>" class="div-level-description">
                                 <!--?= $level_value->description ?>-->
@@ -1338,7 +1915,8 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                         <?php foreach ($mechanism_model_all as $mechanism_value): ?>
                                             <?php if ($mechanism_value->id == $node_id){ ?>
                                                 <div id="node_<?= $mechanism_value->id ?>" parent_node="<?= $mechanism_value->parent_node ?>"
-                                                    class="div-mechanism node" title="<?= $mechanism_value->name ?>">
+                                                    class="div-mechanism node" title="<?= $mechanism_value->description ?>">
+                                                    <div id="node_name_<?= $mechanism_value->id ?>" class="div-mechanism-name"><?= $mechanism_value->name ?></div>
                                                     <div class="div-mechanism-m">M</div>
                                                     <div class="ep ep-mechanism glyphicon-share-alt" title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                     <div id="node_del_<?= $mechanism_value->id ?>" class="del del-mechanism glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1351,17 +1929,22 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                             <?php if ($event_value->id == $node_id){ ?>
                                                 <div id="node_<?= $event_value->id ?>" class="div-event node" parent_node = "<?= $event_value->parent_node ?>">
                                                     <div class="content-event">
-                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?></div>
+                                                        <div id="node_name_<?= $event_value->id ?>" class="div-event-name"><?= $event_value->name ?>
+                                                            <?php if ($event_value->certainty_factor != null){ ?>
+                                                                (<?= $event_value->certainty_factor ?>)
+                                                            <?php } ?>
+                                                        </div>
                                                         <div class="ep ep-event glyphicon-share-alt"  title="<?php echo Yii::t('app', 'BUTTON_CONNECTION'); ?>"></div>
                                                         <div id="node_del_<?= $event_value->id ?>" class="del del-event glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
                                                         <div id="node_edit_<?= $event_value->id ?>" class="edit edit-event glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                         <div id="node_add_parameter_<?= $event_value->id ?>" class="param add-parameter glyphicon-plus" title="<?php echo Yii::t('app', 'BUTTON_ADD'); ?>"></div>
+                                                        <div id="node_show_comment_<?= $event_value->id ?>" class="show-event-comment glyphicon-paperclip" title="<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>"></div>
                                                     </div>
 
                                                     <?php foreach ($parameter_model_all as $parameter_value): ?>
                                                         <?php if ($parameter_value->node == $event_value->id){ ?>
                                                             <div id="parameter_<?= $parameter_value->id ?>" class="div-parameter">
-                                                                <div id="parameter_name_<?= $parameter_value->id ?>" class="div-parameter-name"><?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?></div>
+                                                                <?= $parameter_value->name ?> <?= $parameter_value->getOperatorName() ?> <?= $parameter_value->value ?>
                                                                 <div class="button-parameter">
                                                                     <div id="edit_parameter_<?= $parameter_value->id ?>" class="edit edit-parameter glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
                                                                     <div id="del_parameter_<?= $parameter_value->id ?>" class="del del-parameter glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
@@ -1369,12 +1952,31 @@ $this->registerJsFile('/js/jsplumb.js', ['position'=>yii\web\View::POS_HEAD]);  
                                                             </div>
                                                         <?php } ?>
                                                     <?php endforeach; ?>
-
                                                 </div>
+
+                                                <?php if ($event_value->comment != null){ ?>
+                                                    <div id="node_comment_<?= $event_value->id ?>" class="div-event-comment"  style="visibility:hidden;">
+                                                        <div id="node_comment_name_<?= $event_value->id ?>" class="div-comment-name"><?= $event_value->comment ?></div>
+                                                        <div id="node_edit_comment_<?= $event_value->id ?>" class="edit-event-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                                        <div id="node_del_comment_<?= $event_value->id ?>" class="del-event-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                                        <div id="node_hide_comment_<?= $event_value->id ?>" class="hide-event-comment glyphicon-eye-close" title="<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>"></div>
+                                                    </div>
+                                                <?php } ?>
+
                                             <?php } ?>
                                         <?php endforeach; ?>
                                     <?php } ?>
                                 <?php endforeach; ?>
+
+                                <?php if ($level_value->comment != null){ ?>
+                                    <div id="level_comment_<?= $level_value->id ?>" class="div-level-comment" style="visibility:hidden;">
+                                        <div id="level_comment_name_<?= $level_value->id ?>" class="div-comment-name"><?= $level_value->comment ?></div>
+                                        <div id="level_edit_comment_<?= $level_value->id ?>" class="edit-level-comment glyphicon-pencil" title="<?php echo Yii::t('app', 'BUTTON_EDIT'); ?>"></div>
+                                        <div id="level_del_comment_<?= $level_value->id ?>" class="del-level-comment glyphicon-trash" title="<?php echo Yii::t('app', 'BUTTON_DELETE'); ?>"></div>
+                                        <div id="level_hide_comment_<?= $level_value->id ?>" class="hide-level-comment glyphicon-eye-close" title="<?php echo Yii::t('app', 'BUTTON_HIDE'); ?>"></div>
+                                    </div>
+                                <?php } ?>
+
                             </div>
                         </div>
                         <?php $a = $level_value->id; ?>

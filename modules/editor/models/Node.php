@@ -16,7 +16,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $description
  * @property int $operator
  * @property int $type
+ * @property int $level_id
+ * @property string $comment
  * @property int $parent_node
+ * @property int $indent_x
+ * @property int $indent_y
  * @property int $tree_diagram
  *
  * @property Node $parentNode
@@ -53,10 +57,20 @@ class Node extends \yii\db\ActiveRecord
         return [
             [['name', 'tree_diagram', 'level_id'], 'required'],
             [['operator', 'type', 'parent_node', 'tree_diagram'], 'default', 'value' => null],
-            [['operator', 'type', 'parent_node', 'tree_diagram', 'level_id'], 'integer'],
+            [['indent_x', 'indent_y'], 'default', 'value' => 0],
+            [['operator', 'type', 'parent_node', 'tree_diagram', 'level_id', 'indent_x', 'indent_y'], 'integer'],
 
             [['name'], 'string', 'max' => 255],
             [['description'], 'string', 'max' => 600],
+
+            [['certainty_factor'],  'number', 'max' => 1, 'min' => 0, 'numberPattern' => '/^[0-9]{1}(\.[0-9]{0,2})?$/',
+                'message' => Yii::t('app', 'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS')],
+
+            // name и tree_diagram вместе должны быть уникальны, но только name будет получать сообщение об ошибке
+            ['name', 'unique', 'targetAttribute' => ['name', 'tree_diagram'],
+                'message' => Yii::t('app', 'MESSAGE_ELEMENT_NAME_ALREADY_ON_DIAGRAM')],
+
+            [['comment'], 'string'],
 
             [['parent_node'], 'exist', 'skipOnError' => true, 'targetClass' => Node::className(),
                 'targetAttribute' => ['parent_node' => 'id']],
@@ -75,12 +89,16 @@ class Node extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'NODE_MODEL_CREATED_AT'),
             'updated_at' => Yii::t('app', 'NODE_MODEL_UPDATED_AT'),
             'name' => Yii::t('app', 'NODE_MODEL_NAME'),
+            'certainty_factor' => Yii::t('app', 'NODE_MODEL_CERTAINTY_FACTOR'),
             'description' => Yii::t('app', 'NODE_MODEL_DESCRIPTION'),
             'operator' => Yii::t('app', 'NODE_MODEL_OPERATOR'),
             'type' => Yii::t('app', 'NODE_MODEL_TYPE'),
             'parent_node' => Yii::t('app', 'NODE_MODEL_PARENT_NODE'),
             'tree_diagram' => Yii::t('app', 'NODE_MODEL_TREE_DIAGRAM'),
             'level_id' => Yii::t('app', 'NODE_MODEL_LEVEL_ID'),
+            'indent_x' => Yii::t('app', 'NODE_MODEL_INDENT_X'),
+            'indent_y' => Yii::t('app', 'NODE_MODEL_INDENT_Y'),
+            'comment' => Yii::t('app', 'NODE_MODEL_COMMENT'),
         ];
     }
 
@@ -136,5 +154,26 @@ class Node extends \yii\db\ActiveRecord
         return ArrayHelper::getValue(self::getTypesArray(), $this->type);
     }
 
+    /**
+     * Получение списка типов узлов на английском.
+     * @return array - массив всех возможных типов узлов на английском
+     */
+    public static function getTypesArrayEn()
+    {
+        return [
+            self::INITIAL_EVENT_TYPE => 'Initial event',
+            self::EVENT_TYPE => 'Event',
+            self::MECHANISM_TYPE => 'Mechanism',
+        ];
+    }
+
+    /**
+     * Получение названия типа узла на английском.
+     * @return mixed
+     */
+    public function getTypeNameEn()
+    {
+        return ArrayHelper::getValue(self::getTypesArrayEn(), $this->type);
+    }
 
 }

@@ -5,6 +5,7 @@ use yii\bootstrap\Modal;
 use yii\bootstrap\Button;
 use app\modules\main\models\Lang;
 use app\modules\editor\models\Node;
+use app\modules\editor\models\TreeDiagram;
 
 /* @var $node_model app\modules\editor\models\Node */
 /* @var $array_levels app\modules\editor\controllers\TreeDiagramsController */
@@ -15,6 +16,20 @@ use app\modules\editor\models\Node;
     $(document).on('change', '#node-level_id', function() {
         var alert = document.getElementById('alert_event_level_id');
         alert.style = "";
+    });
+
+    // Обработка открытия модального окна добавления нового события
+    $("#addEventModalForm").on("show.bs.modal", function() {
+        //если начальное событие есть тогда
+        var initial_event = document.getElementsByClassName("div-initial-event");
+        if ((initial_event.length == 0)||(<?= TreeDiagram::CLASSIC_TREE_MODE ?> == <?= $model->mode ?>)){
+            //блокировка изменения левела
+            document.forms["add-event-form"].elements["Node[level_id]"].style.display = "none";
+            document.getElementById('add_label_level').style.display = "none";
+        } else {
+            document.forms["add-event-form"].elements["Node[level_id]"].style.display = "";
+            document.getElementById('add_label_level').style.display = "";
+        }
     });
 </script>
 
@@ -43,8 +58,7 @@ use app\modules\editor\models\Node;
                     success: function(data) {
                         // Если валидация прошла успешно (нет ошибок ввода)
                         if (data['success']) {
-                            // Скрывание модального окна
-                            $("#addEventModalForm").modal("hide");
+
 
                             if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
@@ -61,7 +75,11 @@ use app\modules\editor\models\Node;
                                 var div_initial_event_name = document.createElement('div');
                                 div_initial_event_name.id = 'node_name_' + data['id'];
                                 div_initial_event_name.className = 'div-event-name' ;
-                                div_initial_event_name.innerHTML = data['name'];
+                                if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                    div_initial_event_name.innerHTML = data['name'];
+                                } else {
+                                    div_initial_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                }
                                 div_content_event.append(div_initial_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -87,6 +105,11 @@ use app\modules\editor\models\Node;
                                 div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>' ;
                                 div_content_event.append(div_add_parameter);
 
+                                var div_show_comment = document.createElement('div');
+                                div_show_comment .id = 'node_show_comment_' + data['id'];
+                                div_show_comment .className = 'show-event-comment glyphicon-paperclip' ;
+                                div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
+                                div_content_event.append(div_show_comment );
                             } else {
                                 var div_level_layer = document.getElementById('level_description_' + data['id_level']);
 
@@ -102,7 +125,11 @@ use app\modules\editor\models\Node;
                                 var div_event_name = document.createElement('div');
                                 div_event_name.id = 'node_name_' + data['id'];
                                 div_event_name.className = 'div-event-name' ;
-                                div_event_name.innerHTML = data['name'];
+                                if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                    div_event_name.innerHTML = data['name'];
+                                } else {
+                                    div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                                }
                                 div_content_event.append(div_event_name);
 
                                 var div_ep = document.createElement('div');
@@ -127,6 +154,12 @@ use app\modules\editor\models\Node;
                                 div_add_parameter.className = 'param add-parameter glyphicon-plus' ;
                                 div_add_parameter.title = '<?php echo Yii::t('app', 'BUTTON_ADD'); ?>';
                                 div_content_event.append(div_add_parameter);
+
+                                var div_show_comment = document.createElement('div');
+                                div_show_comment .id = 'node_show_comment_' + data['id'];
+                                div_show_comment .className = 'show-event-comment glyphicon-paperclip' ;
+                                div_show_comment .title = '<?php echo Yii::t('app', 'BUTTON_COMMENT'); ?>' ;
+                                div_content_event.append(div_show_comment );
                             }
 
                             document.getElementById('add-event-form').reset();
@@ -172,13 +205,27 @@ use app\modules\editor\models\Node;
                             var name = data['name'];
                             var parent_node = data['parent_node'];
                             var description = data['description'];
+                            var certainty_factor = data['certainty_factor'];
                             var removed = sequence_mas.push([level, node]);
 
                             var j = 0;
                             $.each(mas_data_node, function (i, elem) {
                                 j = j + 1;
                             });
-                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description};
+                            mas_data_node[j] = {id:node, parent_node:parent_node, name:name, description:description, certainty_factor:certainty_factor,};
+
+                            // Выключение переходов на модальные окна
+                            var nav_add_event = document.getElementById('nav_add_event');
+                            if ((data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>) && (data['level_count'] == 1) && (data['mode'] == <?= TreeDiagram::EXTENDED_TREE_MODE ?>)){
+                                nav_add_event.className = 'disabled';
+                                nav_add_event.setAttribute("data-target", "");
+                            }
+
+                            $.pjax.reload({container: '#pjax_event_editor'});
+                            $.pjax.xhr = null;
+
+                            // Скрывание модального окна
+                            $("#addEventModalForm").modal("hide");
                         } else {
                             // Отображение ошибок ввода
                             viewErrors("#add-event-form", data);
@@ -201,9 +248,17 @@ use app\modules\editor\models\Node;
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
 
+<?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
+
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
-<?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php if ((TreeDiagram::CLASSIC_TREE_MODE == $model->mode) or ($the_initial_event_is == 0) ){ ?>
+    <?= $form->field($node_model, 'level_id')->dropDownList($array_levels)->
+                    label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php } else { ?>
+    <?= $form->field($node_model, 'level_id')->dropDownList($array_levels_initial_without)->
+                    label(Yii::t('app', 'NODE_MODEL_LEVEL_ID'), ['id' => 'add_label_level']); ?>
+<?php } ?>
 
 <?= Button::widget([
     'label' => Yii::t('app', 'BUTTON_ADD'),
@@ -262,12 +317,17 @@ use app\modules\editor\models\Node;
                             if (elem.id == data['id']){
                                 mas_data_node[i].name = data['name'];
                                 mas_data_node[i].description = data['description'];
+                                mas_data_node[i].certainty_factor = data['certainty_factor'];
                             }
                         });
 
                         if (level_id_on_click == data['id_level']){
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'];
+                            if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                div_event_name.innerHTML = data['name'];
+                            } else {
+                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            }
                         } else {
                             var div_event = document.getElementById('node_' + data['id']);
                             var new_div_event = div_event.cloneNode(true); // клонировать сообщение
@@ -279,8 +339,16 @@ use app\modules\editor\models\Node;
 
                             div_level_layer.append(new_div_event); // разместить клонированный элемент в новый уровень
 
+                            //разместить новый node по новым координатам
+                            new_div_event.style.left = '50px';
+                            new_div_event.style.top = '50px';
+
                             var div_event_name = document.getElementById('node_name_' + data['id']);
-                            div_event_name.innerHTML = data['name'];
+                            if ((data['certainty_factor'] == "")||(data['certainty_factor'] == 0)){
+                                div_event_name.innerHTML = data['name'];
+                            } else {
+                                div_event_name.innerHTML = data['name'] + ' (' + data['certainty_factor'] + ')';
+                            }
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_event);
@@ -313,6 +381,20 @@ use app\modules\editor\models\Node;
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: -1,
                             });
+
+                            //поиск комментария
+                            var div_comment = document.getElementById('node_comment_' + data['id']);
+                            if (div_comment != null){
+                                var new_div_comment = div_comment.cloneNode(true); // клонировать сообщение
+                                instance.removeFromGroup(div_comment);
+                                instance.remove(div_comment);
+                                div_level_layer.append(new_div_comment); // разместить клонированный элемент в новый уровень
+
+                                //делаем новый node перетаскиваемым
+                                instance.draggable(new_div_comment);
+
+                                instance.addToGroup(g_name, new_div_comment);//добавляем в группу
+                            }
 
                             //редактируем массив mas_data_node (чистим от удаляемого элемента)
                             $.each(mas_data_node, function (i, elem_node) {
@@ -364,6 +446,8 @@ use app\modules\editor\models\Node;
 <?= $form->errorSummary($node_model); ?>
 
 <?= $form->field($node_model, 'name')->textInput(['maxlength' => true]) ?>
+
+<?= $form->field($node_model, 'certainty_factor')->textInput(['maxlength' => true]) ?>
 
 <?= $form->field($node_model, 'description')->textarea(['maxlength' => true, 'rows'=>6]) ?>
 
@@ -428,6 +512,13 @@ use app\modules\editor\models\Node;
                         instance.removeFromGroup(div_del_event);//удаляем из группы
                         instance.remove(div_del_event);// удаляем node
 
+                        //поиск комментария
+                        var div_comment = document.getElementById('node_comment_' + node_id_on_click);
+                        if (div_comment != null){
+                            instance.removeFromGroup(div_comment);
+                            instance.remove(div_comment);
+                        }
+
                         //редактируем массив mas_data_node (чистим от удаляемого элемента)
                         //убираем соединения от удаляемого элемента
                         var temporary_mas_data_node = {};
@@ -442,6 +533,7 @@ use app\modules\editor\models\Node;
                                         "parent_node":null,
                                         "name":elem_node.name,
                                         "description":elem_node.description,
+                                        "certainty_factor":elem_node.certainty_factor,
                                     };
                                     q = q+1;
                                 } else {
@@ -450,6 +542,7 @@ use app\modules\editor\models\Node;
                                         "parent_node":elem_node.parent_node,
                                         "name":elem_node.name,
                                         "description":elem_node.description,
+                                        "certainty_factor":elem_node.certainty_factor,
                                     };
                                     q = q+1;
                                 }
@@ -470,6 +563,16 @@ use app\modules\editor\models\Node;
                             });
                         });
                         sequence_mas.splice(pos_i, 1);
+
+                        // Включение переходов на модальные окна
+                        var nav_add_event = document.getElementById('nav_add_event');
+                        if (data['type'] == <?= Node::INITIAL_EVENT_TYPE ?>){
+                            nav_add_event.className = 'enabled';
+                            nav_add_event.setAttribute("data-target", "#addEventModalForm");
+                        }
+
+                        $.pjax.reload({container: '#pjax_event_editor'});
+                        $.pjax.xhr = null;
                     }
                 },
                 error: function() {

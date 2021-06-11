@@ -26,15 +26,20 @@ return [
     'NAV_SIGN_IN' => 'Sign in',
     'NAV_SIGN_OUT' => 'Sign out',
     'NAV_TREE_DIAGRAMS' => 'Diagrams',
+    'NAV_TREE_DIAGRAM' => 'Diagram',
+    'NAV_BACK_LIST' => 'Back to the list',
 
     'NAV_ADD' => 'Add',
     'NAV_ADD_LEVEL' => 'Level',
-    'NAV_ADD_INITIAL_EVENT' => 'Initial event',
     'NAV_ADD_EVENT' => 'Event',
     'NAV_ADD_MECHANISM' => 'Mechanism',
 
+    'NAV_IMPORT' => 'Import',
     'NAV_EXPORT' => 'Export',
-    'NAV_EXPORT_EETD' => 'Export EETD',
+    'NAV_VERIFY' => 'Verify',
+    'NAV_ALIGNMENT' => 'Alignment',
+
+    'NAV_ACCOUNT' => 'Account',
 
     /* Пункты правого меню */
     'SIDE_NAV_POSSIBLE_ACTIONS' => 'Possible actions',
@@ -55,11 +60,17 @@ return [
     'BUTTON_EDIT' => 'Edit',
     'BUTTON_DELETE' => 'Delete',
     'BUTTON_CANCEL' => 'Cancel',
+    'BUTTON_HIDE' => 'Hide',
     'BUTTON_IMPORT' => 'Import',
     'BUTTON_EXPORT' => 'Export',
     'BUTTON_RETURN' => 'Return to',
     'BUTTON_CONNECTION' => 'Connection',
     'BUTTON_OPEN_DIAGRAM' => 'Open diagram',
+    'BUTTON_MOVE' => 'Move',
+    'BUTTON_COMMENT' => 'Comment',
+    'BUTTON_UPLOAD' => 'Upload',
+    'BUTTON_UPLOAD_ONTOLOGY' => 'Upload ontology',
+    'BUTTON_CONVERT' => 'Convert',
 
     /* Общие сообщения об ошибках */
     'ERROR_MESSAGE_PAGE_NOT_FOUND' => 'Page not found.',
@@ -84,11 +95,27 @@ return [
     'TREE_DIAGRAMS_PAGE_UPDATE_TREE_DIAGRAM' => 'Update diagram',
     'TREE_DIAGRAMS_PAGE_DELETE_TREE_DIAGRAM' => 'Delete diagram',
     'TREE_DIAGRAMS_PAGE_VISUAL_DIAGRAM' => 'Visual diagram',
+    'TREE_DIAGRAMS_PAGE_IMPORT_TREE_DIAGRAM' => 'Import visual diagram',
+    'TREE_DIAGRAMS_PAGE_CREATE_CHART_FROM_TEMPLATE' => 'Create a chart from a template',
     'TREE_DIAGRAMS_PAGE_MODAL_FORM_TEXT' => 'Are you sure that you want to delete this diagram?',
+    'TREE_DIAGRAMS_PAGE_UPLOAD_ONTOLOGY' => 'Upload ontology',
+    'TREE_DIAGRAMS_PAGE_CONVERT_ONTOLOGY' => 'Convert ontology',
     /* Сообщения на страницах администрирования событий */
     'TREE_DIAGRAMS_PAGE_MESSAGE_CREATE_TREE_DIAGRAM' => 'You have successfully created a new diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_UPDATED_TREE_DIAGRAM' => 'You have successfully updated diagram.',
     'TREE_DIAGRAMS_PAGE_MESSAGE_DELETED_TREE_DIAGRAM' => 'You have successfully deleted diagram.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_IMPORT_TREE_DIAGRAM' => 'You have successfully imported diagram.',
+    'TREE_DIAGRAMS_PAGE_MESSAGE_UPLOAD_ONTOLOGY' => 'You have successfully uploaded ontology.',
+    /* Имя диаграммы созданной из шаблона */
+    'TREE_DIAGRAMS_CREATED_FROM' => 'Chart created from ',
+    'TEMPLATES_DIAGRAMS_NOT_FOUND' => 'Templates diagrams not found',
+
+    /* Страница импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_RELATIONSHIP_INTERPRETATION' => 'Interpret as relation between events',
+    'CONVERT_ONTOLOGY_PAGE_CLASS_LIST' => 'Ontology class list',
+    'CONVERT_ONTOLOGY_PAGE_SELECT_ALL_CLASSES' => 'Select all classes',
+    /* Сообщения на странице импорта онтологии */
+    'CONVERT_ONTOLOGY_PAGE_MESSAGE_CONVERTED_ONTOLOGY' => 'You have successfully converted OWL ontology to event tree diagram.',
 
     /* Страница ошибки */
     'ERROR_PAGE_TEXT_ONE' => 'The above error occurred while the Web server was processing your request.',
@@ -119,6 +146,10 @@ return [
     'LOGIN_FORM_MESSAGE_INCORRECT_USERNAME_OR_PASSWORD' => 'Username or password is incorrect.',
     'LOGIN_FORM_MESSAGE_BLOCKED_ACCOUNT' => 'Your account has been blocked.',
     'LOGIN_FORM_MESSAGE_NOT_CONFIRMED_ACCOUNT' => 'Your account is not confirmed.',
+    /* OWLFileForm */
+    'OWL_FILE_FORM_OWL_FILE' => 'OWL ontology file',
+    'OWL_FILE_FORM_SUBCLASS_OF' => 'Inheritance relationship (class-subclass)',
+    'OWL_FILE_FORM_OBJECT_PROPERTY' => 'Relationship between classes (object properties)',
 
     /* Модели */
     /* Lang */
@@ -157,24 +188,39 @@ return [
     'TREE_DIAGRAM_MODEL_TYPE' => 'Type',
     'TREE_DIAGRAM_MODEL_STATUS' => 'Status',
     'TREE_DIAGRAM_MODEL_AUTHOR' => 'Author',
+    'TREE_DIAGRAM_MODEL_MODE' => 'Mode',
+    'TREE_DIAGRAM_MODEL_CORRECTNESS' => 'Correctness',
+    'TREE_DIAGRAM_MODEL_TREE_VIEW' => 'Tree view',
     /* Значения полей типов диаграмм*/
     'TREE_DIAGRAM_MODEL_EVENT_TREE_TYPE' => 'Event tree',
     'TREE_DIAGRAM_MODEL_FAULT_TREE_TYPE' => 'Fault tree',
     /* Значения полей статусов*/
     'TREE_DIAGRAM_MODEL_PUBLIC_STATUS' => 'Public',
     'TREE_DIAGRAM_MODEL_PRIVATE_STATUS' => 'Private',
+    /* Значения режимов деревьев диаграмм*/
+    'TREE_DIAGRAM_MODEL_EXTENDED_TREE_MODE' => 'Extended tree',
+    'TREE_DIAGRAM_MODEL_CLASSIC_TREE_MODE' => 'Classic tree',
+    /* Значения корректности диаграммы*/
+    'TREE_DIAGRAM_MODEL_NOT_CHECKED_CORRECT' => 'Not checked',
+    'TREE_DIAGRAM_MODEL_CORRECTLY_CORRECT' => 'Correctly',
+    'TREE_DIAGRAM_MODEL_INCORRECTLY_CORRECT' => 'Incorrectly',
+    /* Значения вида дерева диаграмм*/
+    'TREE_DIAGRAM_MODEL_ORDINARY_TREE_VIEW' => 'Ordinary tree',
+    'TREE_DIAGRAM_MODEL_TEMPLATE_TREE_VIEW' => 'Tree template',
 
     /* Node */
     'NODE_MODEL_ID' => 'ID',
     'NODE_MODEL_CREATED_AT' => 'Created at',
     'NODE_MODEL_UPDATED_AT' => 'Updated at',
     'NODE_MODEL_NAME' => 'Name',
+    'NODE_MODEL_CERTAINTY_FACTOR' => 'Certainty factor',
     'NODE_MODEL_DESCRIPTION' => 'Description',
     'NODE_MODEL_OPERATOR' => 'Operator',
     'NODE_MODEL_TYPE' => 'Type',
     'NODE_MODEL_PARENT_NODE' => 'Parent node',
     'NODE_MODEL_TREE_DIAGRAM' => 'Diagram',
     'NODE_MODEL_LEVEL_ID' => 'Level name',
+    'NODE_MODEL_COMMENT' => 'Comment',
     /* Значения операторов */
     'NODE_MODEL_NOT_OPERATOR' => 'NOT',
     'NODE_MODEL_AND_OPERATOR' => 'AND',
@@ -211,6 +257,8 @@ return [
     'LEVEL_MODEL_DESCRIPTION' => 'Description',
     'LEVEL_MODEL_PARENT_LEVEL' => 'Parent level',
     'LEVEL_MODEL_TREE_DIAGRAM' => 'Diagram',
+    'LEVEL_MODEL_MOVEMENT_LEVEL' => 'Level move after:',
+    'LEVEL_MODEL_COMMENT' => 'Comment',
 
     /* Sequence */
     'SEQUENCE_MODEL_ID' => 'ID',
@@ -221,13 +269,25 @@ return [
     'SEQUENCE_MODEL_NODE' => 'Node',
     'SEQUENCE_MODEL_PRIORITY' => 'Priority',
 
+    /* ImportFile */
+    'IMPORT_FORM_FILE_NAME' => 'File name',
+    'MESSAGE_CLEANING' => 'When importing all chart elements are removed',
+    'MESSAGE_IMPORT_ERROR_INCOMPATIBLE_MODE' => 'Imported file mode does not match chart mode',
+
     /* Заголовки модальных форм */
     'LEVEL_ADD_NEW_LEVEL' => 'Add new level',
     'LEVEL_EDIT_LEVEL' => 'Level change',
     'LEVEL_DELETE_LEVEL' => 'Level delete',
+    'LEVEL_MOVING_LEVEL' => 'Transfer level',
+    'LEVEL_ADD_NEW_COMMENT' => 'Add new level comment',
+    'LEVEL_EDIT_COMMENT' => 'Change level comment',
+    'LEVEL_DELETE_COMMENT' => 'Delete level comment',
     'EVENT_ADD_NEW_EVENT' => 'Add new event',
     'EVENT_EDIT_EVENT' => 'Event change',
     'EVENT_DELETE_EVENT' => 'Delete event',
+    'EVENT_ADD_NEW_COMMENT' => 'Add new event comment',
+    'EVENT_EDIT_COMMENT' => 'Change event comment',
+    'EVENT_DELETE_COMMENT' => 'Delete event comment',
     'PARAMETER_ADD_NEW_PARAMETER' => 'Add new parameter',
     'PARAMETER_EDIT_PARAMETER' => 'Parameter change',
     'PARAMETER_DELETE_PARAMETER' => 'Parameter delete',
@@ -235,7 +295,9 @@ return [
     'MECHANISM_EDIT_MECHANISM' => 'Mechanism change',
     'MECHANISM_DELETE_MECHANISM' => 'Delete mechanism',
     'ERROR_LINKING_ITEMS' => 'Error linking items',
+    'VALIDATION' => 'Validation',
     'DELETE_RELATIONSHIP' => 'Deleting connection',
+    'IMPORT_FORM' => 'Import',
 
     /* Cообщения */
     'MAXIMUM_CONNECTIONS' => 'Maximum connections ',
@@ -253,6 +315,21 @@ return [
     'DELETE_EVENT_TEXT' => 'Are you sure you want to delete the event?',
     'DELETE_MECHANISM_TEXT' => 'Are you sure you want to delete the mechanism?',
     'DELETE_PARAMETER_TEXT' => 'Are you sure you want to delete the parameter?',
+    'DELETE_COMMENT_TEXT' => 'Are you sure you want to delete the comment?',
 
     'CONNECTION_DELETE' => 'Delete',
+
+    'MESSAGE_PROBABILITY_ALLOWED_ONLY_UP_TO_HUNDREDTHS' => 'You can enter a number from 0 to 1, and only up to hundredths',
+    'MESSAGE_ELEMENT_NAME_ALREADY_ON_DIAGRAM' => 'An element with this name is already on the diagram',
+    'MESSAGE_PARAMETER_NAME_ALREADY_IN_EVENT' => 'The event already has a parameter with this name',
+    'MESSAGE_LEVEL_NAME_ALREADY_ON_DIAGRAM' => 'The level with this name is already on the diagram',
+
+    /* Текст */
+    'TEXT_NODE' => 'The node ',
+    'TEXT_IS_NOT_LINKED_TO_ANY_OTHER_NODES' => ' is not linked to any other nodes.',
+    'TEXT_LEVEL' => 'Level ',
+    'TEXT_DOES_NOT_CONTAIN_ANY_ITEMS' => ' does not contain any items.',
+    'TEXT_DOES_NOT_CONTAIN_ANY_MECHANISM' => ' does not contain any mechanism.',
+    'TEXT_WHEN_CHECKING_THE_CORRECTNESS' => 'When checking the correctness of this diagram, the following errors were revealed:',
+    'NO_ERRORS_WERE_FOUND' => 'When checking the correctness of this diagram, no errors were found.',
 ];

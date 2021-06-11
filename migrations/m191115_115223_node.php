@@ -18,11 +18,15 @@ class m191115_115223_node extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'name' => $this->string()->notNull(),
+            'certainty_factor' => $this->double(),
             'description' => $this->string(),
             'operator' => $this->smallInteger()->notNull()->defaultValue(0),
             'type' => $this->smallInteger()->notNull()->defaultValue(0),
             'parent_node' => $this->integer(),
             'tree_diagram' => $this->integer()->notNull(),
+            'indent_x' => $this->integer(),
+            'indent_y' => $this->integer(),
+            'comment' => $this->text(),
         ], $tableOptions);
 
         $this->createIndex('idx_node_name', '{{%node}}', 'name');

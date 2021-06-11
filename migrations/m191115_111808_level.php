@@ -21,6 +21,7 @@ class m191115_111808_level extends Migration
             'description' => $this->string(),
             'parent_level' => $this->integer(),
             'tree_diagram' => $this->integer()->notNull(),
+            'comment' => $this->text(),
         ], $tableOptions);
 
         $this->createIndex('idx_level_name', '{{%level}}', 'name');

@@ -17,7 +17,7 @@ use app\modules\main\models\Lang;
     });
 </script>
 
-    <!-- Модальное окно добавления нового уровня -->
+    <!-- Модальное окно добавления нового механизма -->
 <?php Modal::begin([
     'id' => 'addMechanismModalForm',
     'header' => '<h3>' . Yii::t('app', 'MECHANISM_ADD_NEW_MECHANISM') . '</h3>',
@@ -51,8 +51,14 @@ use app\modules\main\models\Lang;
                             var div_mechanism = document.createElement('div');
                             div_mechanism.id = 'node_' + data['id'];
                             div_mechanism.className = 'div-mechanism node';
-                            div_mechanism.title = data['name'];
+                            div_mechanism.title = data['description'];
                             div_level_layer.append(div_mechanism);
+
+                            var div_mechanism_name = document.createElement('div');
+                            div_mechanism_name.id = 'node_name_' + data['id'];
+                            div_mechanism_name.className = 'div-mechanism-name' ;
+                            div_mechanism_name.innerHTML = data['name'];
+                            div_mechanism.append(div_mechanism_name);
 
                             var div_mechanism_m = document.createElement('div');
                             div_mechanism_m.className = 'div-mechanism-m' ;
@@ -103,17 +109,18 @@ use app\modules\main\models\Lang;
 
                             instance.makeSource(div_node_id, {
                                 filter: ".ep",
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 1, 0, 1, 0, -20 ],
                             });
 
                             instance.makeTarget(div_node_id, {
                                 dropOptions: { hoverClass: "dragHover" },
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 0, 0, -1, 0, 20 ],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: 1,
                                 onMaxConnections: function (info, e) {
                                     var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
-                                    alert (message);
+                                    document.getElementById("message-text").lastChild.nodeValue = message;
+                                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                                 }
                             });
 
@@ -218,7 +225,10 @@ use app\modules\main\models\Lang;
 
                         if (level_id_on_click == data['id_level']){
                             var div_mechanism = document.getElementById('node_' + data['id']);
-                            div_mechanism.title = data['name'];
+                            div_mechanism.title = data['description'];
+
+                            var div_mechanism_name = document.getElementById('node_name_' + data['id']);
+                            div_mechanism_name.innerHTML = data['name'];
                         } else {
                             var div_mechanism = document.getElementById('node_' + data['id']);
                             var new_div_mechanism = div_mechanism.cloneNode(true); // клонировать сообщение
@@ -230,7 +240,13 @@ use app\modules\main\models\Lang;
 
                             div_level_layer.append(new_div_mechanism); // разместить клонированный элемент в новый уровень
 
-                            new_div_mechanism.title = data['name'];
+                            //разместить новый node по новым координатам
+                            new_div_mechanism.style.left = '50px';
+                            new_div_mechanism.style.top = '50px';
+
+                            new_div_mechanism.title = data['description'];
+                            var div_mechanism_name = document.getElementById('node_name_' + data['id']);
+                            div_mechanism_name.innerHTML = data['name'];
 
                             //делаем новый node перетаскиваемым
                             instance.draggable(new_div_mechanism);
@@ -254,17 +270,18 @@ use app\modules\main\models\Lang;
 
                             instance.makeSource(new_div_mechanism, {
                                 filter: ".ep",
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 1, 0, 1, 0, -20 ],
                             });
 
                             instance.makeTarget(new_div_mechanism, {
                                 dropOptions: { hoverClass: "dragHover" },
-                                anchor: [ "Perimeter", { shape: "Triangle", rotation: 90 }],
+                                anchor: [ 0.5, 0, 0, -1, 0, 20 ],
                                 allowLoopback: false, // Нельзя создать кольцевую связь
                                 maxConnections: 1,
                                 onMaxConnections: function (info, e) {
                                     var message = "<?php echo Yii::t('app', 'MAXIMUM_CONNECTIONS'); ?>" + info.maxConnections;
-                                    alert (message);
+                                    document.getElementById("message-text").lastChild.nodeValue = message;
+                                    $("#viewMessageErrorLinkingItemsModalForm").modal("show");
                                 }
                             });
 

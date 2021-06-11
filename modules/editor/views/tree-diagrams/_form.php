@@ -22,7 +22,11 @@ use app\modules\editor\models\TreeDiagram;
 
     <?= $form->field($model, 'type')->dropDownList(TreeDiagram::getTypesArray()) ?>
 
-    <?= $form->field($model, 'status')->dropDownList(TreeDiagram::getStatusesArray())  ?>
+    <?= $form->field($model, 'status')->dropDownList(TreeDiagram::getStatusesArray()) ?>
+
+    <?= $model->isNewRecord ? $form->field($model, 'mode')->dropDownList(TreeDiagram::getModesArray()) : false    ?>
+
+    <?= $form->field($model, 'tree_view')->dropDownList(TreeDiagram::getTreeViewArray()) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? '<span class="glyphicon glyphicon-floppy-disk"></span> ' .
