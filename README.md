@@ -1,11 +1,8 @@
-<p align="center">
-    <h1 align="center">Extended Event Tree Editor</h1>
-    <br />
-</p>
+<p align="center"><h1 align="center">Extended Event Tree Editor</h1><br /></p>
 
-Extended Event Tree Editor (EETE) is a web-based tool for building Extended Event Tree Diagrams (EETD).
+<b>The Extended Event Tree Editor (EETE)</b> is a web-based tool for designing Extended Event Tree Diagrams (EETD).
 
-EETE is based on PHP 7 and [Yii 2 Framework](http://www.yiiframework.com/).
+EETE is based on the [PHP 7](https://www.php.net/releases/7_0_0.php) and the [Yii 2 Framework](http://www.yiiframework.com/).
 
 Editor uses [jsPlumb Toolkit](https://jsplumbtoolkit.com/), version 2.12.9 for EETD visualization.
 
@@ -19,18 +16,21 @@ DIRECTORY STRUCTURE
 -------------------
 
       assets/             contains assets definition
-      commands/           contains console commands (controllers) for creation lang, user and EETDs by default
-      config/             contains application configurations
+      commands/           contains console commands (controllers) for creation langs, users and diagrams by default
+      components/         contains XML/OWL importers and XML generator
+      config/             contains application configurations (db, web)
+      messages/           contains localization files for Russian and English
+      migrations/         contains all migrations for database
       modules/            contains two modules:
-          editor/         contains main controllers, models and views for EETE
-          main/           contains views for representation main index, contact and error views:
-      web/                contains the entry script and Web resources
+          editor/         contains main models, controllers and views for EETE
+          main/           contains views for representation of main index, contact and error
+      web/                contains css-scripts, js-scripts, images and other web resources
 
 
 REQUIREMENTS
 ------------
 
-The minimum requirement by this project template that your Web server supports PHP 7.0, jsPlumb 2.12, PostgreSQL 9.0.
+The minimum requirement by this project template that your Web server supports <b>PHP 7.0</b>, <b>jsPlumb 2.12</b>, <b>PostgreSQL 9.0</b>.
 
 
 INSTALLATION
@@ -60,7 +60,7 @@ return [
     'class' => 'yii\db\Connection',
     'dsn' => 'pgsql:host=localhost;port=5432;dbname=eeteditor;',
     'username' => 'postgres',
-    'password' => 'admin',
+    'password' => 'root',
     'charset' => 'utf8',
     'tablePrefix' => 'eeteditor_',
     'schemaMap' => [
